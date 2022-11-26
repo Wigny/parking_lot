@@ -6,7 +6,8 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"jakebecker.elixir-ls"
+				"jakebecker.elixir-ls",
+				"phoenixframework.phoenix"
 			]
 		}
 	},
