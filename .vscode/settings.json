@@ -19,5 +19,15 @@
   },
   "files.associations": {
     "*.heex": "phoenix-heex"
-  }
+  },
+  "sqltools.connections": [
+    {
+      "name": "localhost",
+      "driver": "PostgreSQL",
+      "server": "localhost",
+      "database": "parking_dev",
+      "username": "postgres",
+      "password": "postgres",
+    },
+  ]
 }
