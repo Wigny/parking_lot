@@ -18,6 +18,8 @@ defmodule ParkingWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+
+    live "/hello_world", WorldLive.Index, :index
   end
 
   # Other scopes may use custom stacks.
