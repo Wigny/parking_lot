@@ -1,0 +1,21 @@
+{
+	"name": "Phoenix",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "elixir",
+	"workspaceFolder": "/workspace",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"jakebecker.elixir-ls",
+				"phoenixframework.phoenix"
+			]
+		}
+	},
+	"forwardPorts": [
+		4000,
+		4001,
+		5432
+	],
+	"postCreateCommand": "mix setup",
+	"remoteUser": "vscode"
+}

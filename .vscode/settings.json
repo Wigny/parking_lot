@@ -1,0 +1,32 @@
+{
+  "[elixir]": {
+    "editor.defaultFormatter": "JakeBecker.elixir-ls",
+    "editor.formatOnSave": true,
+    "editor.rulers": [
+      98
+    ]
+  },
+  "[phoenix-heex]": {
+    "editor.defaultFormatter": "JakeBecker.elixir-ls",
+    "editor.formatOnSave": true,
+    "editor.rulers": [
+      98
+    ]
+  },
+  "emmet.includeLanguages": {
+    "phoenix-heex": "html"
+  },
+  "files.associations": {
+    "*.heex": "phoenix-heex"
+  },
+  "sqltools.connections": [
+    {
+      "name": "localhost",
+      "driver": "PostgreSQL",
+      "server": "localhost",
+      "database": "parking_dev",
+      "username": "postgres",
+      "password": "postgres",
+    },
+  ]
+}

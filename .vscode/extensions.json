@@ -1,0 +1,8 @@
+{
+	"recommendations": [
+		"jakebecker.elixir-ls",
+		"phoenixframework.phoenix",
+		"mtxr.sqltools",
+		"mtxr.sqltools-driver-pg"
+	]
+}
