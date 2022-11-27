@@ -1,6 +1,8 @@
 defmodule ParkingWeb.Router do
   use ParkingWeb, :router
 
+  import ParkingWeb.UserAuth
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -8,6 +10,7 @@ defmodule ParkingWeb.Router do
     plug :put_root_layout, {ParkingWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :fetch_current_user
   end
 
   pipeline :api do
@@ -19,18 +22,24 @@ defmodule ParkingWeb.Router do
 
     get "/", PageController, :index
 
+    delete "/users/log_out", UserSessionController, :delete
+  end
+
+  scope "/", ParkingWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
     live "/hello_world", WorldLive.Index, :index
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", ParkingWeb do
-  #   pipe_through :api
-  # end
+  scope "/", ParkingWeb do
+    pipe_through [:browser, :redirect_if_user_is_authenticated]
 
-  # Enables the Swoosh mailbox preview in development.
-  #
-  # Note that preview only shows emails that were sent by the same
-  # node running the Phoenix server.
+    get "/users/log_in", UserSessionController, :new
+
+    get "/auth/:provider", UserOAuthController, :request
+    get "/auth/:provider/callback", UserOAuthController, :callback
+  end
+
   if Mix.env() == :dev do
     scope "/dev" do
       pipe_through :browser
