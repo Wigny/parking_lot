@@ -38,6 +38,7 @@ config :phoenix, :plug_init_mode, :runtime
 
 config :git_hooks,
   extra_success_returns: [
+    {:noop, []},
     {:ok, []}
   ],
   hooks: [
