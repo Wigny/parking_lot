@@ -1,0 +1,53 @@
+<h1>Listing Vehicles</h1>
+
+<%= if @live_action == :new do %>
+  <.modal return_to={Routes.vehicle_index_path(@socket, :index)}>
+    <.live_component
+      module={ParkingWeb.VehicleLive.FormComponent}
+      id={:new}
+      title={@page_title}
+      action={@live_action}
+      vehicle={@vehicle}
+      return_to={Routes.vehicle_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>License plate</th>
+      <th>Deleted at</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="vehicles">
+    <%= for vehicle <- @vehicles do %>
+      <tr id={"vehicle-#{vehicle.id}"}>
+        <td><%= vehicle.license_plate %></td>
+        <td><%= vehicle.deleted_at %></td>
+
+        <td>
+          <span>
+            <.link href={Routes.vehicle_show_path(@socket, :show, vehicle)}>Show</.link>
+          </span>
+          <span>
+            <.link
+              href="#"
+              phx-click="delete"
+              phx-value-id={vehicle.id}
+              data-confirm="Are you sure?"
+            >
+              Delete
+            </.link>
+          </span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span>
+  <.link patch={Routes.vehicle_index_path(@socket, :new)}>New Vehicle</.link>
+</span>

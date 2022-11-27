@@ -6,6 +6,7 @@ defmodule Parking.Accounts.UserSession do
   import Ecto.Changeset
 
   @rand_size 32
+  @timestamps_opts [type: :utc_datetime]
 
   schema "user_sessions" do
     field :token, :binary

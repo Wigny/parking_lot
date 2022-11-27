@@ -95,6 +95,7 @@ defmodule ParkingWeb do
       import Phoenix.View
 
       import ParkingWeb.ErrorHelpers
+      import ParkingWeb.LiveHelpers
       import ParkingWeb.Gettext
       alias ParkingWeb.Router.Helpers, as: Routes
     end

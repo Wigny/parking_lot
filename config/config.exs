@@ -8,6 +8,11 @@ config :ueberauth, Ueberauth,
 config :parking,
   ecto_repos: [Parking.Repo]
 
+config :parking, Parking.Repo,
+  migration_timestamps: [
+    type: :utc_datetime
+  ]
+
 config :parking, ParkingWeb.Endpoint,
   url: [host: "localhost"],
   render_errors: [view: ParkingWeb.ErrorView, accepts: ~w(html json), layout: false],
