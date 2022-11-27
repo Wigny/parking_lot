@@ -14,10 +14,6 @@ config :parking, ParkingWeb.Endpoint,
   pubsub_server: Parking.PubSub,
   live_view: [signing_salt: "AWf5tVrn"]
 
-config :parking, Parking.Mailer, adapter: Swoosh.Adapters.Local
-
-config :swoosh, :api_client, false
-
 config :esbuild,
   version: "0.14.29",
   default: [

@@ -14,7 +14,6 @@
     ]
   },
   "emmet.includeLanguages": {
-    "elixir": "html",
     "phoenix-heex": "html"
   },
   "files.associations": {

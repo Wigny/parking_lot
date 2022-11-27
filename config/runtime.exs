@@ -41,11 +41,4 @@ if config_env() == :prod do
       port: port
     ],
     secret_key_base: secret_key_base
-
-  # config :parking, Parking.Mailer,
-  #   adapter: Swoosh.Adapters.Mailgun,
-  #   api_key: System.get_env("MAILGUN_API_KEY"),
-  #   domain: System.get_env("MAILGUN_DOMAIN")
-
-  # config :swoosh, :api_client, Swoosh.ApiClient.Hackney
 end
