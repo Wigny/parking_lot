@@ -1,7 +1,12 @@
 defmodule ParkingWeb.Router do
   use ParkingWeb, :router
 
-  import ParkingWeb.UserAuth
+  import ParkingWeb.UserAuth,
+    only: [
+      fetch_current_user: 2,
+      require_authenticated_user: 2,
+      redirect_if_user_is_authenticated: 2
+    ]
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -20,13 +25,13 @@ defmodule ParkingWeb.Router do
   scope "/", ParkingWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
-
     delete "/users/log_out", UserSessionController, :delete
   end
 
   scope "/", ParkingWeb do
     pipe_through [:browser, :require_authenticated_user]
+
+    get "/", PageController, :index
   end
 
   scope "/", ParkingWeb do

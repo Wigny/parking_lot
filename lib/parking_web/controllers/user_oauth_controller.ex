@@ -9,7 +9,7 @@ defmodule ParkingWeb.UserOAuthController do
     only: [
       log_in_user: 2,
       log_out_user: 1,
-      require_authenticated_user: 2
+      require_authenticated_user: 1
     ]
 
   alias Parking.Accounts
@@ -40,7 +40,7 @@ defmodule ParkingWeb.UserOAuthController do
       {:error, reason} ->
         conn
         |> put_flash(:error, reason)
-        |> require_authenticated_user([])
+        |> require_authenticated_user()
     end
   end
 end
