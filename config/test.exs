@@ -20,9 +20,6 @@ config :parking, ParkingWeb.Endpoint,
   secret_key_base: "C/fQrrru0slUNJRMg39frnrMNZweJtZtPF3gk3/9JiPHfaxwTWMqNupXB9Nm5JE+",
   server: false
 
-# In test we don't send emails.
-config :parking, Parking.Mailer, adapter: Swoosh.Adapters.Test
-
 # Print only warnings and errors during test
 config :logger, level: :warn
 
