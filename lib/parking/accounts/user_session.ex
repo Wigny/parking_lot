@@ -1,4 +1,6 @@
 defmodule Parking.Accounts.UserSession do
+  @moduledoc false
+
   use Ecto.Schema
 
   import Ecto.Changeset
