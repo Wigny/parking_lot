@@ -27,8 +27,6 @@ defmodule ParkingWeb.Router do
 
   scope "/", ParkingWeb do
     pipe_through [:browser, :require_authenticated_user]
-
-    live "/hello_world", WorldLive.Index, :index
   end
 
   scope "/", ParkingWeb do
