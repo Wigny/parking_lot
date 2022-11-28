@@ -33,9 +33,12 @@ defmodule ParkingWeb.Router do
 
     get "/", PageController, :index
 
+    live "/drivers", DriverLive.Index, :index
+    live "/drivers/new", DriverLive.Index, :new
+    live "/drivers/:id", DriverLive.Show, :show
+
     live "/vehicles", VehicleLive.Index, :index
     live "/vehicles/new", VehicleLive.Index, :new
-
     live "/vehicles/:id", VehicleLive.Show, :show
   end
 

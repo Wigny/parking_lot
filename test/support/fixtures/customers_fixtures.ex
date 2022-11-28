@@ -4,6 +4,36 @@ defmodule Parking.CustomersFixtures do
   entities via the `Parking.Customers` context.
   """
 
+  alias Parking.Customers
+  alias Parking.Changeset.CheckDigit
+
+  def unique_driver_cnh do
+    base = Integer.digits(99_999_999 + :rand.uniform(900_000_000))
+    Enum.join(base ++ CheckDigit.predict(base, :cnh), "")
+  end
+
+  def unique_driver_cpf do
+    base = Integer.digits(99_999_999 + :rand.uniform(900_000_000))
+    Enum.join(base ++ CheckDigit.predict(base, :cpf), "")
+  end
+
+  def valid_driver_attributes(attrs \\ %{}) do
+    Enum.into(attrs, %{
+      cnh: unique_driver_cnh(),
+      cpf: unique_driver_cpf(),
+      name: "some name"
+    })
+  end
+
+  def driver_fixture(attrs \\ %{}) do
+    {:ok, driver} =
+      attrs
+      |> valid_driver_attributes()
+      |> Customers.create_driver()
+
+    driver
+  end
+
   def unique_vehicle_license_plate do
     ~r/[A-Z]{3}[0-9]{4}|[A-Z]{3}[0-9][A-Z][0-9]{2}/
     |> Randex.stream()
@@ -20,7 +50,7 @@ defmodule Parking.CustomersFixtures do
     {:ok, vehicle} =
       attrs
       |> valid_vehicle_attributes()
-      |> Parking.Customers.create_vehicle()
+      |> Customers.create_vehicle()
 
     vehicle
   end

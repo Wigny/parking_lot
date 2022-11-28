@@ -1,0 +1,27 @@
+<h1>Show Driver</h1>
+
+<ul>
+  <li>
+    <strong>Name:</strong>
+    <%= @driver.name %>
+  </li>
+
+  <li>
+    <strong>Cpf:</strong>
+    <%= @driver.cpf %>
+  </li>
+
+  <li>
+    <strong>Cnh:</strong>
+    <%= @driver.cnh %>
+  </li>
+
+  <li>
+    <strong>Deleted at:</strong>
+    <%= @driver.deleted_at %>
+  </li>
+</ul>
+
+<span>
+  <.link navigate={Routes.driver_index_path(@socket, :index)}>Back</.link>
+</span>

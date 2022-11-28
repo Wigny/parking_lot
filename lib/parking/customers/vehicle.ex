@@ -7,15 +7,15 @@ defmodule Parking.Customers.Vehicle do
   @timestamps_opts [type: :utc_datetime]
 
   schema "vehicles" do
-    field :deleted_at, :utc_datetime
     field :license_plate, :string
+    field :deleted_at, :utc_datetime
 
     timestamps()
   end
 
   def creation_changeset(vehicle, attrs) do
     vehicle
-    |> cast(attrs, [:license_plate])
+    |> cast(attrs, [:license_plate, :deleted_at])
     |> validate_required([:license_plate])
     |> validate_format(
       :license_plate,
