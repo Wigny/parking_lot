@@ -31,7 +31,7 @@ defmodule ParkingWeb.Router do
   scope "/", ParkingWeb do
     pipe_through [:browser, :require_authenticated_user]
 
-    get "/", PageController, :index
+    live "/", PageLive.Index, :index
 
     live "/drivers", DriverLive.Index, :index
     live "/drivers/new", DriverLive.Index, :new
