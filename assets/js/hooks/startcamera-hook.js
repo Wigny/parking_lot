@@ -29,7 +29,7 @@ const StartCamera = {
             context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
 
             hook.pushEvent("video_snapshot", canvas.toDataURL("image/png"))
-          }, 1000);
+          }, 3000);
         }
       });
   }

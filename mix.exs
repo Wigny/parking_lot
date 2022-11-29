@@ -43,6 +43,8 @@ defmodule Parking.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:ueberauth_google, "~> 0.10"},
+      {:goth, "~> 1.3"},
+      {:google_api_vision, "~> 0.24.2"},
       {:randex, "~> 0.4.0", only: [:test]},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},

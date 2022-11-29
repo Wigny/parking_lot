@@ -3,16 +3,14 @@ defmodule ParkingWeb.PageLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, socket}
+    {:ok, assign(socket, :plate, nil)}
   end
 
   @impl true
   def handle_event("video_snapshot", snapshot, socket) do
-    {:noreply, socket}
-  end
+    [_start, raw] = String.split(snapshot, ";base64,")
+    {:ok, plate} = Parking.ALPR.recognize(raw)
 
-  defp decode(binary) do
-    [_start, raw] = String.split(binary, ";base64,")
-    Base.decode64!(raw)
+    {:noreply, assign(socket, :plate, plate)}
   end
 end
