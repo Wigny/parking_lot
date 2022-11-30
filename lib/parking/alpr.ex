@@ -8,10 +8,15 @@ defmodule Parking.ALPR do
 
   @plate_regex ~r/(?<legacy>[A-Z]{3}-?[0-9]{4})|(?<mercosul>[A-Z]{3}[0-9][A-Z][0-9]{2})/
 
-  @client with {:ok, token} <- Goth.Token.fetch(source: {:service_account, @credentials}),
-               do: Connection.new(token.token)
+  def client do
+    with {:ok, token} <- Goth.Token.fetch(source: {:service_account, @credentials}) do
+      Connection.new(token.token)
+    end
+  end
 
   def recognize(image) do
+    client = client()
+
     body = %Model.BatchAnnotateImagesRequest{
       requests: [
         %Model.AnnotateImageRequest{
@@ -21,7 +26,7 @@ defmodule Parking.ALPR do
       ]
     }
 
-    with {:ok, %{responses: [response]}} <- Api.Images.vision_images_annotate(@client, body: body) do
+    with {:ok, %{responses: [response]}} <- Api.Images.vision_images_annotate(client, body: body) do
       capture(response)
     end
   end
@@ -31,6 +36,8 @@ defmodule Parking.ALPR do
 
     if plates = Regex.run(@plate_regex, text) do
       {:ok, List.first(plates)}
+    else
+      {:ok, nil}
     end
   end
 

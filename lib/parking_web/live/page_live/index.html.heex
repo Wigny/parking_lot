@@ -1,5 +1,8 @@
 <section class="row">
-  <video phx-hook="StartCamera" id="video-canvas" width="100%" height="auto" muted></video>
+  <video phx-hook="StartCamera" id="stream" width="100%" height="auto" muted autoplay></video>
+</section>
+<section class="row">
+  <img id="preview" width="100%" height="auto" src={@preview} />
 </section>
 
 <h2><%= @plate || "Unidentified plate" %></h2>

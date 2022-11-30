@@ -45,13 +45,14 @@ config :git_hooks,
     pre_commit: [
       tasks: [
         {:mix_task, :format, ~w[--check-formatted]}
+        # {:mix_task, :test, ~w[--max-failures 1 --stale --warnings-as-errors]}
       ]
     ],
     pre_push: [
       tasks: [
         {:mix_task, :compile, ~w[--warning-as-errors]},
         {:mix_task, :dialyzer, ~w[--format short]},
-        {:mix_task, :test, ~w[--max-failures 1 --stale --warnings-as-errors]},
+        {:mix_task, :test, ~w[--max-failures 1 --warnings-as-errors]},
         {:mix_task, :credo, ~w[--strict --format oneline]}
       ]
     ]

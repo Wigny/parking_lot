@@ -4,33 +4,34 @@ const constraints = {
     width: { min: 1024, ideal: 1280, max: 1920 },
     height: { min: 576, ideal: 720, max: 1080 },
   },
-  audio: false,
+  audio: false
 }
+
+const toBase64 = (blob) => new Promise((resolve) => {
+  const reader = new FileReader();
+  reader.onloadend = () => resolve(reader.result);
+  reader.readAsDataURL(blob);
+});
 
 const StartCamera = {
   mounted() {
     const hook = this;
     const video = this.el;
-    const canvas = document.createElement("canvas");
 
     navigator.mediaDevices
       .getUserMedia(constraints)
       .then((stream) => {
         video.srcObject = stream;
-        video.onloadedmetadata = () => {
-          video.play();
 
-          canvas.width = video.videoWidth;
-          canvas.height = video.videoHeight;
+        const tracks = stream.getVideoTracks();
+        const imageCapture = new ImageCapture(tracks[0]);
 
-          const context = canvas.getContext("2d");
-
-          setInterval(() => {
-            context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-
-            hook.pushEvent("video_snapshot", canvas.toDataURL("image/png"))
-          }, 3000);
-        }
+        setInterval(() => {
+          imageCapture
+            .takePhoto()
+            .then(toBase64)
+            .then(base64 => hook.pushEvent("video_snapshot", base64));
+        }, 1000);
       });
   }
 }
