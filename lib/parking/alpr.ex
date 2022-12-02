@@ -1,9 +1,8 @@
 defmodule Parking.ALPR do
   alias GoogleApi.Vision.V1.{Connection, Api, Model}
 
-  @credentials "GOOGLE_APPLICATION_CREDENTIALS_JSON"
+  @credentials "GOOGLE_APPLICATION_CREDENTIALS"
                |> System.fetch_env!()
-               |> File.read!()
                |> Jason.decode!()
 
   @plate_regex ~r/(?<legacy>[A-Z]{3}-?[0-9]{4})|(?<mercosul>[A-Z]{3}[0-9][A-Z][0-9]{2})/
