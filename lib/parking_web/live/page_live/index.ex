@@ -42,12 +42,4 @@ defmodule ParkingWeb.PageLive.Index do
   defp register(_, socket) do
     {:noreply, assign(socket, plate: nil, processing: false)}
   end
-
-  defp in_delta?(dt1, dt2, delta) do
-    unix1 = DateTime.to_unix(dt1)
-    unix2 = DateTime.to_unix(dt2)
-    diff = abs(unix1 - unix2)
-
-    diff <= delta
-  end
 end
