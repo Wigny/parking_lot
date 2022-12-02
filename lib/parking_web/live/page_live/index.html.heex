@@ -14,8 +14,8 @@
     </thead>
     <tbody id="vehicles">
       <tr :for={vehicle <- @vehicles}>
-        <td><%= vehicle.license_plate %></td>
-        <td><%= vehicle.inserted_at %></td>
+        <td><%= vehicle.plate %></td>
+        <td><%= vehicle.registered_at %></td>
       </tr>
     </tbody>
   </table>
