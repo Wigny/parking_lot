@@ -9,7 +9,8 @@ defmodule Parking.Application do
       Parking.Repo,
       ParkingWeb.Telemetry,
       {Phoenix.PubSub, name: Parking.PubSub},
-      ParkingWeb.Endpoint
+      ParkingWeb.Endpoint,
+      Parking.ALPR.State
     ]
 
     opts = [strategy: :one_for_one, name: Parking.Supervisor]

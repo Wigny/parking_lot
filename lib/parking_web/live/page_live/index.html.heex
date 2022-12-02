@@ -2,7 +2,21 @@
   <video phx-hook="StartCamera" id="stream" width="100%" height="auto" muted autoplay></video>
 </section>
 <section class="row">
-  <img id="preview" width="100%" height="auto" src={@preview} />
+  <h1>Placa identificada: <b><%= @plate %></b></h1>
 </section>
-
-<h2><%= @plate || "Unidentified plate" %></h2>
+<section class="row">
+  <table>
+    <thead>
+      <tr>
+        <th>Últimos veículos</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="vehicles">
+      <tr :for={vehicle <- @vehicles}>
+        <td><%= vehicle.license_plate %></td>
+        <td><%= vehicle.inserted_at %></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
