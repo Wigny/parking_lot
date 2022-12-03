@@ -32,7 +32,10 @@ defmodule ParkingLotWeb.PageLive.Index do
   end
 
   defp register({:ok, plate}, socket) when not is_nil(plate) do
-    if vehicle = Customers.get_vehicle(license_plate: plate) do
+    vehicle = Customers.get_vehicle(license_plate: plate)
+    last_parking = vehicle && Parkings.get_last_parking([vehicle_id: vehicle.id], :entered_at)
+
+    if not is_nil(vehicle) and is_nil(last_parking) do
       {:ok, _parking} = Parkings.register_parking(%{vehicle_id: vehicle.id})
 
       assigns = [plate: plate, processing: false, parkings: Parkings.list_parkings()]

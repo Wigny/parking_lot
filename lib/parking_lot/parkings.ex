@@ -8,6 +8,13 @@ defmodule ParkingLot.Parkings do
 
   alias ParkingLot.Parkings.Parking
 
+  def get_last_parking(query, order_by) when is_list(query) do
+    Parking
+    |> where(^query)
+    |> last(order_by)
+    |> Repo.one()
+  end
+
   def list_parkings do
     Parking
     |> Repo.all()
