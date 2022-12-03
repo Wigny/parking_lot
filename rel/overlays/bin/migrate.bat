@@ -1,1 +1,1 @@
-call "%~dp0\parking" eval Parking.Release.migrate
+call "%~dp0\parking" eval ParkingWeb.Release.migrate

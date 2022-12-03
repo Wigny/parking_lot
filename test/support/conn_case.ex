@@ -1,4 +1,4 @@
-defmodule ParkingWeb.ConnCase do
+defmodule ParkingLotWeb.ConnCase do
   @moduledoc """
   This module defines the test case to be used by
   tests that require setting up a connection.
@@ -11,7 +11,7 @@ defmodule ParkingWeb.ConnCase do
   we enable the SQL sandbox, so changes done to the database
   are reverted at the end of every test. If you are using
   PostgreSQL, you can even run database tests asynchronously
-  by setting `use ParkingWeb.ConnCase, async: true`, although
+  by setting `use ParkingLotWeb.ConnCase, async: true`, although
   this option is not recommended for other databases.
   """
 
@@ -22,12 +22,12 @@ defmodule ParkingWeb.ConnCase do
       # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
-      import ParkingWeb.ConnCase
+      import ParkingLotWeb.ConnCase
 
-      alias ParkingWeb.Router.Helpers, as: Routes
+      alias ParkingLotWeb.Router.Helpers, as: Routes
 
       # The default endpoint for testing
-      @endpoint ParkingWeb.Endpoint
+      @endpoint ParkingLotWeb.Endpoint
     end
   end
 

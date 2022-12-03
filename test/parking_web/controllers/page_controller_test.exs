@@ -1,5 +1,5 @@
-defmodule ParkingWeb.PageControllerTest do
-  use ParkingWeb.ConnCase
+defmodule ParkingLotWeb.PageControllerTest do
+  use ParkingLotWeb.ConnCase
 
   setup :register_and_log_in_user
 

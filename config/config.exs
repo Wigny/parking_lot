@@ -13,9 +13,9 @@ config :parking_lot, ParkingLot.Repo,
     type: :utc_datetime
   ]
 
-config :parking_lot, ParkingWeb.Endpoint,
+config :parking_lot, ParkingLotWeb.Endpoint,
   url: [host: "localhost"],
-  render_errors: [view: ParkingWeb.ErrorView, accepts: ~w(html json), layout: false],
+  render_errors: [view: ParkingLotWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: ParkingLot.PubSub,
   live_view: [signing_salt: "AWf5tVrn"]
 

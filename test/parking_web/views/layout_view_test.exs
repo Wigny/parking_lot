@@ -1,5 +1,5 @@
-defmodule ParkingWeb.LayoutViewTest do
-  use ParkingWeb.ConnCase, async: true
+defmodule ParkingLotWeb.LayoutViewTest do
+  use ParkingLotWeb.ConnCase, async: true
 
   # When testing helpers, you may want to import Phoenix.HTML and
   # use functions such as safe_to_string() to convert the helper
