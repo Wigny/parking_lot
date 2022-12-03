@@ -1,4 +1,4 @@
-# fly.toml file generated for estacionamento-ifro on 2022-12-02T20:51:00Z
+# fly.toml file generated for estacionamento-ifro on 2022-12-03T22:20:38Z
 
 app = "estacionamento-ifro"
 kill_signal = "SIGTERM"

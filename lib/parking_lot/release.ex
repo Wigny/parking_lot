@@ -1,9 +1,9 @@
-defmodule ParkingWeb.Release do
+defmodule ParkingLot.Release do
   @moduledoc """
   Used for executing DB release tasks when run in production without Mix
   installed.
   """
-  @app :parking
+  @app :parking_lot
 
   def migrate do
     load_app()
