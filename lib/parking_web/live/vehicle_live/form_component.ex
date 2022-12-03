@@ -1,7 +1,7 @@
 defmodule ParkingWeb.VehicleLive.FormComponent do
   use ParkingWeb, :live_component
 
-  alias Parking.Customers
+  alias ParkingLot.Customers
 
   @impl true
   def update(%{vehicle: vehicle} = assigns, socket) do

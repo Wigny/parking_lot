@@ -1,4 +1,4 @@
-defmodule Parking.Customers.Vehicle do
+defmodule ParkingLot.Customers.Vehicle do
   @moduledoc false
 
   use Ecto.Schema
@@ -24,5 +24,5 @@ defmodule Parking.Customers.Vehicle do
     |> unique_constraint(:license_plate)
   end
 
-  defdelegate deletion_changeset(vehicle), to: Parking.Changeset, as: :mark_deletion
+  defdelegate deletion_changeset(vehicle), to: ParkingLot.Changeset, as: :mark_deletion
 end

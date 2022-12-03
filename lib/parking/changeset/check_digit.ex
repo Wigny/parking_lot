@@ -1,4 +1,4 @@
-defmodule Parking.Changeset.CheckDigit do
+defmodule ParkingLot.Changeset.CheckDigit do
   @moduledoc false
 
   @check_digit_validations [

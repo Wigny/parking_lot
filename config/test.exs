@@ -8,7 +8,7 @@ config :bcrypt_elixir, :log_rounds, 1
 # The MIX_TEST_PARTITION environment variable can be used
 # to provide built-in test partitioning in CI environment.
 # Run `mix help test` for more information.
-config :parking, Parking.Repo,
+config :parking_lot, ParkingLot.Repo,
   username: "postgres",
   password: "postgres",
   hostname: "localhost",
@@ -18,7 +18,7 @@ config :parking, Parking.Repo,
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
-config :parking, ParkingWeb.Endpoint,
+config :parking_lot, ParkingWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
   secret_key_base: "C/fQrrru0slUNJRMg39frnrMNZweJtZtPF3gk3/9JiPHfaxwTWMqNupXB9Nm5JE+",
   server: false

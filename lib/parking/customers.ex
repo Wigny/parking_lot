@@ -1,13 +1,13 @@
-defmodule Parking.Customers do
+defmodule ParkingLot.Customers do
   @moduledoc """
   The Customers context.
   """
 
   import Ecto.Query
-  import Parking.Query, only: [where_include_deleted: 2]
-  alias Parking.Repo
+  import ParkingLot.Query, only: [where_include_deleted: 2]
+  alias ParkingLot.Repo
 
-  alias Parking.Customers.{Driver, Vehicle}
+  alias ParkingLot.Customers.{Driver, Vehicle}
 
   def list_drivers(opts \\ []) do
     include_deleted = Keyword.get(opts, :include_deleted, false)

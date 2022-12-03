@@ -1,9 +1,9 @@
 defmodule ParkingWeb.UserAuthTest do
   use ParkingWeb.ConnCase, async: true
 
-  alias Parking.Accounts
+  alias ParkingLot.Accounts
   alias ParkingWeb.UserAuth
-  import Parking.AccountsFixtures
+  import ParkingLot.AccountsFixtures
 
   @remember_me_cookie "_parking_web_user_remember_me"
 

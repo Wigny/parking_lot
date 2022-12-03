@@ -1,4 +1,4 @@
-defmodule Parking.Application do
+defmodule ParkingLot.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
@@ -9,20 +9,20 @@ defmodule Parking.Application do
   def start(_type, _args) do
     children = [
       # Start the Ecto repository
-      Parking.Repo,
+      ParkingLot.Repo,
       # Start the Telemetry supervisor
       ParkingWeb.Telemetry,
       # Start the PubSub system
-      {Phoenix.PubSub, name: Parking.PubSub},
+      {Phoenix.PubSub, name: ParkingLot.PubSub},
       # Start the Endpoint (http/https)
       ParkingWeb.Endpoint
-      # Start a worker by calling: Parking.Worker.start_link(arg)
-      # {Parking.Worker, arg}
+      # Start a worker by calling: ParkingLot.Worker.start_link(arg)
+      # {ParkingLot.Worker, arg}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: Parking.Supervisor]
+    opts = [strategy: :one_for_one, name: ParkingLot.Supervisor]
     Supervisor.start_link(children, opts)
   end
 

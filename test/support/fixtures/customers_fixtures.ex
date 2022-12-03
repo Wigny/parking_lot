@@ -1,11 +1,11 @@
-defmodule Parking.CustomersFixtures do
+defmodule ParkingLot.CustomersFixtures do
   @moduledoc """
   This module defines test helpers for creating
-  entities via the `Parking.Customers` context.
+  entities via the `ParkingLot.Customers` context.
   """
 
-  alias Parking.Customers
-  alias Parking.Changeset.CheckDigit
+  alias ParkingLot.Customers
+  alias ParkingLot.Changeset.CheckDigit
 
   def unique_driver_cnh do
     base = Integer.digits(99_999_999 + :rand.uniform(900_000_000))

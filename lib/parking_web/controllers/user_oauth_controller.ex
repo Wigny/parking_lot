@@ -12,7 +12,7 @@ defmodule ParkingWeb.UserOAuthController do
       require_authenticated_user: 1
     ]
 
-  alias Parking.Accounts
+  alias ParkingLot.Accounts
 
   plug Ueberauth
 

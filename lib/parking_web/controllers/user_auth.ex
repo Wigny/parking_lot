@@ -4,7 +4,7 @@ defmodule ParkingWeb.UserAuth do
   import Plug.Conn
   import Phoenix.Controller
 
-  alias Parking.Accounts
+  alias ParkingLot.Accounts
   alias ParkingWeb.Router.Helpers, as: Routes
 
   # Make the remember me cookie valid for 60 days.

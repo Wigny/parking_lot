@@ -1,12 +1,12 @@
-defmodule Parking.CustomersTest do
-  use Parking.DataCase
+defmodule ParkingLot.CustomersTest do
+  use ParkingLot.DataCase
 
-  alias Parking.Customers
+  alias ParkingLot.Customers
 
   describe "drivers" do
-    alias Parking.Customers.Driver
+    alias ParkingLot.Customers.Driver
 
-    import Parking.CustomersFixtures
+    import ParkingLot.CustomersFixtures
 
     @invalid_attrs %{name: nil, cpf: nil, cnh: nil}
 
@@ -58,9 +58,9 @@ defmodule Parking.CustomersTest do
   end
 
   describe "vehicles" do
-    alias Parking.Customers.Vehicle
+    alias ParkingLot.Customers.Vehicle
 
-    import Parking.CustomersFixtures
+    import ParkingLot.CustomersFixtures
 
     @invalid_attrs %{license_plate: nil}
 

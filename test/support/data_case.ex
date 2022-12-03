@@ -1,4 +1,4 @@
-defmodule Parking.DataCase do
+defmodule ParkingLot.DataCase do
   @moduledoc """
   This module defines the setup for tests requiring
   access to the application's data layer.
@@ -10,7 +10,7 @@ defmodule Parking.DataCase do
   we enable the SQL sandbox, so changes done to the database
   are reverted at the end of every test. If you are using
   PostgreSQL, you can even run database tests asynchronously
-  by setting `use Parking.DataCase, async: true`, although
+  by setting `use ParkingLot.DataCase, async: true`, although
   this option is not recommended for other databases.
   """
 
@@ -18,17 +18,17 @@ defmodule Parking.DataCase do
 
   using do
     quote do
-      alias Parking.Repo
+      alias ParkingLot.Repo
 
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
-      import Parking.DataCase
+      import ParkingLot.DataCase
     end
   end
 
   setup tags do
-    Parking.DataCase.setup_sandbox(tags)
+    ParkingLot.DataCase.setup_sandbox(tags)
     :ok
   end
 
@@ -38,7 +38,7 @@ defmodule Parking.DataCase do
   def setup_sandbox(tags) do
     alias Ecto.Adapters.SQL.Sandbox
 
-    pid = Sandbox.start_owner!(Parking.Repo, shared: not tags[:async])
+    pid = Sandbox.start_owner!(ParkingLot.Repo, shared: not tags[:async])
     on_exit(fn -> Sandbox.stop_owner(pid) end)
   end
 

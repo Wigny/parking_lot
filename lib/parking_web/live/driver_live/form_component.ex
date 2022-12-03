@@ -1,7 +1,7 @@
 defmodule ParkingWeb.DriverLive.FormComponent do
   use ParkingWeb, :live_component
 
-  alias Parking.Customers
+  alias ParkingLot.Customers
 
   @impl true
   def update(%{driver: driver} = assigns, socket) do

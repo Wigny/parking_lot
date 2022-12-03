@@ -1,7 +1,7 @@
-defmodule Parking.Customers.Driver do
+defmodule ParkingLot.Customers.Driver do
   use Ecto.Schema
   import Ecto.Changeset
-  import Parking.Changeset, only: [validate_check_digit: 2]
+  import ParkingLot.Changeset, only: [validate_check_digit: 2]
 
   @timestamps_opts [type: :utc_datetime]
 
@@ -26,5 +26,5 @@ defmodule Parking.Customers.Driver do
     |> validate_check_digit(:cnh)
   end
 
-  defdelegate deletion_changeset(vehicle), to: Parking.Changeset, as: :mark_deletion
+  defdelegate deletion_changeset(vehicle), to: ParkingLot.Changeset, as: :mark_deletion
 end

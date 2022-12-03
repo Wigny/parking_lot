@@ -2,7 +2,7 @@ defmodule ParkingWeb.VehicleLiveTest do
   use ParkingWeb.ConnCase
 
   import Phoenix.LiveViewTest
-  import Parking.CustomersFixtures
+  import ParkingLot.CustomersFixtures
 
   @create_attrs valid_vehicle_attributes()
   @invalid_attrs %{license_plate: "invalid plate"}

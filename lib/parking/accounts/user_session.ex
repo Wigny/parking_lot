@@ -1,4 +1,4 @@
-defmodule Parking.Accounts.UserSession do
+defmodule ParkingLot.Accounts.UserSession do
   @moduledoc false
 
   use Ecto.Schema
@@ -10,7 +10,7 @@ defmodule Parking.Accounts.UserSession do
 
   schema "user_sessions" do
     field :token, :binary
-    belongs_to :user, Parking.Accounts.User
+    belongs_to :user, ParkingLot.Accounts.User
 
     timestamps updated_at: false
   end

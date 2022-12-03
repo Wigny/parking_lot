@@ -1,7 +1,7 @@
 defmodule ParkingWeb.UserSessionControllerTest do
   use ParkingWeb.ConnCase, async: true
 
-  import Parking.AccountsFixtures
+  import ParkingLot.AccountsFixtures
 
   setup do
     %{user: user_fixture()}

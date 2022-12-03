@@ -1,6 +1,6 @@
-defmodule Parking do
+defmodule ParkingLot do
   @moduledoc """
-  Parking keeps the contexts that define your domain
+  ParkingLot keeps the contexts that define your domain
   and business logic.
 
   Contexts are also responsible for managing your data, regardless
