@@ -1,10 +1,10 @@
-defmodule Parking.AccountsTest do
-  use Parking.DataCase
+defmodule ParkingLot.AccountsTest do
+  use ParkingLot.DataCase
 
-  import Parking.AccountsFixtures
+  import ParkingLot.AccountsFixtures
 
-  alias Parking.Accounts
-  alias Parking.Accounts.{User, UserSession}
+  alias ParkingLot.Accounts
+  alias ParkingLot.Accounts.{User, UserSession}
 
   describe "get_user_by_email/1" do
     test "does not return the user if the email does not exist" do

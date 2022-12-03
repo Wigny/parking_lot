@@ -1,4 +1,4 @@
-defmodule Parking.ALPR do
+defmodule ParkingLot.ALPR do
   alias GoogleApi.Vision.V1.{Connection, Api, Model}
 
   @credentials "GOOGLE_APPLICATION_CREDENTIALS"

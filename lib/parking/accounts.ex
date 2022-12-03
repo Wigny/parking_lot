@@ -1,12 +1,12 @@
-defmodule Parking.Accounts do
+defmodule ParkingLot.Accounts do
   @moduledoc """
   The Accounts context.
   """
 
   import Ecto.Query
 
-  alias Parking.Repo
-  alias Parking.Accounts.{User, UserSession}
+  alias ParkingLot.Repo
+  alias ParkingLot.Accounts.{User, UserSession}
 
   @session_validity_in_days 60
 

@@ -1,7 +1,7 @@
 defmodule ParkingWeb.VehicleLive.Show do
   use ParkingWeb, :live_view
 
-  alias Parking.Customers
+  alias ParkingLot.Customers
 
   @impl true
   def mount(_params, _session, socket) do

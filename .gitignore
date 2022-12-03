@@ -20,7 +20,7 @@ erl_crash.dump
 *.ez
 
 # Ignore package tarball (built via "mix hex.build").
-parking-*.tar
+parking_lot-*.tar
 
 # Ignore assets that are produced by build tools.
 /priv/static/assets/
@@ -31,4 +31,3 @@ parking-*.tar
 # In case you use Node.js/npm, you want to ignore these.
 npm-debug.log
 /assets/node_modules/
-

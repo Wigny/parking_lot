@@ -32,7 +32,7 @@ defmodule ParkingWeb.ConnCase do
   end
 
   setup tags do
-    Parking.DataCase.setup_sandbox(tags)
+    ParkingLot.DataCase.setup_sandbox(tags)
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
 
@@ -45,7 +45,7 @@ defmodule ParkingWeb.ConnCase do
   test context.
   """
   def register_and_log_in_user(%{conn: conn}) do
-    user = Parking.AccountsFixtures.user_fixture()
+    user = ParkingLot.AccountsFixtures.user_fixture()
     %{conn: log_in_user(conn, user), user: user}
   end
 
@@ -55,7 +55,7 @@ defmodule ParkingWeb.ConnCase do
   It returns an updated `conn`.
   """
   def log_in_user(conn, user) do
-    token = Parking.Accounts.generate_user_session_token(user)
+    token = ParkingLot.Accounts.generate_user_session_token(user)
 
     conn
     |> Phoenix.ConnTest.init_test_session(%{})

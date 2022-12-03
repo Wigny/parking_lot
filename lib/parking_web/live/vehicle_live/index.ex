@@ -1,8 +1,8 @@
 defmodule ParkingWeb.VehicleLive.Index do
   use ParkingWeb, :live_view
 
-  alias Parking.Customers
-  alias Parking.Customers.Vehicle
+  alias ParkingLot.Customers
+  alias ParkingLot.Customers.Vehicle
 
   @impl true
   def mount(_params, _session, socket) do

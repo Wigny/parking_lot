@@ -1,6 +1,6 @@
-defmodule Parking.Changeset do
+defmodule ParkingLot.Changeset do
   import Ecto.Changeset
-  alias Parking.Changeset.CheckDigit
+  alias ParkingLot.Changeset.CheckDigit
 
   def mark_deletion(changeset) do
     now = DateTime.truncate(DateTime.utc_now(), :second)

@@ -2,7 +2,7 @@ defmodule ParkingWeb.DriverLiveTest do
   use ParkingWeb.ConnCase
 
   import Phoenix.LiveViewTest
-  import Parking.CustomersFixtures
+  import ParkingLot.CustomersFixtures
 
   @create_attrs valid_driver_attributes()
   @invalid_attrs %{@create_attrs | cpf: "invalid cpf"}

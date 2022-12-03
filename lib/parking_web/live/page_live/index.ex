@@ -1,6 +1,6 @@
 defmodule ParkingWeb.PageLive.Index do
   use ParkingWeb, :live_view
-  import Parking.ALPR, only: [recognize: 1]
+  import ParkingLot.ALPR, only: [recognize: 1]
 
   @impl true
   def mount(_params, _session, socket) do

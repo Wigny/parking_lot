@@ -1,7 +1,7 @@
-defmodule Parking.Changeset.CheckDigitTest do
-  use Parking.DataCase
+defmodule ParkingLot.Changeset.CheckDigitTest do
+  use ParkingLot.DataCase
 
-  alias Parking.Changeset.CheckDigit
+  alias ParkingLot.Changeset.CheckDigit
 
   @valid_cpf "15886489070"
   @invalid_cpf "15886489071"

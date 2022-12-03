@@ -1,4 +1,4 @@
-defmodule Parking.Application do
+defmodule ParkingLot.Application do
   @moduledoc false
 
   use Application
@@ -6,19 +6,19 @@ defmodule Parking.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      Parking.Repo,
-      ParkingWeb.Telemetry,
-      {Phoenix.PubSub, name: Parking.PubSub},
-      ParkingWeb.Endpoint
+      ParkingLot.Repo,
+      ParkingLotWeb.Telemetry,
+      {Phoenix.PubSub, name: ParkingLot.PubSub},
+      ParkingLotWeb.Endpoint
     ]
 
-    opts = [strategy: :one_for_one, name: Parking.Supervisor]
+    opts = [strategy: :one_for_one, name: ParkingLot.Supervisor]
     Supervisor.start_link(children, opts)
   end
 
   @impl true
   def config_change(changed, _new, removed) do
-    ParkingWeb.Endpoint.config_change(changed, removed)
+    ParkingLotWeb.Endpoint.config_change(changed, removed)
     :ok
   end
 end

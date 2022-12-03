@@ -5,18 +5,18 @@ config :ueberauth, Ueberauth,
     google: {Ueberauth.Strategy.Google, []}
   ]
 
-config :parking,
-  ecto_repos: [Parking.Repo]
+config :parking_lot,
+  ecto_repos: [ParkingLot.Repo]
 
-config :parking, Parking.Repo,
+config :parking_lot, ParkingLot.Repo,
   migration_timestamps: [
     type: :utc_datetime
   ]
 
-config :parking, ParkingWeb.Endpoint,
+config :parking_lot, ParkingWeb.Endpoint,
   url: [host: "localhost"],
   render_errors: [view: ParkingWeb.ErrorView, accepts: ~w(html json), layout: false],
-  pubsub_server: Parking.PubSub,
+  pubsub_server: ParkingLot.PubSub,
   live_view: [signing_salt: "AWf5tVrn"]
 
 config :esbuild,

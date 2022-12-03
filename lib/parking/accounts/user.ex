@@ -1,4 +1,4 @@
-defmodule Parking.Accounts.User do
+defmodule ParkingLot.Accounts.User do
   @moduledoc false
 
   use Ecto.Schema
@@ -8,7 +8,7 @@ defmodule Parking.Accounts.User do
 
   schema "users" do
     field :email, :string
-    has_many :sessions, Parking.Accounts.UserSession
+    has_many :sessions, ParkingLot.Accounts.UserSession
 
     timestamps()
   end
@@ -24,7 +24,7 @@ defmodule Parking.Accounts.User do
     |> validate_required([:email])
     |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "must have the @ sign and no spaces")
     |> validate_length(:email, max: 160)
-    |> unsafe_validate_unique(:email, Parking.Repo)
+    |> unsafe_validate_unique(:email, ParkingLot.Repo)
     |> unique_constraint(:email)
   end
 end
