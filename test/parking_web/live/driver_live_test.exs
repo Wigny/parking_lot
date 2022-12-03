@@ -1,5 +1,5 @@
-defmodule ParkingWeb.DriverLiveTest do
-  use ParkingWeb.ConnCase
+defmodule ParkingLotWeb.DriverLiveTest do
+  use ParkingLotWeb.ConnCase
 
   import Phoenix.LiveViewTest
   import ParkingLot.CustomersFixtures

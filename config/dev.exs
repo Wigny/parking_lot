@@ -9,7 +9,7 @@ config :parking_lot, ParkingLot.Repo,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
-config :parking_lot, ParkingWeb.Endpoint,
+config :parking_lot, ParkingLotWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4000],
   check_origin: false,
   code_reloader: true,
@@ -20,7 +20,7 @@ config :parking_lot, ParkingWeb.Endpoint,
   ],
   server: true
 
-config :parking_lot, ParkingWeb.Endpoint,
+config :parking_lot, ParkingLotWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",

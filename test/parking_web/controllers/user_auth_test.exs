@@ -1,8 +1,8 @@
-defmodule ParkingWeb.UserAuthTest do
-  use ParkingWeb.ConnCase, async: true
+defmodule ParkingLotWeb.UserAuthTest do
+  use ParkingLotWeb.ConnCase, async: true
 
   alias ParkingLot.Accounts
-  alias ParkingWeb.UserAuth
+  alias ParkingLotWeb.UserAuth
   import ParkingLot.AccountsFixtures
 
   @remember_me_cookie "_parking_web_user_remember_me"
@@ -10,7 +10,7 @@ defmodule ParkingWeb.UserAuthTest do
   setup %{conn: conn} do
     conn =
       conn
-      |> Map.replace!(:secret_key_base, ParkingWeb.Endpoint.config(:secret_key_base))
+      |> Map.replace!(:secret_key_base, ParkingLotWeb.Endpoint.config(:secret_key_base))
       |> init_test_session(%{})
 
     %{user: user_fixture(), conn: conn}
@@ -65,7 +65,7 @@ defmodule ParkingWeb.UserAuthTest do
 
     test "broadcasts to the given live_socket_id", %{conn: conn} do
       live_socket_id = "users_sessions:abcdef-token"
-      ParkingWeb.Endpoint.subscribe(live_socket_id)
+      ParkingLotWeb.Endpoint.subscribe(live_socket_id)
 
       conn
       |> put_session(:live_socket_id, live_socket_id)

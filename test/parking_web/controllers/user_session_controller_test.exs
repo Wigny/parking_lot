@@ -1,5 +1,5 @@
-defmodule ParkingWeb.UserSessionControllerTest do
-  use ParkingWeb.ConnCase, async: true
+defmodule ParkingLotWeb.UserSessionControllerTest do
+  use ParkingLotWeb.ConnCase, async: true
 
   import ParkingLot.AccountsFixtures
 

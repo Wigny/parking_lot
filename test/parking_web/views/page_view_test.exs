@@ -1,3 +1,3 @@
-defmodule ParkingWeb.PageViewTest do
-  use ParkingWeb.ConnCase, async: true
+defmodule ParkingLotWeb.PageViewTest do
+  use ParkingLotWeb.ConnCase, async: true
 end
