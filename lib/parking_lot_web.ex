@@ -94,6 +94,7 @@ defmodule ParkingLotWeb do
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View
 
+      import ParkingLotWeb.DateHelpers
       import ParkingLotWeb.ErrorHelpers
       import ParkingLotWeb.LiveHelpers
       import ParkingLotWeb.Gettext

@@ -3,10 +3,17 @@ defmodule ParkingLot.Parkings.Parking do
   import Ecto.Changeset
   alias ParkingLot.Customers.Vehicle
 
+  @timestamps_opts [
+    type: :utc_datetime,
+    inserted_at_source: :inserted_at,
+    updated_at_source: :updated_at
+  ]
+
   schema "parkings" do
     belongs_to :vehicle, Vehicle
 
-    timestamps inserted_at: :entered_at, updated_at: :left_at
+    timestamps inserted_at: :entered_at,
+               updated_at: :left_at
   end
 
   @doc false

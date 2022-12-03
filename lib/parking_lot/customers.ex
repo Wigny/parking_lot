@@ -52,11 +52,18 @@ defmodule ParkingLot.Customers do
     |> Repo.all()
   end
 
-  def get_vehicle!(id) do
+  def get_vehicle!(id) when is_binary(id) do
     Vehicle
     |> where(id: ^id)
     |> where_include_deleted(false)
-    |> Repo.one!()
+    |> Repo.one()
+  end
+
+  def get_vehicle(query) when is_list(query) do
+    Vehicle
+    |> where(^query)
+    |> where_include_deleted(false)
+    |> Repo.one()
   end
 
   def create_vehicle(attrs \\ %{}) do

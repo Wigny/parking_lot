@@ -14,19 +14,9 @@ defmodule ParkingLot.Parkings do
     |> Repo.preload(:vehicle)
   end
 
-  def create_parking(attrs \\ %{}) do
+  def register_parking(attrs \\ %{}) do
     %Parking{}
     |> Parking.changeset(attrs)
     |> Repo.insert()
-  end
-
-  def update_parking(%Parking{} = parking, attrs) do
-    parking
-    |> Parking.changeset(attrs)
-    |> Repo.update()
-  end
-
-  def change_parking(%Parking{} = parking, attrs \\ %{}) do
-    Parking.changeset(parking, attrs)
   end
 end

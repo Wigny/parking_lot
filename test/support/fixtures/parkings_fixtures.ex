@@ -14,7 +14,7 @@ defmodule ParkingLot.ParkingsFixtures do
         entered_at: ~U[2022-12-02 19:09:00Z],
         left_at: ~U[2022-12-02 19:09:00Z]
       })
-      |> ParkingLot.Parkings.create_parking()
+      |> ParkingLot.Parkings.register_parking()
 
     parking
   end

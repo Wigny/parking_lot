@@ -1,22 +1,25 @@
 defmodule ParkingLotWeb.PageLive.Index do
   use ParkingLotWeb, :live_view
   import ParkingLot.ALPR, only: [recognize: 1]
+  alias ParkingLot.{Customers, Parkings}
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, plate: nil, processing: false, vehicles: [])}
+    assigns = [plate: nil, processing: false, parkings: Parkings.list_parkings()]
+    {:ok, assign(socket, assigns)}
   end
 
   @impl true
-  def handle_event("video_snapshot", _snapshot, %{assigns: %{processing: true}} = socket) do
-    {:noreply, socket}
-  end
-
-  @impl true
-  def handle_event("video_snapshot", snapshot, socket) do
+  def handle_event("video_snapshot", snapshot, %{assigns: %{processing: false}} = socket) do
     send(self(), {:recognize, snapshot})
 
-    {:noreply, assign(socket, :processing, true)}
+    assigns = [processing: true]
+    {:noreply, assign(socket, assigns)}
+  end
+
+  @impl true
+  def handle_event("video_snapshot", _snapshot, socket) do
+    {:noreply, socket}
   end
 
   @impl true
@@ -29,13 +32,14 @@ defmodule ParkingLotWeb.PageLive.Index do
   end
 
   defp register({:ok, plate}, socket) when not is_nil(plate) do
-    if Enum.find(socket.assigns.vehicles, &match?(%{plate: ^plate}, &1)) do
-      {:noreply, assign(socket, plate: nil, processing: false)}
-    else
-      vehicle = %{plate: plate, registered_at: DateTime.utc_now()}
-      vehicles = Enum.concat(socket.assigns.vehicles, [vehicle])
+    if vehicle = Customers.get_vehicle(license_plate: plate) do
+      {:ok, _parking} = Parkings.register_parking(%{vehicle_id: vehicle.id})
 
-      {:noreply, assign(socket, plate: plate, processing: false, vehicles: vehicles)}
+      assigns = [plate: plate, processing: false, parkings: Parkings.list_parkings()]
+      {:noreply, assign(socket, assigns)}
+    else
+      assigns = [plate: plate, processing: false]
+      {:noreply, assign(socket, assigns)}
     end
   end
 

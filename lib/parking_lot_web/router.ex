@@ -28,18 +28,20 @@ defmodule ParkingLotWeb.Router do
     delete "/users/log_out", UserSessionController, :delete
   end
 
-  scope "/", ParkingLotWeb do
-    pipe_through [:browser, :require_authenticated_user]
+  live_session :default, on_mount: ParkingLotWeb.InitAssigns do
+    scope "/", ParkingLotWeb do
+      pipe_through [:browser, :require_authenticated_user]
 
-    live "/", PageLive.Index, :index
+      live "/", PageLive.Index, :index
 
-    live "/drivers", DriverLive.Index, :index
-    live "/drivers/new", DriverLive.Index, :new
-    live "/drivers/:id", DriverLive.Show, :show
+      live "/drivers", DriverLive.Index, :index
+      live "/drivers/new", DriverLive.Index, :new
+      live "/drivers/:id", DriverLive.Show, :show
 
-    live "/vehicles", VehicleLive.Index, :index
-    live "/vehicles/new", VehicleLive.Index, :new
-    live "/vehicles/:id", VehicleLive.Show, :show
+      live "/vehicles", VehicleLive.Index, :index
+      live "/vehicles/new", VehicleLive.Index, :new
+      live "/vehicles/:id", VehicleLive.Show, :show
+    end
   end
 
   scope "/", ParkingLotWeb do

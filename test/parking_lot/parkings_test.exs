@@ -20,16 +20,16 @@ defmodule ParkingLot.ParkingsTest do
       assert Parkings.get_parking!(parking.id) == parking
     end
 
-    test "create_parking/1 with valid data creates a parking" do
+    test "register_parking/1 with valid data creates a parking" do
       valid_attrs = %{entered_at: ~U[2022-12-02 19:09:00Z], left_at: ~U[2022-12-02 19:09:00Z]}
 
-      assert {:ok, %Parking{} = parking} = Parkings.create_parking(valid_attrs)
+      assert {:ok, %Parking{} = parking} = Parkings.register_parking(valid_attrs)
       assert parking.entered_at == ~U[2022-12-02 19:09:00Z]
       assert parking.left_at == ~U[2022-12-02 19:09:00Z]
     end
 
-    test "create_parking/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Parkings.create_parking(@invalid_attrs)
+    test "register_parking/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Parkings.register_parking(@invalid_attrs)
     end
 
     test "update_parking/2 with valid data updates the parking" do
