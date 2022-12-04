@@ -5,13 +5,13 @@ config :ueberauth, Ueberauth,
     google: {Ueberauth.Strategy.Google, []}
   ]
 
-config :parking,
-  ecto_repos: [Parking.Repo]
+config :parking_lot,
+  ecto_repos: [ParkingLot.Repo]
 
-config :parking, ParkingWeb.Endpoint,
+config :parking_lot, ParkingLotWeb.Endpoint,
   url: [host: "localhost"],
-  render_errors: [view: ParkingWeb.ErrorView, accepts: ~w(html json), layout: false],
-  pubsub_server: Parking.PubSub,
+  render_errors: [view: ParkingLotWeb.ErrorView, accepts: ~w(html json), layout: false],
+  pubsub_server: ParkingLot.PubSub,
   live_view: [signing_salt: "AWf5tVrn"]
 
 config :esbuild,

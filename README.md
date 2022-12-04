@@ -1,4 +1,4 @@
-# Parking
+# ParkingLot
 
 To start your Phoenix server:
 

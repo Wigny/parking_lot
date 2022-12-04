@@ -24,7 +24,7 @@
       "name": "localhost",
       "driver": "PostgreSQL",
       "server": "localhost",
-      "database": "parking_dev",
+      "database": "parking_lot_dev",
       "username": "postgres",
       "password": "postgres",
     },

@@ -5,7 +5,7 @@ config :ueberauth, Ueberauth.Strategy.Google.OAuth,
   client_secret: System.get_env("GOOGLE_CLIENT_SECRET")
 
 if System.get_env("PHX_SERVER") do
-  config :parking, ParkingWeb.Endpoint, server: true
+  config :parking_lot, ParkingLotWeb.Endpoint, server: true
 end
 
 if config_env() == :prod do
@@ -18,7 +18,7 @@ if config_env() == :prod do
 
   maybe_ipv6 = if System.get_env("ECTO_IPV6"), do: [:inet6], else: []
 
-  config :parking, Parking.Repo,
+  config :parking_lot, ParkingLot.Repo,
     # ssl: true,
     url: database_url,
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
@@ -34,7 +34,7 @@ if config_env() == :prod do
   host = System.get_env("PHX_HOST") || "example.com"
   port = String.to_integer(System.get_env("PORT") || "4000")
 
-  config :parking, ParkingWeb.Endpoint,
+  config :parking_lot, ParkingLotWeb.Endpoint,
     url: [host: host, port: 443, scheme: "https"],
     http: [
       ip: {0, 0, 0, 0, 0, 0, 0, 0},
