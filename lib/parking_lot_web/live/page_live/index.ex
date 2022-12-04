@@ -1,5 +1,6 @@
 defmodule ParkingLotWeb.PageLive.Index do
   use ParkingLotWeb, :live_view
+
   import ParkingLot.ALPR, only: [recognize: 1]
   alias ParkingLot.{Customers, Parkings}
 
@@ -33,15 +34,15 @@ defmodule ParkingLotWeb.PageLive.Index do
 
   defp register({:ok, plate}, socket) when not is_nil(plate) do
     vehicle = Customers.get_vehicle(license_plate: plate)
-    last_parking = vehicle && Parkings.get_last_parking([vehicle_id: vehicle.id], :entered_at)
+    already_parked? = vehicle && Parkings.get_parking(vehicle_id: vehicle.id)
 
-    if not is_nil(vehicle) and is_nil(last_parking) do
+    if already_parked? do
+      assigns = [plate: plate, processing: false]
+      {:noreply, assign(socket, assigns)}
+    else
       {:ok, _parking} = Parkings.register_parking(%{vehicle_id: vehicle.id})
 
       assigns = [plate: plate, processing: false, parkings: Parkings.list_parkings()]
-      {:noreply, assign(socket, assigns)}
-    else
-      assigns = [plate: plate, processing: false]
       {:noreply, assign(socket, assigns)}
     end
   end
