@@ -1,5 +1,5 @@
 {
-	"name": "Phoenix",
+	"name": "Parking Lot",
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "elixir",
 	"workspaceFolder": "/workspace",

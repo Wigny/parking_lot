@@ -6,8 +6,8 @@ defmodule ParkingLotWeb.Endpoint do
   # Set :encryption_salt if you would also like to encrypt it.
   @session_options [
     store: :cookie,
-    key: "_parking_key",
-    signing_salt: "KVTVtV66"
+    key: "_parking_lot_key",
+    signing_salt: "ZXzKvw6L"
   ]
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]

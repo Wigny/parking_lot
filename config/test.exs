@@ -1,8 +1,5 @@
 import Config
 
-# Only in tests, remove the complexity from the password hashing algorithm
-config :bcrypt_elixir, :log_rounds, 1
-
 # Configure your database
 #
 # The MIX_TEST_PARTITION environment variable can be used
@@ -12,7 +9,7 @@ config :parking_lot, ParkingLot.Repo,
   username: "postgres",
   password: "postgres",
   hostname: "localhost",
-  database: "parking_test#{System.get_env("MIX_TEST_PARTITION")}",
+  database: "parking_lot_test#{System.get_env("MIX_TEST_PARTITION")}",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
 

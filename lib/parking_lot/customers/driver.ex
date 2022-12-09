@@ -1,4 +1,6 @@
 defmodule ParkingLot.Customers.Driver do
+  @moduledoc false
+
   use Ecto.Schema
   import Ecto.Changeset
   import ParkingLot.Changeset, only: [validate_check_digit: 2]
@@ -6,10 +8,10 @@ defmodule ParkingLot.Customers.Driver do
   @timestamps_opts [type: :utc_datetime]
 
   schema "drivers" do
-    field :name, :string
-    field :cpf, :string
-    field :cnh, :string
-    field :deleted_at, :utc_datetime
+    field(:name, :string)
+    field(:cpf, :string)
+    field(:cnh, :string)
+    field(:deleted_at, :utc_datetime)
 
     timestamps()
   end

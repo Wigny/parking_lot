@@ -1,4 +1,6 @@
 defmodule ParkingLot.Query do
+  @moduledoc false
+
   import Ecto.Query
 
   def where_include_deleted(query, true) do

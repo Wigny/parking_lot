@@ -5,7 +5,7 @@ defmodule ParkingLotWeb.UserAuthTest do
   alias ParkingLotWeb.UserAuth
   import ParkingLot.AccountsFixtures
 
-  @remember_me_cookie "_parking_web_user_remember_me"
+  @remember_me_cookie "_parking_lot_web_user_remember_me"
 
   setup %{conn: conn} do
     conn =

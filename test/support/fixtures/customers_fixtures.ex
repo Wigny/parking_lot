@@ -4,8 +4,8 @@ defmodule ParkingLot.CustomersFixtures do
   entities via the `ParkingLot.Customers` context.
   """
 
-  alias ParkingLot.Customers
   alias ParkingLot.Changeset.CheckDigit
+  alias ParkingLot.Customers
 
   def unique_driver_cnh do
     base = Integer.digits(99_999_999 + :rand.uniform(900_000_000))
