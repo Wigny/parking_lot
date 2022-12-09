@@ -1,4 +1,6 @@
 defmodule ParkingLot.Customers.Driver do
+  @moduledoc false
+
   use Ecto.Schema
   import Ecto.Changeset
   import ParkingLot.Changeset, only: [validate_check_digit: 2]

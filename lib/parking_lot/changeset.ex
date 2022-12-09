@@ -1,4 +1,6 @@
 defmodule ParkingLot.Changeset do
+  @moduledoc false
+
   import Ecto.Changeset
   alias ParkingLot.Changeset.CheckDigit
 

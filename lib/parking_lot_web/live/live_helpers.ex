@@ -1,4 +1,6 @@
 defmodule ParkingLotWeb.LiveHelpers do
+  @moduledoc false
+
   import Phoenix.Component
 
   alias Phoenix.LiveView.JS
