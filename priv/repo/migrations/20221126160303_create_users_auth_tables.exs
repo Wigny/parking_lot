@@ -1,4 +1,4 @@
-defmodule Parking.Repo.Migrations.CreateUsersAuthTables do
+defmodule ParkingLot.Repo.Migrations.CreateUsersAuthTables do
   use Ecto.Migration
 
   def change do

@@ -1,10 +1,10 @@
-defmodule Parking.AccountsFixtures do
+defmodule ParkingLot.AccountsFixtures do
   @moduledoc """
   This module defines test helpers for creating
-  entities via the `Parking.Accounts` context.
+  entities via the `ParkingLot.Accounts` context.
   """
 
-  alias Parking.Accounts
+  alias ParkingLot.Accounts
 
   def valid_user_attributes(attrs \\ %{}) do
     Enum.into(attrs, %{
