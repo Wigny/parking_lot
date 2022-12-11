@@ -31,8 +31,6 @@ defmodule ParkingLot.ALPR do
   end
 
   defp capture(%{fullTextAnnotation: %{text: text}}) do
-    IO.inspect(text, lebal: :text)
-
     if plates = Regex.run(@plate_regex, text) do
       {:ok, List.first(plates)}
     else
