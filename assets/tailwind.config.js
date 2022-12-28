@@ -7,18 +7,16 @@ module.exports = {
   content: [
     './js/**/*.js',
     '../lib/*_web.ex',
-    '../lib/*_web/**/*.*ex'
-  ],
-  content: [
-    './js/**/*.js',
-    '../lib/*_web.ex',
     '../lib/*_web/**/*.*ex',
+    './node_modules/flowbite/**/*.js'
   ],
+  darkMode: 'media',
   theme: {
     extend: {},
   },
   plugins: [
     require('@tailwindcss/forms'),
+    require('flowbite/plugin'),
     plugin(({ addVariant }) => addVariant('phx-no-feedback', ['&.phx-no-feedback', '.phx-no-feedback &'])),
     plugin(({ addVariant }) => addVariant('phx-click-loading', ['&.phx-click-loading', '.phx-click-loading &'])),
     plugin(({ addVariant }) => addVariant('phx-submit-loading', ['&.phx-submit-loading', '.phx-submit-loading &'])),
