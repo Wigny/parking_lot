@@ -16,6 +16,6 @@
 		4001,
 		5432
 	],
-	// "postCreateCommand": "mix setup"
+	"postCreateCommand": "mix setup",
 	"remoteUser": "vscode"
 }

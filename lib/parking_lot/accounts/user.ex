@@ -4,6 +4,8 @@ defmodule ParkingLot.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @timestamps_opts [type: :utc_datetime]
+
   schema "users" do
     field :email, :string
     has_many :sessions, ParkingLot.Accounts.UserSession
