@@ -5,16 +5,12 @@ defmodule ParkingLot.ALPR do
 
   def predict(image_path) do
     image = read_image(image_path)
-
     {detections, confidences} = detect_text(image)
 
-    inferences = Enum.zip(detections, confidences)
-
-    Enum.map(inferences, fn {detection, confidence} ->
-      text = recognize_text(image, detection)
-
-      {text, confidence}
-    end)
+    detections
+    |> Enum.zip(confidences)
+    |> Enum.filter(&match?({_detection, 1.0}, &1))
+    |> Enum.map(fn {detection, _confidence} -> recognize_text(image, detection) end)
   end
 
   defp read_image(filepath) do
