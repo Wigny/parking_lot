@@ -96,6 +96,7 @@ defmodule ParkingLotWeb do
 
       import ParkingLotWeb.ErrorHelpers
       import ParkingLotWeb.Gettext
+      import ParkingLotWeb.LiveHelpers
       alias ParkingLotWeb.Router.Helpers, as: Routes
     end
   end
