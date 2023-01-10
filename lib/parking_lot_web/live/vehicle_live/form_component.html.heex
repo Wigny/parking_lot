@@ -1,0 +1,24 @@
+<div>
+  <h2><%= @title %></h2>
+
+  <.form
+    :let={f}
+    for={@changeset}
+    id="vehicle-form"
+    phx-target={@myself}
+    phx-change="validate"
+    phx-submit="save"
+  >
+    <%= label(f, :license_plate) %>
+    <%= text_input(f, :license_plate) %>
+    <%= error_tag(f, :license_plate) %>
+
+    <%= label(f, :active) %>
+    <%= checkbox(f, :active) %>
+    <%= error_tag(f, :active) %>
+
+    <div>
+      <%= submit("Save", phx_disable_with: "Saving...") %>
+    </div>
+  </.form>
+</div>

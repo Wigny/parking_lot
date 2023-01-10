@@ -66,4 +66,60 @@ defmodule ParkingLot.CustomersTest do
       assert %Ecto.Changeset{} = Customers.change_driver(driver)
     end
   end
+
+  describe "vehicles" do
+    alias ParkingLot.Customers.Vehicle
+
+    import ParkingLot.CustomersFixtures
+
+    @invalid_attrs %{active: nil, license_plate: nil}
+
+    test "list_vehicles/0 returns all vehicles" do
+      vehicle = vehicle_fixture()
+      assert Customers.list_vehicles() == [vehicle]
+    end
+
+    test "get_vehicle!/1 returns the vehicle with given id" do
+      vehicle = vehicle_fixture()
+      assert Customers.get_vehicle!(vehicle.id) == vehicle
+    end
+
+    test "create_vehicle/1 with valid data creates a vehicle" do
+      valid_attrs = %{active: true, license_plate: "some license_plate"}
+
+      assert {:ok, %Vehicle{} = vehicle} = Customers.create_vehicle(valid_attrs)
+      assert vehicle.active == true
+      assert vehicle.license_plate == "some license_plate"
+    end
+
+    test "create_vehicle/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Customers.create_vehicle(@invalid_attrs)
+    end
+
+    test "update_vehicle/2 with valid data updates the vehicle" do
+      vehicle = vehicle_fixture()
+      update_attrs = %{active: false, license_plate: "some updated license_plate"}
+
+      assert {:ok, %Vehicle{} = vehicle} = Customers.update_vehicle(vehicle, update_attrs)
+      assert vehicle.active == false
+      assert vehicle.license_plate == "some updated license_plate"
+    end
+
+    test "update_vehicle/2 with invalid data returns error changeset" do
+      vehicle = vehicle_fixture()
+      assert {:error, %Ecto.Changeset{}} = Customers.update_vehicle(vehicle, @invalid_attrs)
+      assert vehicle == Customers.get_vehicle!(vehicle.id)
+    end
+
+    test "delete_vehicle/1 deletes the vehicle" do
+      vehicle = vehicle_fixture()
+      assert {:ok, %Vehicle{}} = Customers.delete_vehicle(vehicle)
+      assert_raise Ecto.NoResultsError, fn -> Customers.get_vehicle!(vehicle.id) end
+    end
+
+    test "change_vehicle/1 returns a vehicle changeset" do
+      vehicle = vehicle_fixture()
+      assert %Ecto.Changeset{} = Customers.change_vehicle(vehicle)
+    end
+  end
 end

@@ -1,0 +1,52 @@
+<h1>Listing Vehicles</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <.modal return_to={Routes.vehicle_index_path(@socket, :index)}>
+    <.live_component
+      module={ParkingLotWeb.VehicleLive.FormComponent}
+      id={@vehicle.id || :new}
+      title={@page_title}
+      action={@live_action}
+      vehicle={@vehicle}
+      return_to={Routes.vehicle_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>License plate</th>
+      <th>Active</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="vehicles">
+    <%= for vehicle <- @vehicles do %>
+      <tr id={"vehicle-#{vehicle.id}"}>
+        <td><%= vehicle.license_plate %></td>
+        <td><%= vehicle.active %></td>
+
+        <td>
+          <span>
+            <%= live_redirect("Show", to: Routes.vehicle_show_path(@socket, :show, vehicle)) %>
+          </span>
+          <span>
+            <%= live_patch("Edit", to: Routes.vehicle_index_path(@socket, :edit, vehicle)) %>
+          </span>
+          <span>
+            <%= link("Delete",
+              to: "#",
+              phx_click: "delete",
+              phx_value_id: vehicle.id,
+              data: [confirm: "Are you sure?"]
+            ) %>
+          </span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch("New Vehicle", to: Routes.vehicle_index_path(@socket, :new)) %></span>

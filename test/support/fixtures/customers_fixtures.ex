@@ -46,4 +46,24 @@ defmodule ParkingLot.CustomersFixtures do
 
     driver
   end
+
+  @doc """
+  Generate a unique vehicle license_plate.
+  """
+  def unique_vehicle_license_plate, do: "some license_plate#{System.unique_integer([:positive])}"
+
+  @doc """
+  Generate a vehicle.
+  """
+  def vehicle_fixture(attrs \\ %{}) do
+    {:ok, vehicle} =
+      attrs
+      |> Enum.into(%{
+        active: true,
+        license_plate: unique_vehicle_license_plate()
+      })
+      |> ParkingLot.Customers.create_vehicle()
+
+    vehicle
+  end
 end
