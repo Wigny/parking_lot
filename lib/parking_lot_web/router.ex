@@ -32,6 +32,13 @@ defmodule ParkingLotWeb.Router do
     pipe_through [:browser, :require_authenticated_user]
 
     get "/", PageController, :index
+
+    live "/drivers", DriverLive.Index, :index
+    live "/drivers/new", DriverLive.Index, :new
+    live "/drivers/:id/edit", DriverLive.Index, :edit
+
+    live "/drivers/:id", DriverLive.Show, :show
+    live "/drivers/:id/show/edit", DriverLive.Show, :edit
   end
 
   scope "/", ParkingLotWeb do

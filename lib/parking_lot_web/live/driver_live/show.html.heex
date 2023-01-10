@@ -1,0 +1,54 @@
+<h1>Show Driver</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.driver_show_path(@socket, :show, @driver)}>
+    <.live_component
+      module={ParkingLotWeb.DriverLive.FormComponent}
+      id={@driver.id}
+      title={@page_title}
+      action={@live_action}
+      driver={@driver}
+      return_to={Routes.driver_show_path(@socket, :show, @driver)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+  <li>
+    <strong>Name:</strong>
+    <%= @driver.name %>
+  </li>
+
+  <li>
+    <strong>CPF:</strong>
+    <%= mask(@driver.cpf, "000.000.000-00") %>
+  </li>
+
+  <li>
+    <strong>CNH:</strong>
+    <%= @driver.cnh %>
+  </li>
+
+  <li>
+    <strong>Email:</strong>
+    <%= @driver.email %>
+  </li>
+
+  <li>
+    <strong>Phone:</strong>
+    <%= mask(@driver.phone, "(00) 0 0000-0000") %>
+  </li>
+
+  <li>
+    <strong>Active:</strong>
+    <%= @driver.active %>
+  </li>
+</ul>
+
+<span>
+  <.link patch={Routes.driver_show_path(@socket, :edit, @driver)} class="button">Edit</.link>
+</span>
+|
+<span>
+  <.link navigate={Routes.driver_index_path(@socket, :index)}>Back</.link>
+</span>
