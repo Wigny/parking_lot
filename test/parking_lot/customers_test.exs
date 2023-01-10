@@ -8,7 +8,7 @@ defmodule ParkingLot.CustomersTest do
 
     import ParkingLot.CustomersFixtures
 
-    @invalid_attrs %{active: nil, cnh: nil, cpf: nil, email: nil, name: nil, phone: nil}
+    @invalid_attrs %{name: nil, cpf: nil, cnh: nil, email: nil, phone: nil, active: nil}
 
     test "list_drivers/0 returns all drivers" do
       driver = driver_fixture()
@@ -21,22 +21,15 @@ defmodule ParkingLot.CustomersTest do
     end
 
     test "create_driver/1 with valid data creates a driver" do
-      valid_attrs = %{
-        active: true,
-        cnh: "some cnh",
-        cpf: "some cpf",
-        email: "some email",
-        name: "some name",
-        phone: "some phone"
-      }
+      valid_attrs = valid_driver_attributes()
 
       assert {:ok, %Driver{} = driver} = Customers.create_driver(valid_attrs)
-      assert driver.active == true
-      assert driver.cnh == "some cnh"
-      assert driver.cpf == "some cpf"
-      assert driver.email == "some email"
-      assert driver.name == "some name"
-      assert driver.phone == "some phone"
+      assert driver.name == valid_attrs.name
+      assert driver.cpf == valid_attrs.cpf
+      assert driver.cnh == valid_attrs.cnh
+      assert driver.email == valid_attrs.email
+      assert driver.phone == valid_attrs.phone
+      assert driver.active == valid_attrs.active
     end
 
     test "create_driver/1 with invalid data returns error changeset" do
@@ -45,23 +38,15 @@ defmodule ParkingLot.CustomersTest do
 
     test "update_driver/2 with valid data updates the driver" do
       driver = driver_fixture()
-
-      update_attrs = %{
-        active: false,
-        cnh: "some updated cnh",
-        cpf: "some updated cpf",
-        email: "some updated email",
-        name: "some updated name",
-        phone: "some updated phone"
-      }
+      update_attrs = valid_driver_attributes(%{name: "some updated name", active: false})
 
       assert {:ok, %Driver{} = driver} = Customers.update_driver(driver, update_attrs)
-      assert driver.active == false
-      assert driver.cnh == "some updated cnh"
-      assert driver.cpf == "some updated cpf"
-      assert driver.email == "some updated email"
-      assert driver.name == "some updated name"
-      assert driver.phone == "some updated phone"
+      assert driver.name == update_attrs.name
+      assert driver.cpf == update_attrs.cpf
+      assert driver.cnh == update_attrs.cnh
+      assert driver.email == update_attrs.email
+      assert driver.phone == update_attrs.phone
+      assert driver.active == update_attrs.active
     end
 
     test "update_driver/2 with invalid data returns error changeset" do

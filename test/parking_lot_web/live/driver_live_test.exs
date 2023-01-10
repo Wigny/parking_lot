@@ -4,23 +4,9 @@ defmodule ParkingLotWeb.DriverLiveTest do
   import Phoenix.LiveViewTest
   import ParkingLot.CustomersFixtures
 
-  @create_attrs %{
-    active: true,
-    cnh: "some cnh",
-    cpf: "some cpf",
-    email: "some email",
-    name: "some name",
-    phone: "some phone"
-  }
-  @update_attrs %{
-    active: false,
-    cnh: "some updated cnh",
-    cpf: "some updated cpf",
-    email: "some updated email",
-    name: "some updated name",
-    phone: "some updated phone"
-  }
-  @invalid_attrs %{active: false, cnh: nil, cpf: nil, email: nil, name: nil, phone: nil}
+  @create_attrs valid_driver_attributes(%{name: "some name"})
+  @update_attrs valid_driver_attributes(%{name: "some updated name", active: false})
+  @invalid_attrs %{name: nil, cpf: nil, cnh: nil, email: nil, phone: nil}
 
   defp create_driver(_) do
     driver = driver_fixture()
@@ -36,7 +22,7 @@ defmodule ParkingLotWeb.DriverLiveTest do
       {:ok, _index_live, html} = live(conn, Routes.driver_index_path(conn, :index))
 
       assert html =~ "Listing Drivers"
-      assert html =~ driver.cnh
+      assert html =~ driver.name
     end
 
     test "saves new driver", %{conn: conn} do
@@ -58,7 +44,7 @@ defmodule ParkingLotWeb.DriverLiveTest do
         |> follow_redirect(conn, Routes.driver_index_path(conn, :index))
 
       assert html =~ "Driver created successfully"
-      assert html =~ "some cnh"
+      assert html =~ "some name"
     end
 
     test "updates driver in listing", %{conn: conn, driver: driver} do
@@ -80,7 +66,7 @@ defmodule ParkingLotWeb.DriverLiveTest do
         |> follow_redirect(conn, Routes.driver_index_path(conn, :index))
 
       assert html =~ "Driver updated successfully"
-      assert html =~ "some updated cnh"
+      assert html =~ "some updated name"
     end
 
     test "deletes driver in listing", %{conn: conn, driver: driver} do
@@ -98,7 +84,7 @@ defmodule ParkingLotWeb.DriverLiveTest do
       {:ok, _show_live, html} = live(conn, Routes.driver_show_path(conn, :show, driver))
 
       assert html =~ "Show Driver"
-      assert html =~ driver.cnh
+      assert html =~ driver.name
     end
 
     test "updates driver within modal", %{conn: conn, driver: driver} do
@@ -120,7 +106,7 @@ defmodule ParkingLotWeb.DriverLiveTest do
         |> follow_redirect(conn, Routes.driver_show_path(conn, :show, driver))
 
       assert html =~ "Driver updated successfully"
-      assert html =~ "some updated cnh"
+      assert html =~ "some updated name"
     end
   end
 end

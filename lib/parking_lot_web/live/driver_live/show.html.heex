@@ -20,12 +20,12 @@
   </li>
 
   <li>
-    <strong>Cpf:</strong>
-    <%= @driver.cpf %>
+    <strong>CPF:</strong>
+    <%= mask(@driver.cpf, "000.000.000-00") %>
   </li>
 
   <li>
-    <strong>Cnh:</strong>
+    <strong>CNH:</strong>
     <%= @driver.cnh %>
   </li>
 
@@ -36,7 +36,7 @@
 
   <li>
     <strong>Phone:</strong>
-    <%= @driver.phone %>
+    <%= mask(@driver.phone, "(00) 0 0000-0000") %>
   </li>
 
   <li>
@@ -46,6 +46,9 @@
 </ul>
 
 <span>
-  <%= live_patch("Edit", to: Routes.driver_show_path(@socket, :edit, @driver), class: "button") %>
+  <.link patch={Routes.driver_show_path(@socket, :edit, @driver)} class="button">Edit</.link>
 </span>
-| <span><%= live_redirect("Back", to: Routes.driver_index_path(@socket, :index)) %></span>
+|
+<span>
+  <.link navigate={Routes.driver_index_path(@socket, :index)}>Back</.link>
+</span>
