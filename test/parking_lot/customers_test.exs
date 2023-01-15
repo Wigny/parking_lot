@@ -161,6 +161,16 @@ defmodule ParkingLot.CustomersTest do
       assert {:error, %Ecto.Changeset{}} = Customers.create_vehicle_driver(@invalid_attrs)
     end
 
+    test "create_vehicle_driver/1 with already taken vehicle-driver returns error changeset" do
+      %{driver_id: driver_id, vehicle_id: vehicle_id} = vehicle_driver_fixture()
+
+      assert {:error, changeset} =
+               Customers.create_vehicle_driver(%{driver_id: driver_id, vehicle_id: vehicle_id})
+
+      errors = errors_on(changeset)
+      assert "has already been taken" in errors.driver_id
+    end
+
     test "update_vehicle_driver/2 with valid data updates the vehicle_driver" do
       vehicle_driver = vehicle_driver_fixture()
       update_attrs = %{active: false}

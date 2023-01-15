@@ -22,6 +22,6 @@ defmodule ParkingLot.Customers.VehicleDriver do
     |> validate_required([:active, :driver_id, :vehicle_id])
     |> assoc_constraint(:driver)
     |> assoc_constraint(:vehicle)
-    |> unique_constraint([:driver, :vehicle])
+    |> unique_constraint([:driver_id, :vehicle_id])
   end
 end
