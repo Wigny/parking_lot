@@ -8,7 +8,7 @@ defmodule ParkingLot.VehiclesTest do
 
     import ParkingLot.VehiclesFixtures
 
-    @invalid_attrs %{color: nil}
+    @invalid_attrs %{name: nil}
 
     test "list_colors/0 returns all vehicle_colors" do
       color = color_fixture()
@@ -21,10 +21,10 @@ defmodule ParkingLot.VehiclesTest do
     end
 
     test "create_color/1 with valid data creates a color" do
-      valid_attrs = %{color: "some color"}
+      valid_attrs = %{name: "some color"}
 
       assert {:ok, %Color{} = color} = Vehicles.create_color(valid_attrs)
-      assert color.color == "some color"
+      assert color.name == "some color"
     end
 
     test "create_color/1 with invalid data returns error changeset" do
@@ -33,10 +33,10 @@ defmodule ParkingLot.VehiclesTest do
 
     test "update_color/2 with valid data updates the color" do
       color = color_fixture()
-      update_attrs = %{color: "some updated color"}
+      update_attrs = %{name: "some updated color"}
 
       assert {:ok, %Color{} = color} = Vehicles.update_color(color, update_attrs)
-      assert color.color == "some updated color"
+      assert color.name == "some updated color"
     end
 
     test "update_color/2 with invalid data returns error changeset" do
@@ -62,7 +62,7 @@ defmodule ParkingLot.VehiclesTest do
 
     import ParkingLot.VehiclesFixtures
 
-    @invalid_attrs %{brand: nil}
+    @invalid_attrs %{name: nil}
 
     test "list_brands/0 returns all vehicle_brands" do
       brand = brand_fixture()
@@ -75,10 +75,10 @@ defmodule ParkingLot.VehiclesTest do
     end
 
     test "create_brand/1 with valid data creates a brand" do
-      valid_attrs = %{brand: "some brand"}
+      valid_attrs = %{name: "some brand"}
 
       assert {:ok, %Brand{} = brand} = Vehicles.create_brand(valid_attrs)
-      assert brand.brand == "some brand"
+      assert brand.name == "some brand"
     end
 
     test "create_brand/1 with invalid data returns error changeset" do
@@ -87,10 +87,10 @@ defmodule ParkingLot.VehiclesTest do
 
     test "update_brand/2 with valid data updates the brand" do
       brand = brand_fixture()
-      update_attrs = %{brand: "some updated brand"}
+      update_attrs = %{name: "some updated brand"}
 
       assert {:ok, %Brand{} = brand} = Vehicles.update_brand(brand, update_attrs)
-      assert brand.brand == "some updated brand"
+      assert brand.name == "some updated brand"
     end
 
     test "update_brand/2 with invalid data returns error changeset" do
@@ -116,7 +116,7 @@ defmodule ParkingLot.VehiclesTest do
 
     import ParkingLot.VehiclesFixtures
 
-    @invalid_attrs %{model: nil}
+    @invalid_attrs %{name: nil}
 
     test "list_models/0 returns all vehicle_models" do
       model = model_fixture()
@@ -132,7 +132,7 @@ defmodule ParkingLot.VehiclesTest do
       valid_attrs = valid_model_attributes()
 
       assert {:ok, %Model{} = model} = Vehicles.create_model(valid_attrs)
-      assert model.model == valid_attrs.model
+      assert model.name == valid_attrs.name
       assert model.brand_id == valid_attrs.brand_id
     end
 
@@ -142,10 +142,10 @@ defmodule ParkingLot.VehiclesTest do
 
     test "update_model/2 with valid data updates the model" do
       model = model_fixture()
-      update_attrs = %{model: "some updated model"}
+      update_attrs = %{name: "some updated model"}
 
       assert {:ok, %Model{} = model} = Vehicles.update_model(model, update_attrs)
-      assert model.model == "some updated model"
+      assert model.name == "some updated model"
     end
 
     test "update_model/2 with invalid data returns error changeset" do
@@ -171,7 +171,7 @@ defmodule ParkingLot.VehiclesTest do
 
     import ParkingLot.VehiclesFixtures
 
-    @invalid_attrs %{type: nil}
+    @invalid_attrs %{name: nil}
 
     test "list_types/0 returns all vehicle_types" do
       type = type_fixture()
@@ -184,10 +184,10 @@ defmodule ParkingLot.VehiclesTest do
     end
 
     test "create_type/1 with valid data creates a type" do
-      valid_attrs = %{type: "some type"}
+      valid_attrs = %{name: "some type"}
 
       assert {:ok, %Type{} = type} = Vehicles.create_type(valid_attrs)
-      assert type.type == "some type"
+      assert type.name == "some type"
     end
 
     test "create_type/1 with invalid data returns error changeset" do
@@ -196,10 +196,10 @@ defmodule ParkingLot.VehiclesTest do
 
     test "update_type/2 with valid data updates the type" do
       type = type_fixture()
-      update_attrs = %{type: "some updated type"}
+      update_attrs = %{name: "some updated type"}
 
       assert {:ok, %Type{} = type} = Vehicles.update_type(type, update_attrs)
-      assert type.type == "some updated type"
+      assert type.name == "some updated type"
     end
 
     test "update_type/2 with invalid data returns error changeset" do

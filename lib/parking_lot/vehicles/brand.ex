@@ -7,7 +7,7 @@ defmodule ParkingLot.Vehicles.Brand do
   @timestamps_opts [type: :utc_datetime]
 
   schema "vehicle_brands" do
-    field :brand, :string
+    field :name, :string
     has_many :models, ParkingLot.Vehicles.Model
 
     timestamps()
@@ -16,8 +16,8 @@ defmodule ParkingLot.Vehicles.Brand do
   @doc false
   def changeset(brand, attrs) do
     brand
-    |> cast(attrs, [:brand])
-    |> validate_required([:brand])
-    |> unique_constraint(:brand)
+    |> cast(attrs, [:name])
+    |> validate_required([:name])
+    |> unique_constraint(:name)
   end
 end

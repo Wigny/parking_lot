@@ -3,11 +3,11 @@ defmodule ParkingLot.Repo.Migrations.CreateVehicleTypes do
 
   def change do
     create table(:vehicle_types) do
-      add :type, :string
+      add :name, :string
 
       timestamps()
     end
 
-    create unique_index(:vehicle_types, [:type])
+    create unique_index(:vehicle_types, [:name])
   end
 end

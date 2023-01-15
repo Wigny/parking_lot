@@ -11,7 +11,7 @@ defmodule ParkingLot.VehiclesFixtures do
   def color_fixture(attrs \\ %{}) do
     {:ok, color} =
       attrs
-      |> Enum.into(%{color: unique_color_color()})
+      |> Enum.into(%{name: unique_color_color()})
       |> Vehicles.create_color()
 
     color
@@ -22,7 +22,7 @@ defmodule ParkingLot.VehiclesFixtures do
   def brand_fixture(attrs \\ %{}) do
     {:ok, brand} =
       attrs
-      |> Enum.into(%{brand: unique_brand_brand()})
+      |> Enum.into(%{name: unique_brand_brand()})
       |> Vehicles.create_brand()
 
     brand
@@ -32,7 +32,7 @@ defmodule ParkingLot.VehiclesFixtures do
 
   def valid_model_attributes(attrs \\ %{}) do
     attrs
-    |> Enum.into(%{model: unique_model_model()})
+    |> Enum.into(%{name: unique_model_model()})
     |> Map.put_new_lazy(:brand_id, fn ->
       brand = brand_fixture()
       brand.id
@@ -53,7 +53,7 @@ defmodule ParkingLot.VehiclesFixtures do
   def type_fixture(attrs \\ %{}) do
     {:ok, type} =
       attrs
-      |> Enum.into(%{type: unique_type_type()})
+      |> Enum.into(%{name: unique_type_type()})
       |> Vehicles.create_type()
 
     type

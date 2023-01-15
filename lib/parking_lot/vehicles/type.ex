@@ -7,7 +7,7 @@ defmodule ParkingLot.Vehicles.Type do
   @timestamps_opts [type: :utc_datetime]
 
   schema "vehicle_types" do
-    field :type, :string
+    field :name, :string
 
     timestamps()
   end
@@ -15,8 +15,8 @@ defmodule ParkingLot.Vehicles.Type do
   @doc false
   def changeset(type, attrs) do
     type
-    |> cast(attrs, [:type])
-    |> validate_required([:type])
-    |> unique_constraint(:type)
+    |> cast(attrs, [:name])
+    |> validate_required([:name])
+    |> unique_constraint(:name)
   end
 end

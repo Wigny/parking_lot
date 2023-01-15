@@ -7,7 +7,7 @@ defmodule ParkingLot.Vehicles.Color do
   @timestamps_opts [type: :utc_datetime]
 
   schema "vehicle_colors" do
-    field :color, :string
+    field :name, :string
 
     timestamps()
   end
@@ -15,8 +15,8 @@ defmodule ParkingLot.Vehicles.Color do
   @doc false
   def changeset(color, attrs) do
     color
-    |> cast(attrs, [:color])
-    |> validate_required([:color])
-    |> unique_constraint(:color)
+    |> cast(attrs, [:name])
+    |> validate_required([:name])
+    |> unique_constraint(:name)
   end
 end
