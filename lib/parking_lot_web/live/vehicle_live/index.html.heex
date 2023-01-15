@@ -17,6 +17,9 @@
   <thead>
     <tr>
       <th>License plate</th>
+      <th>Type</th>
+      <th>Model</th>
+      <th>Color</th>
       <th>Active</th>
 
       <th></th>
@@ -26,6 +29,9 @@
     <%= for vehicle <- @vehicles do %>
       <tr id={"vehicle-#{vehicle.id}"}>
         <td><%= vehicle.license_plate %></td>
+        <td><%= vehicle.type.name %></td>
+        <td><%= vehicle.model.name %></td>
+        <td><%= vehicle.color.name %></td>
         <td><%= vehicle.active %></td>
 
         <td>
