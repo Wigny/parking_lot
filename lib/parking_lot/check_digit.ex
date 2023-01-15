@@ -34,7 +34,7 @@ defmodule ParkingLot.CheckDigit do
     end
 
     def generate(unquote(type)) do
-      base = Digits.random(unquote(length) - length(unquote(weights)))
+      base = Digits.random(0..9, unquote(length) - length(unquote(weights)))
 
       unquote(weights)
       |> Enum.reduce(base, fn weight, digits ->

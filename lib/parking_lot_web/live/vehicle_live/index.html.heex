@@ -1,0 +1,62 @@
+<h1>Listing Vehicles</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <.modal return_to={Routes.vehicle_index_path(@socket, :index)}>
+    <.live_component
+      module={ParkingLotWeb.VehicleLive.FormComponent}
+      id={@vehicle.id || :new}
+      title={@page_title}
+      action={@live_action}
+      vehicle={@vehicle}
+      return_to={Routes.vehicle_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>License plate</th>
+      <th>Type</th>
+      <th>Model</th>
+      <th>Color</th>
+      <th>Active</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="vehicles">
+    <%= for vehicle <- @vehicles do %>
+      <tr id={"vehicle-#{vehicle.id}"}>
+        <td><%= vehicle.license_plate %></td>
+        <td><%= vehicle.type.name %></td>
+        <td><%= vehicle.model.name %></td>
+        <td><%= vehicle.color.name %></td>
+        <td><%= vehicle.active %></td>
+
+        <td>
+          <span>
+            <.link navigate={Routes.vehicle_show_path(@socket, :show, vehicle)}>Show</.link>
+          </span>
+          <span>
+            <.link patch={Routes.vehicle_index_path(@socket, :edit, vehicle)}>Edit</.link>
+          </span>
+          <span>
+            <.link
+              href="#"
+              phx-click="delete"
+              phx-value-id={vehicle.id}
+              data-confirm="Are you sure?"
+            >
+              Delete
+            </.link>
+          </span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span>
+  <.link patch={Routes.vehicle_index_path(@socket, :new)}>New Vehicle</.link>
+</span>

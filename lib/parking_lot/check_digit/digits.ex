@@ -20,8 +20,8 @@ defmodule ParkingLot.CheckDigit.Digits do
     Enum.join(digits)
   end
 
-  def random(length) do
-    generator = fn -> Enum.random(1..9) end
+  def random(base, length) do
+    generator = fn -> Enum.random(base) end
 
     generator
     |> Stream.repeatedly()
