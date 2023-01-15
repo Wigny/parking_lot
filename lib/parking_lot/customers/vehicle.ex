@@ -1,4 +1,6 @@
 defmodule ParkingLot.Customers.Vehicle do
+  @moduledoc false
+
   use Ecto.Schema
   import Ecto.Changeset
   alias ParkingLot.Vehicles

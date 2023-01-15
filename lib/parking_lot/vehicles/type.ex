@@ -1,4 +1,6 @@
 defmodule ParkingLot.Vehicles.Type do
+  @moduledoc false
+
   use Ecto.Schema
   import Ecto.Changeset
 

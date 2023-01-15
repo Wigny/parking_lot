@@ -6,7 +6,7 @@ defmodule ParkingLot.Vehicles do
   import Ecto.Query, warn: false
   alias ParkingLot.Repo
 
-  alias ParkingLot.Vehicles.{Color, Brand, Model, Type}
+  alias ParkingLot.Vehicles.{Brand, Color, Model, Type}
 
   def list_colors do
     Repo.all(Color)

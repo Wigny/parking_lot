@@ -4,8 +4,8 @@ defmodule ParkingLot.CustomersFixtures do
   entities via the `ParkingLot.Customers` context.
   """
 
-  alias ParkingLot.CheckDigit.Digits
   alias ParkingLot.CheckDigit
+  alias ParkingLot.CheckDigit.Digits
   alias ParkingLot.Customers
   alias ParkingLot.VehiclesFixtures
 
