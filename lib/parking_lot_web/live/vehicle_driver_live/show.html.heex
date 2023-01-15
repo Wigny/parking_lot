@@ -1,0 +1,39 @@
+<h1>Show vehicle-driver</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.vehicle_driver_show_path(@socket, :show, @vehicle_driver)}>
+    <.live_component
+      module={ParkingLotWeb.VehicleDriverLive.FormComponent}
+      id={@vehicle_driver.id}
+      title={@page_title}
+      action={@live_action}
+      vehicle_driver={@vehicle_driver}
+      return_to={Routes.vehicle_driver_show_path(@socket, :show, @vehicle_driver)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+  <li>
+    <strong>Driver:</strong>
+    <%= @vehicle_driver.driver.name %>
+  </li>
+
+  <li>
+    <strong>Vehicle:</strong>
+    <%= @vehicle_driver.vehicle.license_plate %>
+  </li>
+
+  <li>
+    <strong>Active:</strong>
+    <%= @vehicle_driver.active %>
+  </li>
+</ul>
+
+<span>
+  <%= live_patch("Edit",
+    to: Routes.vehicle_driver_show_path(@socket, :edit, @vehicle_driver),
+    class: "button"
+  ) %>
+</span>
+| <span><%= live_redirect("Back", to: Routes.vehicle_driver_index_path(@socket, :index)) %></span>
