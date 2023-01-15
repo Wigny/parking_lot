@@ -128,4 +128,77 @@ defmodule ParkingLot.CustomersTest do
       assert %Ecto.Changeset{} = Customers.change_vehicle(vehicle)
     end
   end
+
+  describe "vehicles_drivers" do
+    alias ParkingLot.Customers.VehicleDriver
+
+    import ParkingLot.CustomersFixtures
+
+    @invalid_attrs %{active: nil}
+
+    test "list_vehicles_drivers/0 returns all vehicles_drivers" do
+      vehicle_driver = vehicle_driver_fixture()
+      assert Customers.list_vehicles_drivers() == [vehicle_driver]
+    end
+
+    test "get_vehicle_driver!/1 returns the vehicle_driver with given id" do
+      vehicle_driver = vehicle_driver_fixture()
+      assert Customers.get_vehicle_driver!(vehicle_driver.id) == vehicle_driver
+    end
+
+    test "create_vehicle_driver/1 with valid data creates a vehicle_driver" do
+      valid_attrs = valid_vehicle_driver_attributes(%{active: true})
+
+      assert {:ok, %VehicleDriver{} = vehicle_driver} =
+               Customers.create_vehicle_driver(valid_attrs)
+
+      assert vehicle_driver.driver_id == valid_attrs.driver_id
+      assert vehicle_driver.vehicle_id == valid_attrs.vehicle_id
+      assert vehicle_driver.active == valid_attrs.active
+    end
+
+    test "create_vehicle_driver/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Customers.create_vehicle_driver(@invalid_attrs)
+    end
+
+    test "create_vehicle_driver/1 with already taken vehicle-driver returns error changeset" do
+      %{driver_id: driver_id, vehicle_id: vehicle_id} = vehicle_driver_fixture()
+
+      assert {:error, changeset} =
+               Customers.create_vehicle_driver(%{driver_id: driver_id, vehicle_id: vehicle_id})
+
+      errors = errors_on(changeset)
+      assert "has already been taken" in errors.driver_id
+    end
+
+    test "update_vehicle_driver/2 with valid data updates the vehicle_driver" do
+      vehicle_driver = vehicle_driver_fixture()
+      update_attrs = %{active: false}
+
+      assert {:ok, %VehicleDriver{} = vehicle_driver} =
+               Customers.update_vehicle_driver(vehicle_driver, update_attrs)
+
+      assert vehicle_driver.active == false
+    end
+
+    test "update_vehicle_driver/2 with invalid data returns error changeset" do
+      vehicle_driver = vehicle_driver_fixture()
+
+      assert {:error, %Ecto.Changeset{}} =
+               Customers.update_vehicle_driver(vehicle_driver, @invalid_attrs)
+
+      assert vehicle_driver == Customers.get_vehicle_driver!(vehicle_driver.id)
+    end
+
+    test "delete_vehicle_driver/1 deletes the vehicle_driver" do
+      vehicle_driver = vehicle_driver_fixture()
+      assert {:ok, %VehicleDriver{}} = Customers.delete_vehicle_driver(vehicle_driver)
+      assert_raise Ecto.NoResultsError, fn -> Customers.get_vehicle_driver!(vehicle_driver.id) end
+    end
+
+    test "change_vehicle_driver/1 returns a vehicle_driver changeset" do
+      vehicle_driver = vehicle_driver_fixture()
+      assert %Ecto.Changeset{} = Customers.change_vehicle_driver(vehicle_driver)
+    end
+  end
 end

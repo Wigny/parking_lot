@@ -6,7 +6,7 @@ defmodule ParkingLot.Customers do
   import Ecto.Query, warn: false
   alias ParkingLot.Repo
 
-  alias ParkingLot.Customers.{Driver, Vehicle}
+  alias ParkingLot.Customers.{Driver, Vehicle, VehicleDriver}
 
   def list_drivers do
     Repo.all(Driver)
@@ -77,5 +77,50 @@ defmodule ParkingLot.Customers do
 
   def preload_vehicle(vehicle) do
     Repo.preload(vehicle, [:type, :color, model: :brand])
+  end
+
+  def list_vehicles_drivers do
+    VehicleDriver
+    |> Repo.all()
+    |> preload_vehicle_driver()
+  end
+
+  def get_vehicle_driver!(id) do
+    VehicleDriver
+    |> Repo.get!(id)
+    |> preload_vehicle_driver()
+  end
+
+  def create_vehicle_driver(attrs \\ %{}) do
+    %VehicleDriver{}
+    |> VehicleDriver.changeset(attrs)
+    |> Repo.insert()
+    |> preload_vehicle_driver()
+  end
+
+  def update_vehicle_driver(%VehicleDriver{} = vehicle_driver, attrs) do
+    vehicle_driver
+    |> VehicleDriver.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def delete_vehicle_driver(%VehicleDriver{} = vehicle_driver) do
+    Repo.delete(vehicle_driver)
+  end
+
+  def change_vehicle_driver(%VehicleDriver{} = vehicle_driver, attrs \\ %{}) do
+    VehicleDriver.changeset(vehicle_driver, attrs)
+  end
+
+  def preload_vehicle_driver({:ok, vehicle_driver}) do
+    {:ok, preload_vehicle_driver(vehicle_driver)}
+  end
+
+  def preload_vehicle_driver({:error, changeset}) do
+    {:error, changeset}
+  end
+
+  def preload_vehicle_driver(vehicle_driver) do
+    Repo.preload(vehicle_driver, [:driver, :vehicle])
   end
 end

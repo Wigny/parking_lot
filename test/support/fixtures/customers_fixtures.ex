@@ -87,4 +87,26 @@ defmodule ParkingLot.CustomersFixtures do
 
     vehicle
   end
+
+  def valid_vehicle_driver_attributes(attrs \\ %{}) do
+    attrs
+    |> Enum.into(%{active: true})
+    |> Map.put_new_lazy(:driver_id, fn ->
+      driver = driver_fixture()
+      driver.id
+    end)
+    |> Map.put_new_lazy(:vehicle_id, fn ->
+      vehicle = vehicle_fixture()
+      vehicle.id
+    end)
+  end
+
+  def vehicle_driver_fixture(attrs \\ %{}) do
+    {:ok, vehicle_driver} =
+      attrs
+      |> valid_vehicle_driver_attributes()
+      |> Customers.create_vehicle_driver()
+
+    vehicle_driver
+  end
 end

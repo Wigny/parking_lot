@@ -1,0 +1,30 @@
+<div>
+  <h2><%= @title %></h2>
+
+  <.form
+    :let={f}
+    for={@changeset}
+    id="vehicle_driver-form"
+    phx-target={@myself}
+    phx-change="validate"
+    phx-submit="save"
+  >
+    <%= label(f, :driver_id) %>
+    <%= select(f, :driver_id, Enum.map(@drivers, &{&1.name, &1.id}), prompt: "Choose the driver") %>
+    <%= error_tag(f, :driver_id) %>
+
+    <%= label(f, :vehicle_id) %>
+    <%= select(f, :vehicle_id, Enum.map(@vehicles, &{&1.license_plate, &1.id}),
+      prompt: "Choose the vehicle"
+    ) %>
+    <%= error_tag(f, :vehicle_id) %>
+
+    <%= label(f, :active) %>
+    <%= checkbox(f, :active) %>
+    <%= error_tag(f, :active) %>
+
+    <div>
+      <%= submit("Save", phx_disable_with: "Saving...") %>
+    </div>
+  </.form>
+</div>
