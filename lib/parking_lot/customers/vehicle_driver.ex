@@ -1,4 +1,6 @@
 defmodule ParkingLot.Customers.VehicleDriver do
+  @moduledoc false
+
   use Ecto.Schema
   import Ecto.Changeset
   alias ParkingLot.Customers.{Driver, Vehicle}
