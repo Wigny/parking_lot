@@ -1,16 +1,19 @@
 defmodule ParkingLotWeb.VehicleLive.FormComponent do
   use ParkingLotWeb, :live_component
 
-  alias ParkingLot.Customers
+  alias ParkingLot.{Customers, Vehicles}
 
   @impl true
   def update(%{vehicle: vehicle} = assigns, socket) do
     changeset = Customers.change_vehicle(vehicle)
+    types = Vehicles.list_types()
+    models = Vehicles.list_models()
+    colors = Vehicles.list_colors()
 
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(:changeset, changeset)}
+     |> assign(changeset: changeset, types: types, models: models, colors: colors)}
   end
 
   @impl true
@@ -33,7 +36,7 @@ defmodule ParkingLotWeb.VehicleLive.FormComponent do
         {:noreply,
          socket
          |> put_flash(:info, "Vehicle updated successfully")
-         |> push_redirect(to: socket.assigns.return_to)}
+         |> push_navigate(to: socket.assigns.return_to)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, :changeset, changeset)}
@@ -46,7 +49,7 @@ defmodule ParkingLotWeb.VehicleLive.FormComponent do
         {:noreply,
          socket
          |> put_flash(:info, "Vehicle created successfully")
-         |> push_redirect(to: socket.assigns.return_to)}
+         |> push_navigate(to: socket.assigns.return_to)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}

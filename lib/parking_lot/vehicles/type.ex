@@ -2,6 +2,8 @@ defmodule ParkingLot.Vehicles.Type do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @timestamps_opts [type: :utc_datetime]
+
   schema "vehicle_types" do
     field :type, :string
 

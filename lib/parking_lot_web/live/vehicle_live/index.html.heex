@@ -30,18 +30,20 @@
 
         <td>
           <span>
-            <%= live_redirect("Show", to: Routes.vehicle_show_path(@socket, :show, vehicle)) %>
+            <.link navigate={Routes.vehicle_show_path(@socket, :show, vehicle)}>Show</.link>
           </span>
           <span>
-            <%= live_patch("Edit", to: Routes.vehicle_index_path(@socket, :edit, vehicle)) %>
+            <.link patch={Routes.vehicle_index_path(@socket, :edit, vehicle)}>Edit</.link>
           </span>
           <span>
-            <%= link("Delete",
-              to: "#",
-              phx_click: "delete",
-              phx_value_id: vehicle.id,
-              data: [confirm: "Are you sure?"]
-            ) %>
+            <.link
+              href="#"
+              phx-click="delete"
+              phx-value-id={vehicle.id}
+              data-confirm="Are you sure?"
+            >
+              Delete
+            </.link>
           </span>
         </td>
       </tr>
@@ -49,4 +51,6 @@
   </tbody>
 </table>
 
-<span><%= live_patch("New Vehicle", to: Routes.vehicle_index_path(@socket, :new)) %></span>
+<span>
+  <.link patch={Routes.vehicle_index_path(@socket, :new)}>New Vehicle</.link>
+</span>

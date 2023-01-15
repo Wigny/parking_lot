@@ -85,11 +85,14 @@ defmodule ParkingLot.CustomersTest do
     end
 
     test "create_vehicle/1 with valid data creates a vehicle" do
-      valid_attrs = %{active: true, license_plate: "some license_plate"}
+      valid_attrs = valid_vehicle_attributes()
 
       assert {:ok, %Vehicle{} = vehicle} = Customers.create_vehicle(valid_attrs)
+      assert vehicle.license_plate == valid_attrs.license_plate
+      assert vehicle.type_id == valid_attrs.type_id
+      assert vehicle.model_id == valid_attrs.model_id
+      assert vehicle.color_id == valid_attrs.color_id
       assert vehicle.active == true
-      assert vehicle.license_plate == "some license_plate"
     end
 
     test "create_vehicle/1 with invalid data returns error changeset" do
@@ -98,11 +101,14 @@ defmodule ParkingLot.CustomersTest do
 
     test "update_vehicle/2 with valid data updates the vehicle" do
       vehicle = vehicle_fixture()
-      update_attrs = %{active: false, license_plate: "some updated license_plate"}
+      update_attrs = valid_vehicle_attributes(%{active: false})
 
       assert {:ok, %Vehicle{} = vehicle} = Customers.update_vehicle(vehicle, update_attrs)
+      assert vehicle.license_plate == update_attrs.license_plate
+      assert vehicle.type_id == update_attrs.type_id
+      assert vehicle.model_id == update_attrs.model_id
+      assert vehicle.color_id == update_attrs.color_id
       assert vehicle.active == false
-      assert vehicle.license_plate == "some updated license_plate"
     end
 
     test "update_vehicle/2 with invalid data returns error changeset" do

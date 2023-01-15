@@ -13,6 +13,20 @@
     <%= text_input(f, :license_plate) %>
     <%= error_tag(f, :license_plate) %>
 
+    <%= label(f, :type_id) %>
+    <%= select(f, :type_id, Enum.map(@types, &{&1.type, &1.id}), prompt: "Choose the type") %>
+    <%= error_tag(f, :type_id) %>
+
+    <%= label(f, :model_id) %>
+    <%= select(f, :model_id, Enum.map(@models, &{"#{&1.brand.brand} - #{&1.model}", &1.id}),
+      prompt: "Choose the model"
+    ) %>
+    <%= error_tag(f, :model_id) %>
+
+    <%= label(f, :color_id) %>
+    <%= select(f, :color_id, Enum.map(@colors, &{&1.color, &1.id}), prompt: "Choose the color") %>
+    <%= error_tag(f, :color_id) %>
+
     <%= label(f, :active) %>
     <%= checkbox(f, :active) %>
     <%= error_tag(f, :active) %>

@@ -26,6 +26,9 @@
 </ul>
 
 <span>
-  <%= live_patch("Edit", to: Routes.vehicle_show_path(@socket, :edit, @vehicle), class: "button") %>
+  <.link patch={Routes.vehicle_show_path(@socket, :edit, @vehicle)} class="button">Edit</.link>
 </span>
-| <span><%= live_redirect("Back", to: Routes.vehicle_index_path(@socket, :index)) %></span>
+|
+<span>
+  <.link navigate={Routes.vehicle_index_path(@socket, :index)}>Back</.link>
+</span>

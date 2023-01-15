@@ -4,8 +4,10 @@ defmodule ParkingLot.CustomersFixtures do
   entities via the `ParkingLot.Customers` context.
   """
 
+  alias ParkingLot.CheckDigit.Digits
   alias ParkingLot.CheckDigit
   alias ParkingLot.Customers
+  alias ParkingLot.VehiclesFixtures
 
   def unique_driver_cpf do
     CheckDigit.generate(:cpf)
@@ -20,10 +22,8 @@ defmodule ParkingLot.CustomersFixtures do
   end
 
   def unique_driver_phone do
-    alias CheckDigit.Digits
-
-    11
-    |> Digits.random()
+    0..9
+    |> Digits.random(11)
     |> Digits.to_string()
   end
 
@@ -47,22 +47,43 @@ defmodule ParkingLot.CustomersFixtures do
     driver
   end
 
-  @doc """
-  Generate a unique vehicle license_plate.
-  """
-  def unique_vehicle_license_plate, do: "some license_plate#{System.unique_integer([:positive])}"
+  def unique_vehicle_license_plate do
+    letters = Enum.map(?A..?Z, &<<&1::utf8>>)
+    numbers = Enum.map(?0..?9, &<<&1::utf8>>)
 
-  @doc """
-  Generate a vehicle.
-  """
+    Enum.join([
+      Digits.random(letters, 3),
+      Digits.random(numbers, 1),
+      Digits.random(letters, 1),
+      Digits.random(numbers, 2)
+    ])
+  end
+
+  def valid_vehicle_attributes(attrs \\ %{}) do
+    attrs
+    |> Enum.into(%{
+      license_plate: unique_vehicle_license_plate(),
+      active: true
+    })
+    |> Map.put_new_lazy(:type_id, fn ->
+      type = VehiclesFixtures.type_fixture()
+      type.id
+    end)
+    |> Map.put_new_lazy(:model_id, fn ->
+      model = VehiclesFixtures.model_fixture()
+      model.id
+    end)
+    |> Map.put_new_lazy(:color_id, fn ->
+      color = VehiclesFixtures.color_fixture()
+      color.id
+    end)
+  end
+
   def vehicle_fixture(attrs \\ %{}) do
     {:ok, vehicle} =
       attrs
-      |> Enum.into(%{
-        active: true,
-        license_plate: unique_vehicle_license_plate()
-      })
-      |> ParkingLot.Customers.create_vehicle()
+      |> valid_vehicle_attributes()
+      |> Customers.create_vehicle()
 
     vehicle
   end

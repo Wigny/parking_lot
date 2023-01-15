@@ -129,10 +129,11 @@ defmodule ParkingLot.VehiclesTest do
     end
 
     test "create_model/1 with valid data creates a model" do
-      valid_attrs = %{model: "some model"}
+      valid_attrs = valid_model_attributes()
 
       assert {:ok, %Model{} = model} = Vehicles.create_model(valid_attrs)
-      assert model.model == "some model"
+      assert model.model == valid_attrs.model
+      assert model.brand_id == valid_attrs.brand_id
     end
 
     test "create_model/1 with invalid data returns error changeset" do
