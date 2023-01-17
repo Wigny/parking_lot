@@ -4,8 +4,8 @@ defmodule ParkingLot.ParkingsFixtures do
   entities via the `ParkingLot.Parkings` context.
   """
 
-  alias ParkingLot.Parkings
   alias ParkingLot.CustomersFixtures
+  alias ParkingLot.Parkings
 
   def valid_parking_attributes(attrs \\ %{}) do
     Map.put_new_lazy(attrs, :vehicle_id, fn ->
