@@ -1,0 +1,27 @@
+<h1>Listing Parkings</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Vehicle</th>
+      <th>Entered at</th>
+      <th>Left at</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="parkings">
+    <%= for parking <- @parkings do %>
+      <tr id={"parking-#{parking.id}"}>
+        <td><%= parking.vehicle.license_plate %></td>
+        <td><.datetime value={parking.entered_at} /></td>
+        <td><.datetime value={parking.entered_at} /></td>
+
+        <td>
+          <span>
+            <.link navigate={Routes.parking_show_path(@socket, :show, parking)}>Show</.link>
+          </span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

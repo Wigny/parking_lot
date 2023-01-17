@@ -5,6 +5,22 @@ defmodule ParkingLotWeb.LiveHelpers do
 
   alias Phoenix.LiveView.JS
 
+  def datetime(assigns) do
+    assigns = assign_new(assigns, :id, &Ecto.UUID.generate/0)
+
+    ~H"""
+    <time phx-hook="LocalDateTime" id={@id}><%= @value %></time>
+    """
+  end
+
+  def mask(%{value: value, pattern: pattern} = assigns) do
+    assigns = assign(assigns, :text, mask_text(value, pattern))
+
+    ~H"""
+    <span><%= @text %></span>
+    """
+  end
+
   @doc """
   Renders a live component inside a modal.
 
@@ -56,5 +72,20 @@ defmodule ParkingLotWeb.LiveHelpers do
     js
     |> JS.hide(to: "#modal", transition: "fade-out")
     |> JS.hide(to: "#modal-content", transition: "fade-out-scale")
+  end
+
+  defp mask_text(value, pattern, acc \\ "")
+
+  defp mask_text(<<>>, _pattern, acc) do
+    acc
+  end
+
+  defp mask_text(<<v, value::binary>>, <<p::binary-size(1), pattern::binary>>, acc)
+       when p in ~w[0 a] do
+    mask_text(value, pattern, <<acc::binary, v>>)
+  end
+
+  defp mask_text(value, <<p, pattern::binary>>, acc) do
+    mask_text(value, pattern, <<acc::binary, p>>)
   end
 end
