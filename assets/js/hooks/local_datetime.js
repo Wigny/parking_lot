@@ -1,6 +1,6 @@
 const LocalDateTime = {
   mounted() {
-    const date = new Date(this.el.textContent);
+    const date = new Date(this.el.dateTime);
     const formatter = new Intl.DateTimeFormat([], {
       dateStyle: "short",
       timeStyle: "medium",

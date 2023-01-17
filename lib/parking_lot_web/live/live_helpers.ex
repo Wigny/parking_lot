@@ -9,7 +9,7 @@ defmodule ParkingLotWeb.LiveHelpers do
     assigns = assign_new(assigns, :id, &Ecto.UUID.generate/0)
 
     ~H"""
-    <time phx-hook="LocalDateTime" id={@id}><%= @value %></time>
+    <time id={@id} datetime={@value} phx-hook="LocalDateTime"><%= @value %></time>
     """
   end
 

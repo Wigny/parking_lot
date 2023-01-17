@@ -1,4 +1,4 @@
-import LocalDateTime from "./localdatetime";
+import LocalDateTime from "./local_datetime";
 
 export default {
   LocalDateTime,
