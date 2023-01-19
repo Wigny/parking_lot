@@ -53,6 +53,9 @@ defmodule ParkingLotWeb.Router do
 
     live "/vehicles_drivers/:id", VehicleDriverLive.Show, :show
     live "/vehicles_drivers/:id/show/edit", VehicleDriverLive.Show, :edit
+
+    live "/parkings", ParkingLive.Index, :index
+    live "/parkings/:id", ParkingLive.Show, :show
   end
 
   scope "/", ParkingLotWeb do
