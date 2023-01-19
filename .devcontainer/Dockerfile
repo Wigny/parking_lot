@@ -53,10 +53,13 @@ RUN su ${USERNAME} -c "mix local.hex --force \
   && mix local.rebar --force \
   && mix archive.install --force hex phx_new ${PHOENIX_VERSION}"
 
+ENV EVISION_PREFER_PRECOMPILED=false
+ENV CMAKE_OPENCV_OPTIONS="-D WITH_FFMPEG=ON"
+
 # [Optional] Uncomment this section to install additional OS packages.
-# RUN apt-get update \
-#     && export DEBIAN_FRONTEND=noninteractive \
-#     && apt-get -y install --no-install-recommends <your-package-list-here>
+RUN apt-get update \
+    && export DEBIAN_FRONTEND=noninteractive \
+    && apt-get -y install --no-install-recommends build-essential cmake libavcodec-dev libavformat-dev libavutil-dev libswscale-dev libavresample-dev ffmpeg
 
 # [Optional] Uncomment this line to install additional package.
 # RUN  mix ...
