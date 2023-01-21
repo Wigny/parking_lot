@@ -47,7 +47,19 @@ defmodule ParkingLot.CustomersFixtures do
     driver
   end
 
-  def unique_vehicle_license_plate do
+  def unique_vehicle_license_plate(version \\ :mercosul)
+
+  def unique_vehicle_license_plate(:legacy) do
+    letters = Enum.map(?A..?Z, &<<&1::utf8>>)
+    numbers = Enum.map(?0..?9, &<<&1::utf8>>)
+
+    Enum.join([
+      Digits.random(letters, 3),
+      Digits.random(numbers, 4)
+    ])
+  end
+
+  def unique_vehicle_license_plate(:mercosul) do
     letters = Enum.map(?A..?Z, &<<&1::utf8>>)
     numbers = Enum.map(?0..?9, &<<&1::utf8>>)
 

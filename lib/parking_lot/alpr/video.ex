@@ -5,9 +5,7 @@ defmodule ParkingLot.ALPR.Video do
 
   alias Evision.VideoCapture
 
-  @default_stream "rtsp://zephyr.rtsp.stream/pattern?streamKey=6bfd0f20eef65aae930a9d43fd43962d"
-
-  def start(stream \\ @default_stream) do
+  def start(stream) do
     VideoCapture.videoCapture(stream, apiPreference: Evision.cv_CAP_FFMPEG())
   end
 
