@@ -30,10 +30,10 @@
     <%= for driver <- @drivers do %>
       <tr id={"driver-#{driver.id}"}>
         <td><%= driver.name %></td>
-        <td><%= mask(driver.cpf, "000.000.000-00") %></td>
+        <td><.mask value={driver.cpf} pattern="000.000.000-00" /></td>
         <td><%= driver.cnh %></td>
         <td><%= driver.email %></td>
-        <td><%= mask(driver.phone, "(00) 0 0000-0000") %></td>
+        <td><.mask value={driver.phone} pattern="(00) 0 0000-0000" /></td>
         <td><%= driver.active %></td>
 
         <td>

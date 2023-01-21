@@ -21,7 +21,7 @@
 
   <li>
     <strong>CPF:</strong>
-    <%= mask(@driver.cpf, "000.000.000-00") %>
+    <.mask value={@driver.cpf} pattern="000.000.000-00" />
   </li>
 
   <li>
@@ -36,7 +36,7 @@
 
   <li>
     <strong>Phone:</strong>
-    <%= mask(@driver.phone, "(00) 0 0000-0000") %>
+    <.mask value={@driver.phone} pattern="(00) 0 0000-0000" />
   </li>
 
   <li>

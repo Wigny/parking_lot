@@ -1,0 +1,22 @@
+<h1>Show Parking</h1>
+
+<ul>
+  <li>
+    <strong>Vehicle:</strong>
+    <%= @parking.vehicle.license_plate %>
+  </li>
+
+  <li>
+    <strong>Entered at:</strong>
+    <.datetime value={@parking.entered_at} />
+  </li>
+
+  <li>
+    <strong>Left at:</strong>
+    <.datetime value={@parking.entered_at} />
+  </li>
+</ul>
+
+<span>
+  <.link navigate={Routes.parking_index_path(@socket, :index)}>Back</.link>
+</span>
