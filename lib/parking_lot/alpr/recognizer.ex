@@ -5,19 +5,11 @@ defmodule ParkingLot.ALPR.Recognizer do
 
   alias Evision.Zoo.{TextDetection, TextRecognition}
 
-  def predict(image_path) do
-    image = read_image(image_path)
-
+  def predict(image) do
     image
     |> detect_text()
     |> filter_detections()
     |> Enum.map(&recognize_text(image, &1))
-  end
-
-  defp read_image(filepath) do
-    filepath
-    |> Evision.imread()
-    |> Evision.resize({736, 736})
   end
 
   defp detect_text(image) do
