@@ -15,9 +15,9 @@ defmodule ParkingLot.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: ParkingLot.PubSub},
       # Start the Endpoint (http/https)
-      ParkingLotWeb.Endpoint
+      ParkingLotWeb.Endpoint,
       # Start a worker by calling: ParkingLot.Worker.start_link(arg)
-      # {ParkingLot.Worker, arg}
+      ParkingLot.ALPR.Recognizer
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

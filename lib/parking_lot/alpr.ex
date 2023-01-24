@@ -5,10 +5,10 @@ defmodule ParkingLot.ALPR do
 
   def video(url), do: Video.start(url)
 
-  def recognize_plate(video) do
+  def recognize(video) do
     video
     |> Video.frame()
-    |> Recognizer.predict()
+    |> Recognizer.infer()
     |> Extractor.capture()
   end
 end
