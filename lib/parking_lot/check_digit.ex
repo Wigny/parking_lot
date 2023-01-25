@@ -21,7 +21,7 @@ defmodule ParkingLot.CheckDigit do
     def valid?(value, unquote(type)) do
       digits = Digits.to_digits(value, length: unquote(length))
 
-      if Digits.duplicated?(digits) or length(digits) > unquote(length) do
+      if Digits.duplicated?(digits) or length(digits) !== unquote(length) do
         false
       else
         Enum.all?(unquote(weights), fn weight ->

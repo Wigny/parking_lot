@@ -63,7 +63,7 @@ defmodule ParkingLot.MixProject do
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       "assets.deploy": ["esbuild default --minify", "phx.digest"],
-      deps: ["deps.clean --unlock --unused", "deps.update --all", "hex.outdated"]
+      "deps.bump": ["deps.clean --unlock --unused", "deps.update --all", "hex.outdated"]
     ]
   end
 end

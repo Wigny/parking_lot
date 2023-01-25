@@ -4,7 +4,7 @@ defmodule ParkingLot.Changeset do
   import Ecto.Changeset
   alias ParkingLot.CheckDigit
 
-  def validate_check_digit(changeset, field) do
+  def validate_check_digit(%{valid?: true} = changeset, field) do
     validate_change(changeset, field, fn ^field, digits ->
       if CheckDigit.valid?(digits, field) do
         []
@@ -12,5 +12,9 @@ defmodule ParkingLot.Changeset do
         [{field, "has invalid check digit"}]
       end
     end)
+  end
+
+  def validate_check_digit(changeset, _field) do
+    changeset
   end
 end
