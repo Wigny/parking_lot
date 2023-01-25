@@ -27,13 +27,19 @@ defmodule ParkingLotWeb.CameraLive.FormComponent do
     save_camera(socket, socket.assigns.action, camera_params)
   end
 
+  def select_type_values do
+    for {key, value} <- Ecto.Enum.mappings(Cameras.Camera, :type) do
+      {Macro.camelize(value), key}
+    end
+  end
+
   defp save_camera(socket, :edit, camera_params) do
     case Cameras.update_camera(socket.assigns.camera, camera_params) do
       {:ok, _camera} ->
         {:noreply,
          socket
          |> put_flash(:info, "Camera updated successfully")
-         |> push_redirect(to: socket.assigns.return_to)}
+         |> push_navigate(to: socket.assigns.return_to)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, :changeset, changeset)}
@@ -46,7 +52,7 @@ defmodule ParkingLotWeb.CameraLive.FormComponent do
         {:noreply,
          socket
          |> put_flash(:info, "Camera created successfully")
-         |> push_redirect(to: socket.assigns.return_to)}
+         |> push_navigate(to: socket.assigns.return_to)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}

@@ -10,13 +10,11 @@
     phx-submit="save"
   >
     <%= label(f, :type) %>
-    <%= select(f, :type, Ecto.Enum.values(ParkingLot.Cameras.Camera, :type),
-      prompt: "Choose a value"
-    ) %>
+    <%= select(f, :type, select_type_values(), prompt: "Choose a value") %>
     <%= error_tag(f, :type) %>
 
-    <%= label(f, :uri) %>
-    <%= text_input(f, :uri) %>
+    <%= label(f, :uri, "URI") %>
+    <%= uri_input(f, :uri, phx_debounce: "blur") %>
     <%= error_tag(f, :uri) %>
 
     <div>

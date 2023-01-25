@@ -16,16 +16,19 @@
 <ul>
   <li>
     <strong>Type:</strong>
-    <%= @camera.type %>
+    <%= Macro.camelize(to_string(@camera.type)) %>
   </li>
 
   <li>
-    <strong>Uri:</strong>
-    <%= @camera.uri %>
+    <strong>URI:</strong>
+    <.uri value={@camera.uri} />
   </li>
 </ul>
 
 <span>
-  <%= live_patch("Edit", to: Routes.camera_show_path(@socket, :edit, @camera), class: "button") %>
+  <.link patch={Routes.camera_show_path(@socket, :edit, @camera)} class="button">Edit</.link>
 </span>
-| <span><%= live_redirect("Back", to: Routes.camera_index_path(@socket, :index)) %></span>
+|
+<span>
+  <.link navigate={Routes.camera_index_path(@socket, :index)}>Back</.link>
+</span>

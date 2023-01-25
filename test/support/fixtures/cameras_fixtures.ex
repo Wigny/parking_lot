@@ -4,29 +4,27 @@ defmodule ParkingLot.CamerasFixtures do
   entities via the `ParkingLot.Cameras` context.
   """
 
-  @doc """
-  Generate a unique camera type.
-  """
-  def unique_camera_type do
-    Enum.random(Ecto.Enum.values(ParkingLot.Cameras.Camera, :type))
+  alias ParkingLot.Cameras
+
+  def valid_camera_attributes(attrs \\ %{}) do
+    Enum.into(attrs, %{
+      type: Enum.random(Ecto.Enum.values(Cameras.Camera, :type)),
+      uri: %URI{
+        scheme: "rtsp",
+        userinfo: "admin:123456",
+        host: "127.0.0.1",
+        port: 554,
+        path: "/example",
+        query: URI.encode_query(%{id: System.unique_integer([:positive])})
+      }
+    })
   end
 
-  @doc """
-  Generate a unique camera uri.
-  """
-  def unique_camera_uri, do: "some uri#{System.unique_integer([:positive])}"
-
-  @doc """
-  Generate a camera.
-  """
   def camera_fixture(attrs \\ %{}) do
     {:ok, camera} =
       attrs
-      |> Enum.into(%{
-        type: unique_camera_type(),
-        uri: unique_camera_uri()
-      })
-      |> ParkingLot.Cameras.create_camera()
+      |> valid_camera_attributes()
+      |> Cameras.create_camera()
 
     camera
   end

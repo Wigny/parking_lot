@@ -4,8 +4,8 @@ defmodule ParkingLotWeb.CameraLiveTest do
   import Phoenix.LiveViewTest
   import ParkingLot.CamerasFixtures
 
-  @create_attrs %{type: :external, uri: "some uri"}
-  @update_attrs %{type: :external, uri: "some updated uri"}
+  @create_attrs valid_camera_attributes(%{type: :external})
+  @update_attrs valid_camera_attributes(%{type: :external})
   @invalid_attrs %{type: nil, uri: nil}
 
   defp create_camera(_) do
@@ -22,7 +22,7 @@ defmodule ParkingLotWeb.CameraLiveTest do
       {:ok, _index_live, html} = live(conn, Routes.camera_index_path(conn, :index))
 
       assert html =~ "Listing Cameras"
-      assert html =~ camera.uri
+      assert html =~ URI.to_string(camera.uri)
     end
 
     test "saves new camera", %{conn: conn} do
@@ -44,7 +44,7 @@ defmodule ParkingLotWeb.CameraLiveTest do
         |> follow_redirect(conn, Routes.camera_index_path(conn, :index))
 
       assert html =~ "Camera created successfully"
-      assert html =~ "some uri"
+      assert html =~ URI.to_string(@create_attrs.uri)
     end
 
     test "updates camera in listing", %{conn: conn, camera: camera} do
@@ -66,7 +66,7 @@ defmodule ParkingLotWeb.CameraLiveTest do
         |> follow_redirect(conn, Routes.camera_index_path(conn, :index))
 
       assert html =~ "Camera updated successfully"
-      assert html =~ "some updated uri"
+      assert html =~ URI.to_string(@update_attrs.uri)
     end
 
     test "deletes camera in listing", %{conn: conn, camera: camera} do
@@ -84,7 +84,7 @@ defmodule ParkingLotWeb.CameraLiveTest do
       {:ok, _show_live, html} = live(conn, Routes.camera_show_path(conn, :show, camera))
 
       assert html =~ "Show Camera"
-      assert html =~ camera.uri
+      assert html =~ URI.to_string(camera.uri)
     end
 
     test "updates camera within modal", %{conn: conn, camera: camera} do
@@ -106,7 +106,7 @@ defmodule ParkingLotWeb.CameraLiveTest do
         |> follow_redirect(conn, Routes.camera_show_path(conn, :show, camera))
 
       assert html =~ "Camera updated successfully"
-      assert html =~ "some updated uri"
+      assert html =~ URI.to_string(@update_attrs.uri)
     end
   end
 end

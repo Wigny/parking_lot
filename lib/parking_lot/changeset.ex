@@ -17,4 +17,14 @@ defmodule ParkingLot.Changeset do
   def validate_check_digit(changeset, _field) do
     changeset
   end
+
+  def validate_uri(changeset, field) do
+    validate_change(changeset, field, fn ^field, uri ->
+      cond do
+        is_nil(uri.scheme) -> [{field, "is missing scheme"}]
+        is_nil(uri.host) -> [{field, "is missing host"}]
+        true -> []
+      end
+    end)
+  end
 end

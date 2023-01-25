@@ -17,7 +17,7 @@
   <thead>
     <tr>
       <th>Type</th>
-      <th>Uri</th>
+      <th>URI</th>
 
       <th></th>
     </tr>
@@ -25,23 +25,25 @@
   <tbody id="cameras">
     <%= for camera <- @cameras do %>
       <tr id={"camera-#{camera.id}"}>
-        <td><%= camera.type %></td>
-        <td><%= camera.uri %></td>
+        <td><%= Macro.camelize(to_string(camera.type)) %></td>
+        <td><.uri value={camera.uri} /></td>
 
         <td>
           <span>
-            <%= live_redirect("Show", to: Routes.camera_show_path(@socket, :show, camera)) %>
+            <.link navigate={Routes.camera_show_path(@socket, :show, camera)}>Show</.link>
           </span>
           <span>
-            <%= live_patch("Edit", to: Routes.camera_index_path(@socket, :edit, camera)) %>
+            <.link patch={Routes.camera_index_path(@socket, :edit, camera)}>Edit</.link>
           </span>
           <span>
-            <%= link("Delete",
-              to: "#",
-              phx_click: "delete",
-              phx_value_id: camera.id,
-              data: [confirm: "Are you sure?"]
-            ) %>
+            <.link
+              href="#"
+              phx-click="delete"
+              phx-value-id={camera.id}
+              data-confirm="Are you sure?"
+            >
+              Delete
+            </.link>
           </span>
         </td>
       </tr>
@@ -49,4 +51,6 @@
   </tbody>
 </table>
 
-<span><%= live_patch("New Camera", to: Routes.camera_index_path(@socket, :new)) %></span>
+<span>
+  <.link patch={Routes.camera_index_path(@socket, :new)}>New Camera</.link>
+</span>
