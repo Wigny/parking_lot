@@ -3,7 +3,7 @@ defmodule ParkingLot.ALPR do
 
   alias ParkingLot.ALPR.{Extractor, Recognizer, Video}
 
-  def video(url), do: Video.start(url)
+  def video(uri), do: Video.start_link(uri)
 
   def recognize(video) do
     video
