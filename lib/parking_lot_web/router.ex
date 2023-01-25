@@ -64,6 +64,15 @@ defmodule ParkingLotWeb.Router do
       live "/", Index, :index
       live "/:id", Show, :show
     end
+
+    scope "/cameras", CameraLive do
+      live "/", Index, :index
+      live "/new", Index, :new
+      live "/:id/edit", Index, :edit
+
+      live "/:id", Show, :show
+      live "/:id/show/edit", Show, :edit
+    end
   end
 
   scope "/", ParkingLotWeb do

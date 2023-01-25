@@ -1,0 +1,31 @@
+<h1>Show Camera</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.camera_show_path(@socket, :show, @camera)}>
+    <.live_component
+      module={ParkingLotWeb.CameraLive.FormComponent}
+      id={@camera.id}
+      title={@page_title}
+      action={@live_action}
+      camera={@camera}
+      return_to={Routes.camera_show_path(@socket, :show, @camera)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+  <li>
+    <strong>Type:</strong>
+    <%= @camera.type %>
+  </li>
+
+  <li>
+    <strong>Uri:</strong>
+    <%= @camera.uri %>
+  </li>
+</ul>
+
+<span>
+  <%= live_patch("Edit", to: Routes.camera_show_path(@socket, :edit, @camera), class: "button") %>
+</span>
+| <span><%= live_redirect("Back", to: Routes.camera_index_path(@socket, :index)) %></span>
