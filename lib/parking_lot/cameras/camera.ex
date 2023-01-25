@@ -1,4 +1,6 @@
 defmodule ParkingLot.Cameras.Camera do
+  @moduledoc false
+
   use Ecto.Schema
   import Ecto.Changeset
   import ParkingLot.Changeset

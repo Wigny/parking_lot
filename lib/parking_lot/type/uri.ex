@@ -1,4 +1,8 @@
 defmodule ParkingLot.Type.URI do
+  @moduledoc """
+  Custom Ecto Type for handling `URI` structs in schema fields
+  """
+
   use Ecto.Type
 
   def type, do: :string
