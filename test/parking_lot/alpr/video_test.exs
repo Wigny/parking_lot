@@ -11,20 +11,15 @@ defmodule ParkingLot.ALPR.VideoTest do
     type: :internal
   }
 
-  describe "start_link/1" do
-    test "expects a `Camera` struct" do
-      assert {:ok, pid} = Video.start_link(@camera)
-
-      GenServer.stop(pid)
-    end
-  end
-
   describe "frame/1" do
     setup _ do
+      start_supervised!({Registry, keys: :unique, name: ParkingLot.Registry})
+
       %{video: start_supervised!({Video, @camera})}
     end
 
     test "returns the last stream frame", %{video: video} do
+      assert nil == Video.frame(video)
       assert %Evision.Mat{shape: {1080, 1920, 3}} = Video.frame(video)
     end
   end

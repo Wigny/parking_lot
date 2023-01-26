@@ -7,38 +7,48 @@ defmodule ParkingLot.ALPR.Recognizer do
   use GenServer
   alias Evision.Zoo.{TextDetection, TextRecognition}
 
+  # Server
+
   @impl true
   def init(config) do
-    {:ok, config}
+    {:ok, config, {:continue, :init}}
   end
 
   @impl true
-  def handle_call({:detect_text, image}, _from, config) do
-    %{detector: detector} = config
+  def handle_continue(:init, %{models: models, charset: charset}) do
+    detector = TextDetection.DB.init(models[:detector])
+    recognizer = TextRecognition.CRNN.init(models[:recognizer])
+    charset = TextRecognition.CRNN.get_charset(charset)
+
+    {:noreply, %{detector: detector, recognizer: recognizer, charset: charset}}
+  end
+
+  @impl true
+  def handle_call({:detect_text, image}, _from, state) do
+    %{detector: detector} = state
 
     inference = TextDetection.DB.infer(detector, image)
-    {:reply, inference, config}
+    {:reply, inference, state}
   end
 
   @impl true
-  def handle_call({:recognize_text, detection, image}, _from, config) do
-    %{recognizer: recognizer, charset: charset} = config
+  def handle_call({:recognize_text, detection, image}, _from, state) do
+    %{recognizer: recognizer, charset: charset} = state
 
     infer_opts = [to_gray: false, charset: charset]
     inference = TextRecognition.CRNN.infer(recognizer, image, detection, infer_opts)
-
-    {:reply, inference, config}
+    {:reply, inference, state}
   end
 
+  # Client
+
   def start_link(_opts) do
-    detector = TextDetection.DB.init(:td500_resnet18)
-    recognizer = TextRecognition.CRNN.init(:cn)
-    charset = TextRecognition.CRNN.get_charset(:cn)
+    config = %{
+      models: %{detector: :td500_resnet18, recognizer: :cn},
+      charset: :cn
+    }
 
-    config = %{detector: detector, recognizer: recognizer, charset: charset}
-    opts = [name: __MODULE__]
-
-    GenServer.start_link(__MODULE__, config, opts)
+    GenServer.start_link(__MODULE__, config, name: __MODULE__)
   end
 
   def infer(image) do
