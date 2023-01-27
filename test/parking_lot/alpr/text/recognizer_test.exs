@@ -1,9 +1,9 @@
-defmodule ParkingLot.ALPR.RecognizerTest do
+defmodule ParkingLot.ALPR.Text.RecognizerTest do
   use ParkingLot.DataCase
 
-  alias ParkingLot.ALPR.Recognizer
+  alias ParkingLot.ALPR.Text.Recognizer
 
-  @license_plate Path.join([__DIR__ | ~w[.. .. support files license_plate.png]])
+  @license_plate Path.join([__DIR__ | ~w[.. .. .. support files license_plate.png]])
 
   describe "infer/1" do
     setup do

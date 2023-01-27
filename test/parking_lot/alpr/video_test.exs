@@ -13,14 +13,14 @@ defmodule ParkingLot.ALPR.VideoTest do
 
   describe "frame/1" do
     setup _ do
-      start_supervised!({Registry, keys: :unique, name: ParkingLot.Registry})
+      start_supervised!({Video, @camera})
 
-      %{video: start_supervised!({Video, @camera})}
+      :ok
     end
 
-    test "returns the last stream frame", %{video: video} do
-      assert nil == Video.frame(video)
-      assert %Evision.Mat{shape: {1080, 1920, 3}} = Video.frame(video)
+    test "returns the last stream frame" do
+      assert nil == Video.frame(@camera)
+      assert %Evision.Mat{shape: {1080, 1920, 3}} = Video.frame(@camera)
     end
   end
 end

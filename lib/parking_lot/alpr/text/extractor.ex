@@ -1,4 +1,4 @@
-defmodule ParkingLot.ALPR.Extractor do
+defmodule ParkingLot.ALPR.Text.Extractor do
   @moduledoc false
 
   @license_plate_regex ~r/(?<legacy>[A-Z]{3}-?[0-9]{4})|(?<mercosul>[A-Z]{3}[0-9][A-Z][0-9]{2})/

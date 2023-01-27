@@ -17,7 +17,8 @@ defmodule ParkingLot.Application do
       # Start the Endpoint (http/https)
       ParkingLotWeb.Endpoint,
       # Start a worker by calling: ParkingLot.Worker.start_link(arg)
-      ParkingLot.ALPR.Recognizer
+      {Registry, keys: :unique, name: ParkingLot.Registry},
+      ParkingLot.ALPR
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

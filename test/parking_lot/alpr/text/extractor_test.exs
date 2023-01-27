@@ -1,7 +1,7 @@
-defmodule ParkingLot.ALPR.ExtractorTest do
+defmodule ParkingLot.ALPR.Text.ExtractorTest do
   use ParkingLot.DataCase
 
-  alias ParkingLot.ALPR.Extractor
+  alias ParkingLot.ALPR.Text.Extractor
   import ParkingLot.CustomersFixtures
 
   describe "capture/1" do

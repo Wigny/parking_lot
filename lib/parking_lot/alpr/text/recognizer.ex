@@ -1,4 +1,4 @@
-defmodule ParkingLot.ALPR.Recognizer do
+defmodule ParkingLot.ALPR.Text.Recognizer do
   @moduledoc """
   Based on https://github.com/opencv/opencv_zoo/tree/master/models/text_recognition_crnn by
   https://github.com/cocoa-xu/evision/pull/143
@@ -10,21 +10,25 @@ defmodule ParkingLot.ALPR.Recognizer do
   # Server
 
   @impl true
-  def init(config) do
-    {:ok, config, {:continue, :init}}
+  def init(state) do
+    {:ok, state, {:continue, :init}}
   end
 
   @impl true
-  def handle_continue(:init, %{models: models, charset: charset}) do
-    detector = TextDetection.DB.init(models[:detector])
-    recognizer = TextRecognition.CRNN.init(models[:recognizer])
-    charset = TextRecognition.CRNN.get_charset(charset)
+  def handle_continue(:init, _state) do
+    opts = [backend: Evision.cv_DNN_BACKEND_OPENCV(), target: Evision.cv_DNN_TARGET_CPU()]
 
-    {:noreply, %{detector: detector, recognizer: recognizer, charset: charset}}
+    detector = TextDetection.DB.init(:td500_resnet18, opts)
+    recognizer = TextRecognition.CRNN.init(:cn, opts)
+    charset = TextRecognition.CRNN.get_charset(:cn)
+
+    state = %{detector: detector, recognizer: recognizer, charset: charset}
+
+    {:noreply, state}
   end
 
   @impl true
-  def handle_call({:detect_text, image}, _from, state) do
+  def handle_call({:detect, image}, _from, state) do
     %{detector: detector} = state
 
     inference = TextDetection.DB.infer(detector, image)
@@ -32,7 +36,7 @@ defmodule ParkingLot.ALPR.Recognizer do
   end
 
   @impl true
-  def handle_call({:recognize_text, detection, image}, _from, state) do
+  def handle_call({:recognize, detection, image}, _from, state) do
     %{recognizer: recognizer, charset: charset} = state
 
     infer_opts = [to_gray: false, charset: charset]
@@ -42,13 +46,8 @@ defmodule ParkingLot.ALPR.Recognizer do
 
   # Client
 
-  def start_link(_opts) do
-    config = %{
-      models: %{detector: :td500_resnet18, recognizer: :cn},
-      charset: :cn
-    }
-
-    GenServer.start_link(__MODULE__, config, name: __MODULE__)
+  def start_link(opts) do
+    GenServer.start_link(__MODULE__, opts, name: __MODULE__)
   end
 
   def infer(image) do
@@ -59,11 +58,11 @@ defmodule ParkingLot.ALPR.Recognizer do
   end
 
   defp detections(image) do
-    GenServer.call(__MODULE__, {:detect_text, image})
+    GenServer.call(__MODULE__, {:detect, image}, :infinity)
   end
 
   defp recognitions(image, detection) do
-    GenServer.call(__MODULE__, {:recognize_text, detection, image})
+    GenServer.call(__MODULE__, {:recognize, detection, image})
   end
 
   defp filter_detections({detections, confidences}) do
