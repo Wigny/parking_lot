@@ -1,4 +1,4 @@
-defmodule ParkingLot.CheckDigit.Digits do
+defmodule ParkingLot.Digits do
   @moduledoc false
 
   def to_digits(value, opts) when is_integer(value) do
@@ -7,8 +7,10 @@ defmodule ParkingLot.CheckDigit.Digits do
   end
 
   def to_digits(value, opts) when is_binary(value) do
-    {digits, ""} = Integer.parse(value)
-    to_digits(digits, opts)
+    case Integer.parse(value) do
+      {digits, _binary} -> to_digits(digits, opts)
+      :error -> []
+    end
   end
 
   def to_digits(value, opts) when is_list(value) do
