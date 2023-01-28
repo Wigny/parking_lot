@@ -1,8 +1,8 @@
 defmodule ParkingLotWeb.HomeLive.Index do
   use ParkingLotWeb, :live_view
 
-  alias ParkingLot.Cameras
   alias ParkingLot.ALPR.Video
+  alias ParkingLot.Cameras
 
   @fps 24
 
