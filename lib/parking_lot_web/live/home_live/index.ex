@@ -1,7 +1,7 @@
 defmodule ParkingLotWeb.HomeLive.Index do
   use ParkingLotWeb, :live_view
 
-  alias ParkingLot.ALPR.Video
+  alias ParkingLot.ALPR.{Image, Video}
   alias ParkingLot.Cameras
 
   @fps 24
@@ -10,7 +10,10 @@ defmodule ParkingLotWeb.HomeLive.Index do
   def mount(_params, _session, socket) do
     cameras = Cameras.list_cameras()
 
-    {:ok, socket |> assign(:cameras, cameras) |> assign(:previews, [])}
+    {:ok,
+     socket
+     |> assign(:cameras, cameras)
+     |> assign(:previews, [])}
   end
 
   @impl true
@@ -30,16 +33,22 @@ defmodule ParkingLotWeb.HomeLive.Index do
   end
 
   defp preview(camera) do
-    if frame = Video.frame(camera) do
-      {_dimensions, [height, width]} = Evision.Mat.size(frame)
+    %{id: camera.id, canvas: canvas(Video.frame(camera)), recognition: Image.recognition(camera)}
+  end
 
-      image =
-        ".jpeg"
-        |> Evision.imencode(frame)
-        |> Base.encode64()
-        |> then(&"data:image/jpeg;charset=utf-8;base64,#{&1}")
+  defp canvas(nil) do
+    nil
+  end
 
-      %{id: camera.id, width: width, height: height, image: image}
-    end
+  defp canvas(frame) do
+    {_dimensions, [height, width]} = Evision.Mat.size(frame)
+
+    image =
+      ".jpeg"
+      |> Evision.imencode(frame)
+      |> Base.encode64()
+      |> then(&"data:image/jpeg;charset=utf-8;base64,#{&1}")
+
+    %{width: width, height: height, image: image}
   end
 end

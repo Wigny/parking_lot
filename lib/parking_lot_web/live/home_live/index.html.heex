@@ -1,10 +1,12 @@
 <section :for={preview <- @previews} class="row">
   <canvas
-    :if={preview}
+    :if={preview.canvas}
     id={"preview_#{preview.id}"}
-    data-image={preview[:image]}
-    width={preview[:width]}
-    height={preview[:height]}
+    data-image={preview.canvas.image}
+    width={preview.canvas.width}
+    height={preview.canvas.height}
     phx-hook="DrawCanvas"
+    style="max-width: 100%; object-fit: contain;"
   />
+  <h2 :if={preview.recognition}><%= preview.recognition %></h2>
 </section>

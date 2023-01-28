@@ -5,8 +5,8 @@ defmodule ParkingLot.ALPR.Text.Extractor do
 
   def capture(recognitions) when is_list(recognitions) do
     recognitions
-    |> Enum.map(&capture/1)
-    |> List.first()
+    |> Enum.join()
+    |> capture()
   end
 
   def capture(recognition) when is_binary(recognition) do

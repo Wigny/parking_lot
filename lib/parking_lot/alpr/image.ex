@@ -4,11 +4,16 @@ defmodule ParkingLot.ALPR.Image do
   use GenServer
 
   alias ParkingLot.ALPR.{Text, Video}
-  alias ParkingLot.Cameras
+  alias ParkingLot.Cameras.Camera
 
-  def start_link(%Cameras.Camera{id: id} = camera) do
+  def start_link(%Camera{id: id} = camera) do
     name = {:via, Registry, {ParkingLot.Registry, "image_#{id}"}}
     GenServer.start_link(__MODULE__, %{camera: camera}, name: name)
+  end
+
+  def recognition(%Camera{id: id}) do
+    [{pid, nil}] = Registry.lookup(ParkingLot.Registry, "image_#{id}")
+    GenServer.call(pid, :recognition)
   end
 
   @impl true
@@ -19,17 +24,24 @@ defmodule ParkingLot.ALPR.Image do
   end
 
   @impl true
+  def handle_call(:recognition, _from, state) do
+    {:reply, state[:recognition], state}
+  end
+
+  @impl true
   def handle_info(:recognize, state) do
-    _license_plate = recognize(state.camera)
+    recognition = recognize(state.camera)
 
     Process.send_after(self(), :recognize, 100)
 
-    {:noreply, state}
+    {:noreply, Map.put(state, :recognition, recognition)}
   end
 
   defp recognize(camera) do
     if frame = Video.frame(camera) do
-      Text.Recognizer.infer(frame)
+      frame
+      |> Text.Recognizer.infer()
+      |> Text.Extractor.capture()
     end
   end
 end
