@@ -16,10 +16,8 @@ defmodule ParkingLot.ALPR.Text.Recognizer do
 
   @impl true
   def handle_continue(:init, _state) do
-    opts = [backend: Evision.cv_DNN_BACKEND_OPENCV(), target: Evision.cv_DNN_TARGET_CPU()]
-
-    detector = TextDetection.DB.init(:td500_resnet18, opts)
-    recognizer = TextRecognition.CRNN.init(:cn, opts)
+    detector = TextDetection.DB.init(:td500_resnet18)
+    recognizer = TextRecognition.CRNN.init(:cn)
     charset = TextRecognition.CRNN.get_charset(:cn)
 
     state = %{detector: detector, recognizer: recognizer, charset: charset}
