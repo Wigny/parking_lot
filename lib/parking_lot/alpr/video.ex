@@ -7,7 +7,6 @@ defmodule ParkingLot.ALPR.Video do
 
   alias Evision.VideoCapture
   alias ParkingLot.Cameras.Camera
-  alias ParkingLot.RegistryHelper
 
   @max_fps 30
 
@@ -20,13 +19,13 @@ defmodule ParkingLot.ALPR.Video do
 
   # Client
 
-  def start_link(%Camera{type: type, uri: uri}) do
-    name = RegistryHelper.name(__MODULE__, type)
+  def start_link(%Camera{id: id, uri: uri}) do
+    name = {:via, Registry, {ParkingLot.Registry, "video_#{id}"}}
     GenServer.start_link(__MODULE__, URI.to_string(uri), name: name)
   end
 
-  def frame(%Camera{type: type}) do
-    pid = RegistryHelper.pid(__MODULE__, type)
+  def frame(%Camera{id: id}) do
+    [{pid, nil}] = Registry.lookup(ParkingLot.Registry, "video_#{id}")
     GenServer.call(pid, :frame)
   end
 

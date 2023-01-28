@@ -5,10 +5,9 @@ defmodule ParkingLot.ALPR.Image do
 
   alias ParkingLot.ALPR.{Text, Video}
   alias ParkingLot.Cameras
-  alias ParkingLot.RegistryHelper
 
-  def start_link(%Cameras.Camera{type: type} = camera) do
-    name = RegistryHelper.name(__MODULE__, type)
+  def start_link(%Cameras.Camera{id: id} = camera) do
+    name = {:via, Registry, {ParkingLot.Registry, "image_#{id}"}}
     GenServer.start_link(__MODULE__, %{camera: camera}, name: name)
   end
 
