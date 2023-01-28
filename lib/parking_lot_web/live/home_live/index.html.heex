@@ -1,0 +1,10 @@
+<section :for={preview <- @previews} class="row">
+  <canvas
+    :if={preview}
+    id={"preview_#{preview.id}"}
+    data-image={preview[:image]}
+    width={preview[:width]}
+    height={preview[:height]}
+    phx-hook="DrawCanvas"
+  />
+</section>

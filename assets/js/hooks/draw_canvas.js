@@ -7,7 +7,7 @@ const DrawCanvas = {
       context.drawImage(image, 0, 0);
     };
 
-    image.src = this.el.dataset.frame;
+    image.src = this.el.dataset.image;
   },
 };
 

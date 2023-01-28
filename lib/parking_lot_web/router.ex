@@ -31,7 +31,7 @@ defmodule ParkingLotWeb.Router do
   scope "/", ParkingLotWeb do
     pipe_through [:browser, :require_authenticated_user]
 
-    get "/", PageController, :index
+    live "/", HomeLive.Index, :index
 
     scope "/drivers", DriverLive do
       live "/", Index, :index
