@@ -14,11 +14,11 @@
     <%= error_tag(f, :name) %>
 
     <%= label(f, :cpf, "CPF") %>
-    <%= text_input(f, :cpf, type: :number) %>
+    <%= numeric_input(f, :cpf, maxlength: 11) %>
     <%= error_tag(f, :cpf) %>
 
     <%= label(f, :cnh, "CNH") %>
-    <%= text_input(f, :cnh, type: :number) %>
+    <%= numeric_input(f, :cnh, maxlength: 11) %>
     <%= error_tag(f, :cnh) %>
 
     <%= label(f, :email) %>
@@ -26,7 +26,7 @@
     <%= error_tag(f, :email) %>
 
     <%= label(f, :phone) %>
-    <%= text_input(f, :phone, type: :tel) %>
+    <%= telephone_input(f, :phone, maxlength: 11, phx_hook: "NumericInput") %>
     <%= error_tag(f, :phone) %>
 
     <%= label(f, :active) %>

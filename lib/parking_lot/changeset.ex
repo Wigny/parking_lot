@@ -5,12 +5,16 @@ defmodule ParkingLot.Changeset do
   alias ParkingLot.CheckDigit
 
   def validate_check_digit(changeset, field) do
-    validate_change(changeset, field, fn ^field, digits ->
-      if CheckDigit.valid?(digits, field) do
-        []
-      else
-        [{field, "has invalid check digit"}]
-      end
-    end)
+    if field in Keyword.keys(changeset.errors) do
+      changeset
+    else
+      validate_change(changeset, field, fn ^field, digits ->
+        if CheckDigit.valid?(digits, field) do
+          []
+        else
+          [{field, "has invalid check digit"}]
+        end
+      end)
+    end
   end
 end

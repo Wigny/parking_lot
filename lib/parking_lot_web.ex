@@ -94,9 +94,8 @@ defmodule ParkingLotWeb do
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View
 
-      import ParkingLotWeb.ErrorHelpers
       import ParkingLotWeb.Gettext
-      import ParkingLotWeb.LiveHelpers
+      import ParkingLotWeb.{ErrorHelpers, InputHelpers, LiveHelpers}
       alias ParkingLotWeb.Router.Helpers, as: Routes
     end
   end

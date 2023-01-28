@@ -14,7 +14,7 @@
     <%= error_tag(f, :license_plate) %>
 
     <%= label(f, :type_id) %>
-    <%= select(f, :type_id, Enum.map(@types, &{&1.name, &1.id}), prompt: "Choose the type") %>
+    <%= select_input(f, :type_id, Enum.map(@types, &{&1.name, &1.id}), prompt: "Choose the type") %>
     <%= error_tag(f, :type_id) %>
 
     <%= label(f, :model_id) %>
