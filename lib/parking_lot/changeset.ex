@@ -23,8 +23,13 @@ defmodule ParkingLot.Changeset do
       cond do
         is_nil(uri.scheme) -> [{field, "is missing scheme"}]
         is_nil(uri.host) -> [{field, "is missing host"}]
+        not valid_host?(uri.host) -> [{field, "has invalid host"}]
         true -> []
       end
     end)
+  end
+
+  defp valid_host?(host) do
+    match?({:ok, _hostent}, :inet.gethostbyname(to_charlist(host)))
   end
 end
