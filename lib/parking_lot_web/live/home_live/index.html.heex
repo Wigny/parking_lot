@@ -6,7 +6,12 @@
     width={preview.canvas.width}
     height={preview.canvas.height}
     phx-hook="DrawCanvas"
-    style="max-width: 100%; object-fit: contain;"
+    style="
+      max-width: 100%;
+      object-fit: contain;
+      width: 100% !important;
+      height: auto !important;
+    "
   />
   <h2 :if={preview.recognition}><%= preview.recognition %></h2>
 </section>
