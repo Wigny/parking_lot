@@ -33,29 +33,39 @@ defmodule ParkingLotWeb.Router do
 
     get "/", PageController, :index
 
-    live "/drivers", DriverLive.Index, :index
-    live "/drivers/new", DriverLive.Index, :new
-    live "/drivers/:id/edit", DriverLive.Index, :edit
+    live_session :default, on_mount: ParkingLotWeb.UserLiveAuth do
+      scope "/drivers", DriverLive do
+        live "/", Index, :index
+        live "/new", Index, :new
+        live "/:id/edit", Index, :edit
 
-    live "/drivers/:id", DriverLive.Show, :show
-    live "/drivers/:id/show/edit", DriverLive.Show, :edit
+        live "/:id", Show, :show
+        live "/:id/show/edit", Show, :edit
+      end
 
-    live "/vehicles", VehicleLive.Index, :index
-    live "/vehicles/new", VehicleLive.Index, :new
-    live "/vehicles/:id/edit", VehicleLive.Index, :edit
+      scope "/vehicles", VehicleLive do
+        live "/", Index, :index
+        live "/new", Index, :new
+        live "/:id/edit", Index, :edit
 
-    live "/vehicles/:id", VehicleLive.Show, :show
-    live "/vehicles/:id/show/edit", VehicleLive.Show, :edit
+        live "/:id", Show, :show
+        live "/:id/show/edit", Show, :edit
+      end
 
-    live "/vehicles_drivers", VehicleDriverLive.Index, :index
-    live "/vehicles_drivers/new", VehicleDriverLive.Index, :new
-    live "/vehicles_drivers/:id/edit", VehicleDriverLive.Index, :edit
+      scope "/vehicles_drivers", VehicleDriverLive do
+        live "/", Index, :index
+        live "/new", Index, :new
+        live "/:id/edit", Index, :edit
 
-    live "/vehicles_drivers/:id", VehicleDriverLive.Show, :show
-    live "/vehicles_drivers/:id/show/edit", VehicleDriverLive.Show, :edit
+        live "/:id", Show, :show
+        live "/:id/show/edit", Show, :edit
+      end
 
-    live "/parkings", ParkingLive.Index, :index
-    live "/parkings/:id", ParkingLive.Show, :show
+      scope "/parkings", ParkingLive do
+        live "/", Index, :index
+        live "/:id", Show, :show
+      end
+    end
   end
 
   scope "/", ParkingLotWeb do
