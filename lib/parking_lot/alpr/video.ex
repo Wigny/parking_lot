@@ -59,7 +59,7 @@ defmodule ParkingLot.ALPR.Video do
 
   @impl true
   def handle_info(:read, %State{video: %{isOpened: false}} = state) do
-    {:stop, :normal, state}
+    {:stop, "Video stream isn't opened", state}
   end
 
   def handle_info(:read, %State{video: video} = state) do
