@@ -10,13 +10,4 @@ defmodule ParkingLotWeb.InputHelpers do
 
     text_input(form, field, opts)
   end
-
-  def select_input(form, field, options, opts \\ []) do
-    listname = "#{input_id(form, field)}_list"
-
-    [
-      text_input(form, field, Keyword.put(opts, :list, listname)),
-      content_tag(:datalist, [id: listname], do: options_for_select(options, opts[:selected]))
-    ]
-  end
 end
