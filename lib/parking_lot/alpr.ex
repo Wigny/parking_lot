@@ -15,9 +15,9 @@ defmodule ParkingLot.ALPR do
     Cameras.list_cameras()
     |> Enum.reduce([Text.Recognizer], fn camera, children ->
       video = Supervisor.child_spec({Video, camera}, id: "video_#{camera.id}")
-      image = Supervisor.child_spec({Image, camera}, id: "image_#{camera.id}")
+      # image = Supervisor.child_spec({Image, camera}, id: "image_#{camera.id}")
 
-      [video, image | children]
+      [video | children]
     end)
     |> Supervisor.init(strategy: :one_for_one)
   end

@@ -1,39 +1,22 @@
 defmodule ParkingLotWeb.HomeLive.Index do
   use ParkingLotWeb, :live_view
 
-  alias ParkingLot.ALPR.{Image, Video}
-  alias ParkingLot.Cameras
-
   @fps 24
 
   @impl true
   def mount(_params, _session, socket) do
-    cameras = Cameras.list_cameras()
+    if connected?(socket) do
+      Phoenix.PubSub.subscribe(ParkingLot.PubSub, "video")
+    end
 
-    {:ok,
-     socket
-     |> assign(:cameras, cameras)
-     |> assign(:previews, [])}
+    {:ok, assign(socket, :canvas, %{})}
   end
 
   @impl true
-  def handle_params(_params, _url, socket) do
-    Process.send_after(self(), :preview, 100)
+  def handle_info({:frame, camera_id, frame}, socket) do
+    canvas = Map.put(socket.assigns.canvas, camera_id, canvas(frame))
 
-    {:noreply, socket}
-  end
-
-  @impl true
-  def handle_info(:preview, socket) do
-    previews = Enum.map(socket.assigns.cameras, &preview/1)
-
-    Process.send_after(self(), :preview, div(:timer.seconds(1), @fps))
-
-    {:noreply, assign(socket, :previews, previews)}
-  end
-
-  defp preview(camera) do
-    %{id: camera.id, canvas: canvas(Video.frame(camera)), recognition: Image.recognition(camera)}
+    {:noreply, assign(socket, :canvas, canvas)}
   end
 
   defp canvas(nil) do
@@ -42,13 +25,13 @@ defmodule ParkingLotWeb.HomeLive.Index do
 
   defp canvas(frame) do
     {_dimensions, [height, width]} = Evision.Mat.size(frame)
-
-    image =
-      ".jpeg"
-      |> Evision.imencode(frame)
-      |> Base.encode64()
-      |> then(&"data:image/jpeg;charset=utf-8;base64,#{&1}")
+    image = to_base64(frame)
 
     %{width: width, height: height, image: image}
+  end
+
+  defp to_base64(frame) do
+    jpeg = Evision.imencode(".jpeg", frame)
+    "data:image/jpeg;charset=utf-8;base64,#{Base.encode64(jpeg)}"
   end
 end
