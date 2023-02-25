@@ -1,4 +1,4 @@
-const NumericInput = {
+const InputPatternConstraint = {
   mounted() {
     this.el.addEventListener("beforeinput", (e) => {
       let beforeValue = this.el.value;
@@ -12,4 +12,4 @@ const NumericInput = {
   },
 };
 
-export default NumericInput;
+export default InputPatternConstraint;

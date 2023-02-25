@@ -26,7 +26,7 @@
     <%= error_tag(f, :email) %>
 
     <%= label(f, :phone) %>
-    <%= telephone_input(f, :phone, maxlength: 11, phx_hook: "NumericInput") %>
+    <%= telephone_input(f, :phone, maxlength: 11, phx_hook: "InputPatternConstraint") %>
     <%= error_tag(f, :phone) %>
 
     <%= label(f, :active) %>
