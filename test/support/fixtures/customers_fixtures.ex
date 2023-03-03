@@ -5,8 +5,8 @@ defmodule ParkingLot.CustomersFixtures do
   """
 
   alias ParkingLot.CheckDigit
-  alias ParkingLot.CheckDigit.Digits
   alias ParkingLot.Customers
+  alias ParkingLot.Digits
   alias ParkingLot.VehiclesFixtures
 
   def unique_driver_cpf do
