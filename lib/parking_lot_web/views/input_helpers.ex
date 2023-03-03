@@ -5,7 +5,7 @@ defmodule ParkingLotWeb.InputHelpers do
 
   use Phoenix.HTML
 
-  def numeric_input(form, field, opts \\ []) do
+  def digits_input(form, field, opts \\ []) do
     opts =
       Keyword.merge(opts,
         inputmode: "numeric",

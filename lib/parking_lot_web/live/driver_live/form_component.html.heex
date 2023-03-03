@@ -14,11 +14,11 @@
     <%= error_tag(f, :name) %>
 
     <%= label(f, :cpf, "CPF") %>
-    <%= numeric_input(f, :cpf, maxlength: 11) %>
+    <%= digits_input(f, :cpf, maxlength: 11) %>
     <%= error_tag(f, :cpf) %>
 
     <%= label(f, :cnh, "CNH") %>
-    <%= numeric_input(f, :cnh, maxlength: 11) %>
+    <%= digits_input(f, :cnh, maxlength: 11) %>
     <%= error_tag(f, :cnh) %>
 
     <%= label(f, :email) %>
