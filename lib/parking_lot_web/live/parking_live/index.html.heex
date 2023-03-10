@@ -13,8 +13,26 @@
     <%= for parking <- @parkings do %>
       <tr id={"parking-#{parking.id}"}>
         <td><%= parking.vehicle.license_plate %></td>
-        <td><.datetime value={parking.entered_at} /></td>
-        <td><.datetime value={parking.entered_at} /></td>
+        <td>
+          <time
+            is="relative-time"
+            datetime={parking.entered_at}
+            phx-update="ignore"
+            id={Ecto.UUID.generate()}
+          >
+            <%= parking.entered_at %>
+          </time>
+        </td>
+        <td>
+          <time
+            is="relative-time"
+            datetime={parking.left_at}
+            phx-update="ignore"
+            id={Ecto.UUID.generate()}
+          >
+            <%= parking.left_at %>
+          </time>
+        </td>
 
         <td>
           <span>

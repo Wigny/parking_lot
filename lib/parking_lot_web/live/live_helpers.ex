@@ -5,14 +5,6 @@ defmodule ParkingLotWeb.LiveHelpers do
 
   alias Phoenix.LiveView.JS
 
-  def datetime(assigns) do
-    assigns = assign_new(assigns, :id, &Ecto.UUID.generate/0)
-
-    ~H"""
-    <time id={@id} datetime={@value} phx-hook="LocalDateTime"><%= @value %></time>
-    """
-  end
-
   def mask(%{value: value, pattern: pattern} = assigns) do
     assigns = assign(assigns, :text, mask_text(value, pattern))
 
