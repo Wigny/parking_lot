@@ -13,7 +13,8 @@ defmodule ParkingLotWeb.VehicleLive.FormComponent do
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(changeset: changeset, types: types, models: models, colors: colors)}
+     |> assign(types: types, models: models, colors: colors)
+     |> assign_form(changeset)}
   end
 
   @impl true
@@ -23,7 +24,7 @@ defmodule ParkingLotWeb.VehicleLive.FormComponent do
       |> Customers.change_vehicle(vehicle_params)
       |> Map.put(:action, :validate)
 
-    {:noreply, assign(socket, :changeset, changeset)}
+    {:noreply, assign_form(socket, changeset)}
   end
 
   def handle_event("save", %{"vehicle" => vehicle_params}, socket) do
@@ -32,27 +33,37 @@ defmodule ParkingLotWeb.VehicleLive.FormComponent do
 
   defp save_vehicle(socket, :edit, vehicle_params) do
     case Customers.update_vehicle(socket.assigns.vehicle, vehicle_params) do
-      {:ok, _vehicle} ->
+      {:ok, vehicle} ->
+        notify_parent({:saved, vehicle})
+
         {:noreply,
          socket
          |> put_flash(:info, "Vehicle updated successfully")
-         |> push_navigate(to: socket.assigns.return_to)}
+         |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, :changeset, changeset)}
+        {:noreply, assign_form(socket, changeset)}
     end
   end
 
   defp save_vehicle(socket, :new, vehicle_params) do
     case Customers.create_vehicle(vehicle_params) do
-      {:ok, _vehicle} ->
+      {:ok, vehicle} ->
+        notify_parent({:saved, vehicle})
+
         {:noreply,
          socket
          |> put_flash(:info, "Vehicle created successfully")
-         |> push_navigate(to: socket.assigns.return_to)}
+         |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, changeset: changeset)}
+        {:noreply, assign_form(socket, changeset)}
     end
   end
+
+  defp assign_form(socket, %Ecto.Changeset{} = changeset) do
+    assign(socket, :form, to_form(changeset))
+  end
+
+  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 end

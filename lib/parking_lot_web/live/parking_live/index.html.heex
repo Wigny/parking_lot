@@ -1,45 +1,36 @@
-<h1>Listing Parkings</h1>
+<.header>
+  Listing Parkings
+</.header>
 
-<table>
-  <thead>
-    <tr>
-      <th>Vehicle</th>
-      <th>Entered at</th>
-      <th>Left at</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody id="parkings">
-    <%= for parking <- @parkings do %>
-      <tr id={"parking-#{parking.id}"}>
-        <td><%= parking.vehicle.license_plate %></td>
-        <td>
-          <time
-            is="relative-time"
-            datetime={parking.entered_at}
-            phx-update="ignore"
-            id={Ecto.UUID.generate()}
-          >
-            <%= parking.entered_at %>
-          </time>
-        </td>
-        <td>
-          <time
-            is="relative-time"
-            datetime={parking.left_at}
-            phx-update="ignore"
-            id={Ecto.UUID.generate()}
-          >
-            <%= parking.left_at %>
-          </time>
-        </td>
-
-        <td>
-          <span>
-            <.link navigate={Routes.parking_show_path(@socket, :show, parking)}>Show</.link>
-          </span>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<.table
+  id="parkings"
+  rows={@streams.parkings}
+  row_click={fn {_id, parking} -> JS.navigate(~p"/parkings/#{parking}") end}
+>
+  <:col :let={{_id, parking}} label="Vehicle"><%= parking.vehicle.license_plate %></:col>
+  <:col :let={{_id, parking}} label="Entered at">
+    <time
+      is="relative-time"
+      datetime={parking.entered_at}
+      phx-update="ignore"
+      id={Ecto.UUID.generate()}
+    >
+      <%= parking.entered_at %>
+    </time>
+  </:col>
+  <:col :let={{_id, parking}} label="Left at">
+    <time
+      is="relative-time"
+      datetime={parking.left_at}
+      phx-update="ignore"
+      id={Ecto.UUID.generate()}
+    >
+      <%= parking.left_at %>
+    </time>
+  </:col>
+  <:action :let={{_id, parking}}>
+    <div class="sr-only">
+      <.link navigate={~p"/parkings/#{parking}"}>Show</.link>
+    </div>
+  </:action>
+</.table>

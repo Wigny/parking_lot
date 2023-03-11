@@ -1,38 +1,41 @@
 <div>
-  <h2><%= @title %></h2>
+  <.header>
+    <%= @title %>
+    <:subtitle>Use this form to manage vehicle records in your database.</:subtitle>
+  </.header>
 
-  <.form
-    :let={f}
-    for={@changeset}
+  <.simple_form
+    for={@form}
     id="vehicle-form"
     phx-target={@myself}
     phx-change="validate"
     phx-submit="save"
   >
-    <%= label(f, :license_plate) %>
-    <%= text_input(f, :license_plate) %>
-    <%= error_tag(f, :license_plate) %>
-
-    <%= label(f, :type_id) %>
-    <%= select(f, :type_id, Enum.map(@types, &{&1.name, &1.id}), prompt: "Choose the type") %>
-    <%= error_tag(f, :type_id) %>
-
-    <%= label(f, :model_id) %>
-    <%= select(f, :model_id, Enum.map(@models, &{"#{&1.brand.name} - #{&1.name}", &1.id}),
-      prompt: "Choose the model"
-    ) %>
-    <%= error_tag(f, :model_id) %>
-
-    <%= label(f, :color_id) %>
-    <%= select(f, :color_id, Enum.map(@colors, &{&1.name, &1.id}), prompt: "Choose the color") %>
-    <%= error_tag(f, :color_id) %>
-
-    <%= label(f, :active) %>
-    <%= checkbox(f, :active) %>
-    <%= error_tag(f, :active) %>
-
-    <div>
-      <%= submit("Save", phx_disable_with: "Saving...") %>
-    </div>
-  </.form>
+    <.input field={@form[:license_plate]} type="text" label="License plate" />
+    <.input
+      field={@form[:type_id]}
+      type="select"
+      label="Type"
+      prompt="Choose the type"
+      options={Enum.map(@types, &{&1.name, &1.id})}
+    />
+    <.input
+      field={@form[:model_id]}
+      type="select"
+      label="Model"
+      prompt="Choose the model"
+      options={Enum.map(@models, &{"#{&1.brand.name} - #{&1.name}", &1.id})}
+    />
+    <.input
+      field={@form[:color_id]}
+      type="select"
+      label="Color"
+      prompt="Choose the color"
+      options={Enum.map(@colors, &{&1.name, &1.id})}
+    />
+    <.input field={@form[:active]} type="checkbox" label="Active" />
+    <:actions>
+      <.button phx-disable-with="Saving...">Save Vehicle</.button>
+    </:actions>
+  </.simple_form>
 </div>

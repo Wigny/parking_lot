@@ -1,49 +1,35 @@
-<h1>Show Vehicle</h1>
+<.header>
+  Vehicle <%= @vehicle.id %>
+  <:subtitle>This is a vehicle record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/vehicles/#{@vehicle}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit vehicle</.button>
+    </.link>
+  </:actions>
+</.header>
 
-<%= if @live_action in [:edit] do %>
-  <.modal return_to={Routes.vehicle_show_path(@socket, :show, @vehicle)}>
-    <.live_component
-      module={ParkingLotWeb.VehicleLive.FormComponent}
-      id={@vehicle.id}
-      title={@page_title}
-      action={@live_action}
-      vehicle={@vehicle}
-      return_to={Routes.vehicle_show_path(@socket, :show, @vehicle)}
-    />
-  </.modal>
-<% end %>
+<.list>
+  <:item title="License plate"><%= @vehicle.license_plate %></:item>
+  <:item title="Type"><%= @vehicle.type.name %></:item>
+  <:item title="Model"><%= @vehicle.model.name %></:item>
+  <:item title="Color"><%= @vehicle.color.name %></:item>
+  <:item title="Active"><%= @vehicle.active %></:item>
+</.list>
 
-<ul>
-  <li>
-    <strong>License plate:</strong>
-    <%= @vehicle.license_plate %>
-  </li>
+<.back navigate={~p"/vehicles"}>Back to vehicles</.back>
 
-  <li>
-    <strong>Type:</strong>
-    <%= @vehicle.type.name %>
-  </li>
-
-  <li>
-    <strong>Model:</strong>
-    <%= @vehicle.model.name %>
-  </li>
-
-  <li>
-    <strong>Color:</strong>
-    <%= @vehicle.color.name %>
-  </li>
-
-  <li>
-    <strong>Active:</strong>
-    <%= @vehicle.active %>
-  </li>
-</ul>
-
-<span>
-  <.link patch={Routes.vehicle_show_path(@socket, :edit, @vehicle)} class="button">Edit</.link>
-</span>
-|
-<span>
-  <.link navigate={Routes.vehicle_index_path(@socket, :index)}>Back</.link>
-</span>
+<.modal
+  :if={@live_action == :edit}
+  id="vehicle-modal"
+  show
+  on_cancel={JS.patch(~p"/vehicles/#{@vehicle}")}
+>
+  <.live_component
+    module={ParkingLotWeb.VehicleLive.FormComponent}
+    id={@vehicle.id}
+    title={@page_title}
+    action={@live_action}
+    vehicle={@vehicle}
+    patch={~p"/vehicles/#{@vehicle}"}
+  />
+</.modal>

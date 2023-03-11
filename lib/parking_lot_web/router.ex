@@ -1,21 +1,13 @@
 defmodule ParkingLotWeb.Router do
   use ParkingLotWeb, :router
 
-  import ParkingLotWeb.UserAuth,
-    only: [
-      fetch_current_user: 2,
-      require_authenticated_user: 2,
-      redirect_if_user_is_authenticated: 2
-    ]
-
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_live_flash
-    plug :put_root_layout, {ParkingLotWeb.LayoutView, :root}
+    plug :put_root_layout, {ParkingLotWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
-    plug :fetch_current_user
   end
 
   pipeline :api do
@@ -25,45 +17,40 @@ defmodule ParkingLotWeb.Router do
   scope "/", ParkingLotWeb do
     pipe_through :browser
 
-    delete "/users/log_out", UserSessionController, :delete
-  end
+    get "/", PageController, :home
 
-  scope "/", ParkingLotWeb do
-    pipe_through [:browser, :require_authenticated_user]
+    scope "/drivers", DriverLive do
+      live "/", Index, :index
+      live "/new", Index, :new
+      live "/:id/edit", Index, :edit
 
-    get "/", PageController, :index
+      live "/:id", Show, :show
+      live "/:id/show/edit", Show, :edit
+    end
 
-    live "/drivers", DriverLive.Index, :index
-    live "/drivers/new", DriverLive.Index, :new
-    live "/drivers/:id/edit", DriverLive.Index, :edit
+    scope "/vehicles", VehicleLive do
+      live "/", Index, :index
+      live "/new", Index, :new
+      live "/:id/edit", Index, :edit
 
-    live "/drivers/:id", DriverLive.Show, :show
-    live "/drivers/:id/show/edit", DriverLive.Show, :edit
+      live "/:id", Show, :show
+      live "/:id/show/edit", Show, :edit
+    end
 
-    live "/vehicles", VehicleLive.Index, :index
-    live "/vehicles/new", VehicleLive.Index, :new
-    live "/vehicles/:id/edit", VehicleLive.Index, :edit
+    scope "/vehicles_drivers", VehicleDriverLive do
+      live "/", Index, :index
+      live "/new", Index, :new
+      live "/:id/edit", Index, :edit
 
-    live "/vehicles/:id", VehicleLive.Show, :show
-    live "/vehicles/:id/show/edit", VehicleLive.Show, :edit
+      live "/:id", Show, :show
+      live "/:id/show/edit", Show, :edit
+    end
 
-    live "/vehicles_drivers", VehicleDriverLive.Index, :index
-    live "/vehicles_drivers/new", VehicleDriverLive.Index, :new
-    live "/vehicles_drivers/:id/edit", VehicleDriverLive.Index, :edit
+    scope "/parkings", ParkingLive do
+      live "/", Index, :index
 
-    live "/vehicles_drivers/:id", VehicleDriverLive.Show, :show
-    live "/vehicles_drivers/:id/show/edit", VehicleDriverLive.Show, :edit
-
-    live "/parkings", ParkingLive.Index, :index
-    live "/parkings/:id", ParkingLive.Show, :show
-  end
-
-  scope "/", ParkingLotWeb do
-    pipe_through [:browser, :redirect_if_user_is_authenticated]
-
-    get "/users/log_in", UserSessionController, :new
-
-    get "/auth/:provider", UserOAuthController, :request
-    get "/auth/:provider/callback", UserOAuthController, :callback
+      live "/:id", Show, :show
+      live "/:id/show/edit", Show, :edit
+    end
   end
 end

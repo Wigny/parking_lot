@@ -16,19 +16,20 @@ config :parking_lot, ParkingLotWeb.Endpoint,
   debug_errors: true,
   secret_key_base: "jVItoF805EN9xxoN60jjyWeEq4Aff7cVTT9RNyYCFC0VeuXxWu5kGVDgVGCKX2aF",
   watchers: [
-    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]}
-  ],
-  server: true
+    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
+    tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
+  ]
 
 config :parking_lot, ParkingLotWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/parking_lot_web/(live|views)/.*(ex)$",
-      ~r"lib/parking_lot_web/templates/.*(eex)$"
+      ~r"lib/parking_lot_web/(controllers|live|components)/.*(ex|heex)$"
     ]
   ]
+
+config :parking_lot, dev_routes: true
 
 config :logger, :console, format: "[$level] $message\n"
 

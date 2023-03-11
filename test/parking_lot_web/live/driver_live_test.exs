@@ -13,67 +13,67 @@ defmodule ParkingLotWeb.DriverLiveTest do
     %{driver: driver}
   end
 
-  setup :register_and_log_in_user
-
   describe "Index" do
     setup [:create_driver]
 
     test "lists all drivers", %{conn: conn, driver: driver} do
-      {:ok, _index_live, html} = live(conn, Routes.driver_index_path(conn, :index))
+      {:ok, _index_live, html} = live(conn, ~p"/drivers")
 
       assert html =~ "Listing Drivers"
       assert html =~ driver.name
     end
 
     test "saves new driver", %{conn: conn} do
-      {:ok, index_live, _html} = live(conn, Routes.driver_index_path(conn, :index))
+      {:ok, index_live, _html} = live(conn, ~p"/drivers")
 
       assert index_live |> element("a", "New Driver") |> render_click() =~
                "New Driver"
 
-      assert_patch(index_live, Routes.driver_index_path(conn, :new))
+      assert_patch(index_live, ~p"/drivers/new")
 
       assert index_live
              |> form("#driver-form", driver: @invalid_attrs)
              |> render_change() =~ "can&#39;t be blank"
 
-      {:ok, _, html} =
-        index_live
-        |> form("#driver-form", driver: @create_attrs)
-        |> render_submit()
-        |> follow_redirect(conn, Routes.driver_index_path(conn, :index))
+      assert index_live
+             |> form("#driver-form", driver: @create_attrs)
+             |> render_submit()
 
+      assert_patch(index_live, ~p"/drivers")
+
+      html = render(index_live)
       assert html =~ "Driver created successfully"
       assert html =~ "some name"
     end
 
     test "updates driver in listing", %{conn: conn, driver: driver} do
-      {:ok, index_live, _html} = live(conn, Routes.driver_index_path(conn, :index))
+      {:ok, index_live, _html} = live(conn, ~p"/drivers")
 
-      assert index_live |> element("#driver-#{driver.id} a", "Edit") |> render_click() =~
+      assert index_live |> element("#drivers-#{driver.id} a", "Edit") |> render_click() =~
                "Edit Driver"
 
-      assert_patch(index_live, Routes.driver_index_path(conn, :edit, driver))
+      assert_patch(index_live, ~p"/drivers/#{driver}/edit")
 
       assert index_live
              |> form("#driver-form", driver: @invalid_attrs)
              |> render_change() =~ "can&#39;t be blank"
 
-      {:ok, _, html} =
-        index_live
-        |> form("#driver-form", driver: @update_attrs)
-        |> render_submit()
-        |> follow_redirect(conn, Routes.driver_index_path(conn, :index))
+      assert index_live
+             |> form("#driver-form", driver: @update_attrs)
+             |> render_submit()
 
+      assert_patch(index_live, ~p"/drivers")
+
+      html = render(index_live)
       assert html =~ "Driver updated successfully"
       assert html =~ "some updated name"
     end
 
     test "deletes driver in listing", %{conn: conn, driver: driver} do
-      {:ok, index_live, _html} = live(conn, Routes.driver_index_path(conn, :index))
+      {:ok, index_live, _html} = live(conn, ~p"/drivers")
 
-      assert index_live |> element("#driver-#{driver.id} a", "Delete") |> render_click()
-      refute has_element?(index_live, "#driver-#{driver.id}")
+      assert index_live |> element("#drivers-#{driver.id} a", "Delete") |> render_click()
+      refute has_element?(index_live, "#drivers-#{driver.id}")
     end
   end
 
@@ -81,30 +81,31 @@ defmodule ParkingLotWeb.DriverLiveTest do
     setup [:create_driver]
 
     test "displays driver", %{conn: conn, driver: driver} do
-      {:ok, _show_live, html} = live(conn, Routes.driver_show_path(conn, :show, driver))
+      {:ok, _show_live, html} = live(conn, ~p"/drivers/#{driver}")
 
       assert html =~ "Show Driver"
       assert html =~ driver.name
     end
 
     test "updates driver within modal", %{conn: conn, driver: driver} do
-      {:ok, show_live, _html} = live(conn, Routes.driver_show_path(conn, :show, driver))
+      {:ok, show_live, _html} = live(conn, ~p"/drivers/#{driver}")
 
       assert show_live |> element("a", "Edit") |> render_click() =~
                "Edit Driver"
 
-      assert_patch(show_live, Routes.driver_show_path(conn, :edit, driver))
+      assert_patch(show_live, ~p"/drivers/#{driver}/show/edit")
 
       assert show_live
              |> form("#driver-form", driver: @invalid_attrs)
              |> render_change() =~ "can&#39;t be blank"
 
-      {:ok, _, html} =
-        show_live
-        |> form("#driver-form", driver: @update_attrs)
-        |> render_submit()
-        |> follow_redirect(conn, Routes.driver_show_path(conn, :show, driver))
+      assert show_live
+             |> form("#driver-form", driver: @update_attrs)
+             |> render_submit()
 
+      assert_patch(show_live, ~p"/drivers/#{driver}")
+
+      html = render(show_live)
       assert html =~ "Driver updated successfully"
       assert html =~ "some updated name"
     end

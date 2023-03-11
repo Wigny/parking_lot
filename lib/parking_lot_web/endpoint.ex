@@ -7,7 +7,8 @@ defmodule ParkingLotWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_parking_lot_key",
-    signing_salt: "ZXzKvw6L"
+    signing_salt: "ZXzKvw6L",
+    same_site: "Lax"
   ]
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
@@ -20,7 +21,7 @@ defmodule ParkingLotWeb.Endpoint do
     at: "/",
     from: :parking_lot,
     gzip: false,
-    only: ~w(assets fonts images favicon.ico robots.txt)
+    only: ParkingLotWeb.static_paths()
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.

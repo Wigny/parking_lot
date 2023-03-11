@@ -11,68 +11,68 @@
 # and so on) as they will fail if something goes wrong.
 
 unless Mix.env() == :test do
+  alias Ecto.Multi
   alias ParkingLot.Repo
   alias ParkingLot.Vehicles
 
-  now = DateTime.truncate(DateTime.utc_now(), :second)
+  insert_all = fn name, enumerable, change_fun ->
+    enumerable
+    |> Enum.with_index()
+    |> Enum.reduce(Multi.new(), fn {elem, index}, multi ->
+      Multi.insert(multi, {name, index}, then(elem, change_fun))
+    end)
+    |> Repo.transaction()
+  end
 
-  Repo.insert_all(
-    Vehicles.Color,
+  apply(insert_all, [
+    :vehicle_colors,
     [
-      %{name: "Amarelo", inserted_at: now, updated_at: now},
-      %{name: "Azul", inserted_at: now, updated_at: now},
-      %{name: "Bege", inserted_at: now, updated_at: now},
-      %{name: "Branca", inserted_at: now, updated_at: now},
-      %{name: "Cinza", inserted_at: now, updated_at: now},
-      %{name: "Dourada", inserted_at: now, updated_at: now},
-      %{name: "Grená", inserted_at: now, updated_at: now},
-      %{name: "Laranja", inserted_at: now, updated_at: now},
-      %{name: "Marrom", inserted_at: now, updated_at: now},
-      %{name: "Prata", inserted_at: now, updated_at: now},
-      %{name: "Preta", inserted_at: now, updated_at: now},
-      %{name: "Rosa", inserted_at: now, updated_at: now},
-      %{name: "Roxa", inserted_at: now, updated_at: now},
-      %{name: "Verde", inserted_at: now, updated_at: now},
-      %{name: "Vermelha", inserted_at: now, updated_at: now},
-      %{name: "Fantasia", inserted_at: now, updated_at: now}
-    ]
-  )
+      "Amarelo",
+      "Azul",
+      "Bege",
+      "Branca",
+      "Cinza",
+      "Dourada",
+      "Grená",
+      "Laranja",
+      "Marrom",
+      "Prata",
+      "Preta",
+      "Rosa",
+      "Roxa",
+      "Verde",
+      "Vermelha",
+      "Fantasia"
+    ],
+    &Vehicles.change_color(%Vehicles.Color{}, %{name: &1})
+  ])
 
-  Repo.insert!(%Vehicles.Brand{
-    name: "HONDA",
-    models: [%Vehicles.Model{name: "CG 150 TITAN ES"}]
-  })
-
-  Repo.insert!(%Vehicles.Brand{
-    name: "CHEV",
-    models: [%Vehicles.Model{name: "ONIX PLUS 10TAT PR2"}]
-  })
-
-  Repo.insert_all(
-    Vehicles.Type,
+  apply(insert_all, [
+    :vehicle_types,
     [
-      %{name: "Automóvel", inserted_at: now, updated_at: now},
-      %{name: "Caminhão", inserted_at: now, updated_at: now},
-      %{name: "Caminhão Trator", inserted_at: now, updated_at: now},
-      %{name: "Caminhonete", inserted_at: now, updated_at: now},
-      %{name: "Camioneta", inserted_at: now, updated_at: now},
-      %{name: "Carga", inserted_at: now, updated_at: now},
-      %{name: "Chassi Plataforma", inserted_at: now, updated_at: now},
-      %{name: "Ciclomotor", inserted_at: now, updated_at: now},
-      %{name: "Especial", inserted_at: now, updated_at: now},
-      %{name: "Micro-Ônibus", inserted_at: now, updated_at: now},
-      %{name: "Motocicleta", inserted_at: now, updated_at: now},
-      %{name: "Motoneta", inserted_at: now, updated_at: now},
-      %{name: "Motor-Casa", inserted_at: now, updated_at: now},
-      %{name: "Ônibus", inserted_at: now, updated_at: now},
-      %{name: "Quadriciclo", inserted_at: now, updated_at: now},
-      %{name: "Reboque", inserted_at: now, updated_at: now},
-      %{name: "Semirreboque", inserted_at: now, updated_at: now},
-      %{name: "Tr Esteiras", inserted_at: now, updated_at: now},
-      %{name: "Tr Misto", inserted_at: now, updated_at: now},
-      %{name: "Tr Rodas", inserted_at: now, updated_at: now},
-      %{name: "Triciclo", inserted_at: now, updated_at: now},
-      %{name: "Utilitário", inserted_at: now, updated_at: now}
-    ]
-  )
+      "Automóvel",
+      "Caminhão",
+      "Caminhão Trator",
+      "Caminhonete",
+      "Camioneta",
+      "Carga",
+      "Chassi Plataforma",
+      "Ciclomotor",
+      "Especial",
+      "Micro-Ônibus",
+      "Motocicleta",
+      "Motoneta",
+      "Motor-Casa",
+      "Ônibus",
+      "Quadriciclo",
+      "Reboque",
+      "Semirreboque",
+      "Tr Esteiras",
+      "Tr Misto",
+      "Tr Rodas",
+      "Triciclo",
+      "Utilitário"
+    ],
+    &Vehicles.change_type(%Vehicles.Type{}, %{name: &1})
+  ])
 end

@@ -1,62 +1,50 @@
-<h1>Listing Vehicles</h1>
+<.header>
+  Listing Vehicles
+  <:actions>
+    <.link patch={~p"/vehicles/new"}>
+      <.button>New Vehicle</.button>
+    </.link>
+  </:actions>
+</.header>
 
-<%= if @live_action in [:new, :edit] do %>
-  <.modal return_to={Routes.vehicle_index_path(@socket, :index)}>
-    <.live_component
-      module={ParkingLotWeb.VehicleLive.FormComponent}
-      id={@vehicle.id || :new}
-      title={@page_title}
-      action={@live_action}
-      vehicle={@vehicle}
-      return_to={Routes.vehicle_index_path(@socket, :index)}
-    />
-  </.modal>
-<% end %>
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="vehicle-modal"
+  show
+  on_cancel={JS.navigate(~p"/vehicles")}
+>
+  <.live_component
+    module={ParkingLotWeb.VehicleLive.FormComponent}
+    id={@vehicle.id || :new}
+    title={@page_title}
+    action={@live_action}
+    vehicle={@vehicle}
+    patch={~p"/vehicles"}
+  />
+</.modal>
 
-<table>
-  <thead>
-    <tr>
-      <th>License plate</th>
-      <th>Type</th>
-      <th>Model</th>
-      <th>Color</th>
-      <th>Active</th>
-
-      <th></th>
-    </tr>
-  </thead>
-  <tbody id="vehicles">
-    <%= for vehicle <- @vehicles do %>
-      <tr id={"vehicle-#{vehicle.id}"}>
-        <td><%= vehicle.license_plate %></td>
-        <td><%= vehicle.type.name %></td>
-        <td><%= vehicle.model.name %></td>
-        <td><%= vehicle.color.name %></td>
-        <td><%= vehicle.active %></td>
-
-        <td>
-          <span>
-            <.link navigate={Routes.vehicle_show_path(@socket, :show, vehicle)}>Show</.link>
-          </span>
-          <span>
-            <.link patch={Routes.vehicle_index_path(@socket, :edit, vehicle)}>Edit</.link>
-          </span>
-          <span>
-            <.link
-              href="#"
-              phx-click="delete"
-              phx-value-id={vehicle.id}
-              data-confirm="Are you sure?"
-            >
-              Delete
-            </.link>
-          </span>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<span>
-  <.link patch={Routes.vehicle_index_path(@socket, :new)}>New Vehicle</.link>
-</span>
+<.table
+  id="vehicles"
+  rows={@streams.vehicles}
+  row_click={fn {_id, vehicle} -> JS.navigate(~p"/vehicles/#{vehicle}") end}
+>
+  <:col :let={{_id, vehicle}} label="License plate"><%= vehicle.license_plate %></:col>
+  <:col :let={{_id, vehicle}} label="Type"><%= vehicle.type.name %></:col>
+  <:col :let={{_id, vehicle}} label="Model"><%= vehicle.model.name %></:col>
+  <:col :let={{_id, vehicle}} label="Color"><%= vehicle.color.name %></:col>
+  <:col :let={{_id, vehicle}} label="Active"><%= vehicle.active %></:col>
+  <:action :let={{_id, vehicle}}>
+    <div class="sr-only">
+      <.link navigate={~p"/vehicles/#{vehicle}"}>Show</.link>
+    </div>
+    <.link patch={~p"/vehicles/#{vehicle}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, vehicle}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: vehicle.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>

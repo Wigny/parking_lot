@@ -3,6 +3,8 @@ defmodule ParkingLot.Repo.Migrations.CreateParkings do
 
   def change do
     create table(:parkings) do
+      add :entered_at, :utc_datetime
+      add :left_at, :utc_datetime
       add :vehicle_id, references(:vehicles, on_delete: :nothing)
 
       timestamps()

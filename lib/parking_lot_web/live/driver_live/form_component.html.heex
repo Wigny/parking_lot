@@ -1,40 +1,24 @@
 <div>
-  <h2><%= @title %></h2>
+  <.header>
+    <%= @title %>
+    <:subtitle>Use this form to manage driver records in your database.</:subtitle>
+  </.header>
 
-  <.form
-    :let={f}
-    for={@changeset}
+  <.simple_form
+    for={@form}
     id="driver-form"
     phx-target={@myself}
     phx-change="validate"
     phx-submit="save"
   >
-    <%= label(f, :name) %>
-    <%= text_input(f, :name) %>
-    <%= error_tag(f, :name) %>
-
-    <%= label(f, :cpf, "CPF") %>
-    <%= digits_input(f, :cpf, maxlength: 11) %>
-    <%= error_tag(f, :cpf) %>
-
-    <%= label(f, :cnh, "CNH") %>
-    <%= digits_input(f, :cnh, maxlength: 11) %>
-    <%= error_tag(f, :cnh) %>
-
-    <%= label(f, :email) %>
-    <%= text_input(f, :email, type: :email) %>
-    <%= error_tag(f, :email) %>
-
-    <%= label(f, :phone) %>
-    <%= telephone_input(f, :phone, maxlength: 11, phx_hook: "InputPatternConstraint") %>
-    <%= error_tag(f, :phone) %>
-
-    <%= label(f, :active) %>
-    <%= checkbox(f, :active) %>
-    <%= error_tag(f, :active) %>
-
-    <div>
-      <%= submit("Save", phx_disable_with: "Saving...") %>
-    </div>
-  </.form>
+    <.input field={@form[:name]} type="text" label="Name" />
+    <.input field={@form[:cpf]} type="digits" label="CPF" />
+    <.input field={@form[:cnh]} type="digits" label="CNH" />
+    <.input field={@form[:email]} type="email" label="Email" />
+    <.input field={@form[:phone]} type="tel" label="Phone" />
+    <.input field={@form[:active]} type="checkbox" label="Active" />
+    <:actions>
+      <.button phx-disable-with="Saving...">Save Driver</.button>
+    </:actions>
+  </.simple_form>
 </div>

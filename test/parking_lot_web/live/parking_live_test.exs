@@ -9,13 +9,11 @@ defmodule ParkingLotWeb.ParkingLiveTest do
     %{parking: parking}
   end
 
-  setup :register_and_log_in_user
-
   describe "Index" do
     setup [:create_parking]
 
     test "lists all parkings", %{conn: conn} do
-      {:ok, _index_live, html} = live(conn, Routes.parking_index_path(conn, :index))
+      {:ok, _index_live, html} = live(conn, ~p"/parkings")
 
       assert html =~ "Listing Parkings"
     end
@@ -25,7 +23,7 @@ defmodule ParkingLotWeb.ParkingLiveTest do
     setup [:create_parking]
 
     test "displays parking", %{conn: conn, parking: parking} do
-      {:ok, _show_live, html} = live(conn, Routes.parking_show_path(conn, :show, parking))
+      {:ok, _show_live, html} = live(conn, ~p"/parkings/#{parking}")
 
       assert html =~ "Show Parking"
     end

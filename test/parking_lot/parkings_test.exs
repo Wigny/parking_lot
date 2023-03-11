@@ -8,7 +8,7 @@ defmodule ParkingLot.ParkingsTest do
 
     import ParkingLot.ParkingsFixtures
 
-    @invalid_attrs %{vehicle_id: nil}
+    @invalid_attrs %{vehicle_id: nil, entered_at: nil, left_at: nil}
 
     test "list_parkings/0 returns all parkings" do
       parking = parking_fixture()
