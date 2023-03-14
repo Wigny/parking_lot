@@ -7,6 +7,7 @@ import { LiveSocket } from "phoenix_live_view";
 
 import topbar from "../vendor/topbar";
 import hooks from "./hooks";
+import "./elements";
 
 const csrfToken = document
   .querySelector("meta[name='csrf-token']")

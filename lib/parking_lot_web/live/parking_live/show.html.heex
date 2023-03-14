@@ -8,12 +8,26 @@
 
   <li>
     <strong>Entered at:</strong>
-    <.datetime value={@parking.entered_at} />
+    <time
+      is="relative-time"
+      datetime={@parking.entered_at}
+      phx-update="ignore"
+      id={Ecto.UUID.generate()}
+    >
+      <%= @parking.entered_at %>
+    </time>
   </li>
 
   <li>
     <strong>Left at:</strong>
-    <.datetime value={@parking.entered_at} />
+    <time
+      is="relative-time"
+      datetime={@parking.left_at}
+      phx-update="ignore"
+      id={Ecto.UUID.generate()}
+    >
+      <%= @parking.left_at %>
+    </time>
   </li>
 </ul>
 

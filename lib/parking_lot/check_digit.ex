@@ -4,7 +4,7 @@ defmodule ParkingLot.CheckDigit do
   based on https://github.com/klawdyo/validation-br/tree/v.1.4.2
   """
 
-  alias ParkingLot.CheckDigit.Digits
+  alias ParkingLot.Digits
 
   @validations [
     cpf: %{
