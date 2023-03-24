@@ -8,7 +8,7 @@ defmodule ParkingLot.ALPR.Video do
   alias Evision.VideoCapture
   alias ParkingLot.Cameras.Camera
 
-  @max_fps 30
+  @max_fps 10
 
   defmodule State do
     @moduledoc false
