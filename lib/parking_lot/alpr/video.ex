@@ -5,6 +5,8 @@ defmodule ParkingLot.ALPR.Video do
 
   use GenServer
 
+  import Evision.Constant, only: [cv_CAP_FFMPEG: 0]
+
   alias Evision.VideoCapture
   alias ParkingLot.Cameras.Camera
 
@@ -55,7 +57,7 @@ defmodule ParkingLot.ALPR.Video do
   @impl true
   def handle_continue(:start, %State{camera: camera} = state) do
     stream = URI.to_string(camera.uri)
-    video = VideoCapture.videoCapture(stream, apiPreference: Evision.cv_CAP_FFMPEG())
+    video = VideoCapture.videoCapture(stream, apiPreference: cv_CAP_FFMPEG())
 
     send(self(), :read)
 
