@@ -18,7 +18,7 @@ defmodule ParkingLot.Application do
       ParkingLotWeb.Endpoint,
       # Start a worker by calling: ParkingLot.Worker.start_link(arg)
       {Registry, keys: :unique, name: ParkingLot.Registry},
-      ParkingLot.ALPR
+      # ParkingLot.ALPR
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

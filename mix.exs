@@ -42,6 +42,7 @@ defmodule ParkingLot.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:ueberauth_google, "~> 0.10"},
+      {:gen_stage, "~> 1.2"},
       {:evision, "~> 0.1.30"},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},

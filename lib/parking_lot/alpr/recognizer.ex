@@ -1,4 +1,4 @@
-defmodule ParkingLot.ALPR.Text.Recognizer do
+defmodule ParkingLot.ALPR.Recognizer do
   @moduledoc """
   Based on https://github.com/opencv/opencv_zoo/tree/master/models/text_recognition_crnn by
   https://github.com/cocoa-xu/evision/pull/143
@@ -10,8 +10,8 @@ defmodule ParkingLot.ALPR.Text.Recognizer do
   # Server
 
   @impl true
-  def init(state) do
-    {:ok, state, {:continue, :init}}
+  def init(_state) do
+    {:ok, nil, {:continue, :init}}
   end
 
   @impl true
@@ -44,29 +44,33 @@ defmodule ParkingLot.ALPR.Text.Recognizer do
 
   # Client
 
-  def start_link(opts) do
-    GenServer.start_link(__MODULE__, opts, name: __MODULE__)
+  def start_link(_opts \\ []) do
+    GenServer.start_link(__MODULE__, nil, name: __MODULE__)
   end
 
   def infer(image) do
-    image
-    |> detections()
-    |> filter_detections()
-    |> Enum.map(fn detection -> recognitions(image, detection) end)
-  end
+    {detections, confidences} = GenServer.call(__MODULE__, {:detect, image}, :infinity)
+    texts = Enum.map(detections, &GenServer.call(__MODULE__, {:recognize, &1, image}))
 
-  defp detections(image) do
-    GenServer.call(__MODULE__, {:detect, image}, :infinity)
-  end
+    detections =
+      Enum.map(detections, fn points ->
+        %{shape: {height, width, _channels}} = image
 
-  defp recognitions(image, detection) do
-    GenServer.call(__MODULE__, {:recognize, detection, image})
-  end
+        points
+        |> Evision.boxPoints()
+        |> Evision.Mat.to_nx(Nx.BinaryBackend)
+        |> Nx.multiply(Nx.tensor([height, width]))
+        |> Nx.as_type(:s32)
+      end)
 
-  defp filter_detections({detections, confidences}) do
-    detections
-    |> Enum.zip(confidences)
-    |> Enum.filter(fn {_detection, confidence} -> match?(1.0, confidence) end)
-    |> Enum.map(fn {detection, _confidence} -> detection end)
+    image =
+      TextRecognition.CRNN.visualize(
+        image,
+        texts,
+        detections,
+        confidences
+      )
+
+    %{texts: texts, image: image}
   end
 end
