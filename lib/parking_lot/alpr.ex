@@ -3,7 +3,7 @@ defmodule ParkingLot.ALPR do
 
   use Supervisor
 
-  alias ParkingLot.ALPR.{Image, Text, Video}
+  alias ParkingLot.ALPR.{Recognizer, Video, Watcher}
   alias ParkingLot.Cameras
 
   def start_link(opts) do
@@ -12,13 +12,33 @@ defmodule ParkingLot.ALPR do
 
   @impl true
   def init(_opts) do
-    Cameras.list_cameras()
-    |> Enum.reduce([Text.Recognizer], fn camera, children ->
-      video = Supervisor.child_spec({Video, camera}, id: "video_#{camera.id}")
-      image = Supervisor.child_spec({Image, camera}, id: "image_#{camera.id}")
+    cameras = Cameras.list_cameras()
 
-      [video, image | children]
-    end)
+    children = [Recognizer]
+
+    cameras
+    |> Enum.reduce(children, &children_by_camera/2)
     |> Supervisor.init(strategy: :one_for_one)
+  end
+
+  defp children_by_camera(camera, children) do
+    video = %{
+      id: {Video, camera.id},
+      start: {
+        Video,
+        :start_link,
+        [
+          %{id: camera.id, stream: URI.to_string(camera.uri)},
+          [name: {:via, Registry, {ParkingLot.Registry, "video_#{camera.id}"}}]
+        ]
+      }
+    }
+
+    watcher = %{
+      id: {Watcher, camera.id},
+      start: {Watcher, :start_link, [%{id: camera.id}]}
+    }
+
+    [video, watcher | children]
   end
 end

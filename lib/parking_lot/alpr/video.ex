@@ -8,75 +8,60 @@ defmodule ParkingLot.ALPR.Video do
   import Evision.Constant, only: [cv_CAP_FFMPEG: 0]
 
   alias Evision.VideoCapture
-  alias ParkingLot.Cameras.Camera
 
-  @max_fps 10
-
-  defmodule State do
-    @moduledoc false
-
-    @type t :: %__MODULE__{
-            camera: Camera.t(),
-            video: Evision.VideoCapture.t() | nil,
-            frame: Evision.Mat.t() | nil
-          }
-    defstruct camera: nil, video: nil, frame: nil
-  end
+  @max_fps 60
 
   # Client
 
-  def start_link(%Camera{id: id} = camera) do
-    name = {:via, Registry, {ParkingLot.Registry, "video_#{id}"}}
-    GenServer.start_link(__MODULE__, camera, name: name)
+  def start_link(%{id: id, stream: stream}, opts \\ []) do
+    GenServer.start_link(__MODULE__, %{id: id, stream: stream}, opts)
   end
 
-  def frame(%Camera{id: id}) do
-    [{pid, nil}] = Registry.lookup(ParkingLot.Registry, "video_#{id}")
-    GenServer.call(pid, :frame)
+  def frame(server) do
+    GenServer.call(server, :frame)
   end
 
   # Server
 
   @impl true
-  def init(camera) do
+  def init(attrs) do
     Process.flag(:trap_exit, true)
 
-    {:ok, %State{camera: camera}, {:continue, :start}}
+    {:ok, attrs, {:continue, :start}}
   end
 
   @impl true
-  def terminate(_reason, %State{video: video} = state) do
-    %State{state | video: VideoCapture.release(video)}
-  end
-
-  @impl true
-  def handle_call(:frame, _from, %State{frame: frame} = state) do
-    {:reply, frame, state}
-  end
-
-  @impl true
-  def handle_continue(:start, %State{camera: camera} = state) do
-    stream = URI.to_string(camera.uri)
+  def handle_continue(:start, %{id: id, stream: stream}) do
     video = VideoCapture.videoCapture(stream, apiPreference: cv_CAP_FFMPEG())
 
     send(self(), :read)
 
-    {:noreply, %State{state | video: video}}
+    {:noreply, %{id: id, video: video, frame: nil}}
   end
 
   @impl true
-  def handle_info(:read, %State{video: %{isOpened: false}} = state) do
+  def terminate(_reason, %{video: video} = state) do
+    %{state | video: VideoCapture.release(video)}
+  end
+
+  @impl true
+  def handle_info(:read, %{video: %{isOpened: false}} = state) do
     {:stop, "Video stream isn't opened", state}
   end
 
-  def handle_info(:read, %State{camera: camera, video: video} = state) do
+  def handle_info(:read, %{video: video} = state) do
     frame = if mat = VideoCapture.read(video), do: mat
 
     Process.send_after(self(), :read, cycle(video))
 
-    Phoenix.PubSub.broadcast(ParkingLot.PubSub, "video", {:frame, camera.id, frame})
+    # Phoenix.PubSub.broadcast(ParkingLot.PubSub, "alpr", {:frame, state.id, frame})
 
-    {:noreply, %State{state | frame: frame}}
+    {:noreply, %{state | frame: frame}}
+  end
+
+  @impl true
+  def handle_call(:frame, _from, %{frame: frame} = state) do
+    {:reply, frame, state}
   end
 
   defp cycle(video) do

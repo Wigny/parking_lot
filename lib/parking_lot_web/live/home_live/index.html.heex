@@ -1,9 +1,9 @@
-<section :for={{id, canvas} <- @canvas} :if={canvas} class="row">
-  <canvas
+<section :for={{id, preview} <- @previews} :if={preview} class="row">
+ <canvas
     id={"preview_#{id}"}
-    data-image={canvas.image}
-    width={canvas.width}
-    height={canvas.height}
+    data-image={preview.image}
+    width={preview.width}
+    height={preview.height}
     phx-hook="DrawCanvas"
     style="
       max-width: 100%;
