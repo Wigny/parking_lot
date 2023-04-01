@@ -9,63 +9,57 @@ defmodule ParkingLot.ALPR.Video do
 
   alias Evision.VideoCapture
 
-  @max_fps 60
-
   # Client
 
-  def start_link(%{id: id, stream: stream}, opts \\ []) do
-    GenServer.start_link(__MODULE__, %{id: id, stream: stream}, opts)
+  def start_link(%{stream: stream}, opts \\ [name: __MODULE__]) do
+    GenServer.start_link(__MODULE__, stream, opts)
   end
 
-  def frame(server) do
+  def frame(server \\ __MODULE__) do
     GenServer.call(server, :frame)
   end
 
   # Server
 
   @impl true
-  def init(attrs) do
+  def init(stream) do
     Process.flag(:trap_exit, true)
 
-    {:ok, attrs, {:continue, :start}}
+    {:ok, stream, {:continue, :start}}
   end
 
   @impl true
-  def handle_continue(:start, %{id: id, stream: stream}) do
+  def handle_continue(:start, stream) do
     video = VideoCapture.videoCapture(stream, apiPreference: cv_CAP_FFMPEG())
 
-    send(self(), :read)
+    send(self(), :grab)
 
-    {:noreply, %{id: id, video: video, frame: nil}}
+    {:noreply, video}
   end
 
   @impl true
-  def terminate(_reason, %{video: video} = state) do
-    %{state | video: VideoCapture.release(video)}
+  def terminate(_reason, video) do
+    VideoCapture.release(video)
   end
 
   @impl true
-  def handle_info(:read, %{video: %{isOpened: false}} = state) do
-    {:stop, "Video stream isn't opened", state}
-  end
-
-  def handle_info(:read, %{video: video} = state) do
-    frame = if mat = VideoCapture.read(video), do: mat
-
-    Process.send_after(self(), :read, cycle(video))
-
-    # Phoenix.PubSub.broadcast(ParkingLot.PubSub, "alpr", {:frame, state.id, frame})
-
-    {:noreply, %{state | frame: frame}}
+  def handle_call(:frame, _from, %{isOpened: false} = video) do
+    {:stop, "Video stream isn't opened", video}
   end
 
   @impl true
-  def handle_call(:frame, _from, %{frame: frame} = state) do
-    {:reply, frame, state}
+  def handle_call(:frame, _from, video) do
+    frame = VideoCapture.retrieve(video)
+
+    {:reply, frame, video}
   end
 
-  defp cycle(video) do
-    fps = min(round(video.fps), @max_fps)
-    div(:timer.seconds(1), fps)
+  @impl true
+  def handle_info(:grab, video) do
+    true = VideoCapture.grab(video)
+
+    Process.send_after(self(), :grab, floor(:timer.seconds(1) / video.fps))
+
+    {:noreply, video}
   end
 end

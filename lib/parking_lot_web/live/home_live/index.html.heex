@@ -1,5 +1,5 @@
 <section :for={{id, preview} <- @previews} :if={preview} class="row">
- <canvas
+  <canvas
     id={"preview_#{id}"}
     data-image={preview.image}
     width={preview.width}
