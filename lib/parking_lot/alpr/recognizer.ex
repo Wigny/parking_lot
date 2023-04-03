@@ -16,7 +16,7 @@ defmodule ParkingLot.ALPR.Recognizer do
   def infer(%{shape: {height, width, _channels}} = image) do
     resized_image = Evision.resize(image, {736, 736})
 
-    {detections, confidences} = GenServer.call(__MODULE__, {:detect, resized_image}, :infinity)
+    {detections, _confidences} = GenServer.call(__MODULE__, {:detect, resized_image}, :infinity)
 
     recognitions =
       Enum.map(detections, &GenServer.call(__MODULE__, {:recognize, &1, resized_image}))
@@ -30,25 +30,21 @@ defmodule ParkingLot.ALPR.Recognizer do
         |> Nx.as_type(:s32)
       end)
 
-    preview = TextRecognition.CRNN.visualize(image, recognitions, detections, confidences)
-
-    {recognitions, preview}
+    Enum.zip(recognitions, detections)
   end
 
   # Server
 
   @impl true
   def init(_state) do
-    models = %{text_detection: :td500_resnet18, text_recognition: :cn, charset: :cn}
-
-    {:ok, models, {:continue, :init}}
+    {:ok, nil, {:continue, :init}}
   end
 
   @impl true
-  def handle_continue(:init, models) do
-    detector = TextDetection.DB.init(models.text_detection)
-    recognizer = TextRecognition.CRNN.init(models.text_recognition)
-    charset = TextRecognition.CRNN.get_charset(models.charset)
+  def handle_continue(:init, nil) do
+    detector = TextDetection.DB.init(:td500_resnet18)
+    recognizer = TextRecognition.CRNN.init(:cn)
+    charset = TextRecognition.CRNN.get_charset(:cn)
 
     {:noreply, %{detector: detector, recognizer: recognizer, charset: charset}}
   end

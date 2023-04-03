@@ -16,15 +16,30 @@ defmodule ParkingLot.ALPR.Watcher do
 
   @impl true
   def handle_info(:recognize, %{id: id} = state) do
-    [{video_server, nil}] = Registry.lookup(ParkingLot.Registry, "video_#{id}")
+    [{video, nil}] = Registry.lookup(ParkingLot.Registry, "video_#{id}")
 
-    frame = Video.frame(video_server)
-    recognition = if frame, do: Recognizer.infer(frame)
+    frame = Video.frame(video)
+    recognitions = if frame, do: Recognizer.infer(frame)
 
     send(self(), :recognize)
 
-    Phoenix.PubSub.broadcast(ParkingLot.PubSub, "alpr", {:recognition, id, recognition})
+    preview = if frame, do: Enum.reduce(recognitions, frame, &draw/2)
+
+    Phoenix.PubSub.broadcast(ParkingLot.PubSub, "alpr", {:recognition, id, {nil, preview}})
 
     {:noreply, state}
+  end
+
+  defp draw(nil, image) do
+    image
+  end
+
+  defp draw({text, points}, image) do
+    import Evision.Constant, only: [cv_FONT_HERSHEY_DUPLEX: 0]
+
+    [b0, b1 | _] = Nx.to_flat_list(points)
+
+    box = Evision.polylines(image, [points], true, {0, 255, 0}, thickness: 2)
+    Evision.putText(box, text, {b0, b1 + 12}, cv_FONT_HERSHEY_DUPLEX(), 1.0, {0, 0, 255})
   end
 end

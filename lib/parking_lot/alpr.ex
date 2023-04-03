@@ -28,7 +28,7 @@ defmodule ParkingLot.ALPR do
         Video,
         :start_link,
         [
-          %{id: camera.id, stream: URI.to_string(camera.uri)},
+          %{stream: URI.to_string(camera.uri)},
           [name: {:via, Registry, {ParkingLot.Registry, "video_#{camera.id}"}}]
         ]
       }

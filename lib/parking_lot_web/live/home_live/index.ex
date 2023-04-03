@@ -16,9 +16,7 @@ defmodule ParkingLotWeb.HomeLive.Index do
   end
 
   @impl true
-  def handle_info({:recognition, id, {texts, preview}}, socket) do
-    IO.inspect(texts)
-
+  def handle_info({:recognition, id, {_texts, preview}}, socket) do
     {:noreply, update(socket, :previews, &Map.put(&1, id, to_canvas(preview)))}
   end
 
