@@ -1,10 +1,13 @@
 defmodule ParkingLot.ALPR.Watcher do
   use GenServer
 
+  alias ParkingLot.{Customers, Parkings}
   alias ParkingLot.ALPR.{Recognizer, Video}
 
-  def start_link(%{id: id}, opts \\ []) do
-    GenServer.start_link(__MODULE__, %{id: id}, opts)
+  @license_plate_regex ~r/(?<legacy>[A-Z]{3}-?[0-9]{4})|(?<mercosul>[A-Z]{3}[0-9][A-Z][0-9]{2})/
+
+  def start_link(%{id: id, type: type}, opts \\ []) do
+    GenServer.start_link(__MODULE__, %{id: id, type: type}, opts)
   end
 
   @impl true
@@ -19,27 +22,86 @@ defmodule ParkingLot.ALPR.Watcher do
     [{video, nil}] = Registry.lookup(ParkingLot.Registry, "video_#{id}")
 
     frame = Video.frame(video)
-    recognitions = if frame, do: Recognizer.infer(frame)
+    inferences = if frame, do: Recognizer.infer(frame), else: []
 
     send(self(), :recognize)
 
-    preview = if frame, do: Enum.reduce(recognitions, frame, &draw/2)
+    recognition = find_license_plate_recognition(inferences)
 
-    Phoenix.PubSub.broadcast(ParkingLot.PubSub, "alpr", {:recognition, id, {nil, preview}})
+    preview = visualize_recognition(frame, recognition)
+    vehicle = with {plate, _} <- recognition, do: Customers.get_vehicle(license_plate: plate)
+
+    Phoenix.PubSub.broadcast(
+      ParkingLot.PubSub,
+      "alpr",
+      {:recognition, id, %{preview: preview, vehicle: vehicle}}
+    )
+
+    # GenServer.cast(self(), {:register, vehicle})
 
     {:noreply, state}
   end
 
-  defp draw(nil, image) do
+  @impl true
+  def handle_cast({:register, nil}, state) do
+    {:noreply, state}
+  end
+
+  def handle_cast({:register, vehicle}, %{id: id, type: type} = state) do
+    parking = register_parking(type, vehicle)
+
+    Phoenix.PubSub.broadcast(ParkingLot.PubSub, "alpr", {:parking, id, parking})
+
+    {:noreply, state}
+  end
+
+  defp find_license_plate_recognition(inferences) do
+    inferences
+    |> Enum.map(fn {text, detection} -> {capture_license_plate(text), detection} end)
+    |> Enum.reject(&match?({nil, _detection}, &1))
+    |> List.first()
+  end
+
+  defp capture_license_plate(text) when is_binary(text) do
+    @license_plate_regex
+    |> Regex.run(text)
+    |> List.wrap()
+    |> List.first()
+  end
+
+  defp visualize_recognition(image, nil) do
     image
   end
 
-  defp draw({text, points}, image) do
-    import Evision.Constant, only: [cv_FONT_HERSHEY_DUPLEX: 0]
+  defp visualize_recognition(image, {text, points}) do
+    import Evision.Constant
 
     [b0, b1 | _] = Nx.to_flat_list(points)
 
-    box = Evision.polylines(image, [points], true, {0, 255, 0}, thickness: 2)
-    Evision.putText(box, text, {b0, b1 + 12}, cv_FONT_HERSHEY_DUPLEX(), 1.0, {0, 0, 255})
+    image
+    |> Evision.polylines([points], true, {0, 255, 0}, thickness: 2)
+    |> Evision.putText(text, {b0, b1 + 50}, cv_FONT_HERSHEY_DUPLEX(), 2, {0, 0, 0}, thickness: 5)
+  end
+
+  # the external camera register the car entry
+  defp register_parking(:external, vehicle) do
+    last_parking = Parkings.get_last_parking(vehicle_id: vehicle.id)
+
+    if match?(%{left_at: nil}, last_parking) do
+      {:error, :already_entered}
+    else
+      Parkings.create_parking(%{vehicle_id: vehicle.id, entered_at: DateTime.utc_now()})
+    end
+  end
+
+  # the internal camera register the car exit
+  defp register_parking(:internal, vehicle) do
+    last_parking = Parkings.get_last_parking(vehicle_id: vehicle.id)
+
+    if match?(%{left_at: nil}, last_parking) do
+      Parkings.update_parking(last_parking, left_at: DateTime.utc_now())
+    else
+      {:error, :already_left}
+    end
   end
 end

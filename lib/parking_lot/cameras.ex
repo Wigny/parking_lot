@@ -8,8 +8,8 @@ defmodule ParkingLot.Cameras do
 
   alias ParkingLot.Cameras.Camera
 
-  def list_cameras do
-    Repo.all(Camera)
+  def list_cameras() do
+    Repo.all(where(Camera, type: :internal))
   end
 
   def get_camera!(id), do: Repo.get!(Camera, id)

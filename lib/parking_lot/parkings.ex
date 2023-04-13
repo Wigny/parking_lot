@@ -20,6 +20,13 @@ defmodule ParkingLot.Parkings do
     |> preload_parking()
   end
 
+  def get_last_parking(where, order_by \\ nil) when is_list(where) do
+    Parking
+    |> where(^where)
+    |> last(order_by)
+    |> Repo.one()
+  end
+
   def create_parking(attrs \\ %{}) do
     %Parking{}
     |> Parking.changeset(attrs)

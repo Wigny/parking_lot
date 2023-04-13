@@ -5,6 +5,7 @@ defmodule ParkingLot.ALPR.Recognizer do
   """
 
   use GenServer
+  import Evision.Constant
   alias Evision.Zoo.{TextDetection, TextRecognition}
 
   # Client
@@ -16,21 +17,29 @@ defmodule ParkingLot.ALPR.Recognizer do
   def infer(%{shape: {height, width, _channels}} = image) do
     resized_image = Evision.resize(image, {736, 736})
 
-    {detections, _confidences} = GenServer.call(__MODULE__, {:detect, resized_image}, :infinity)
-
-    recognitions =
-      Enum.map(detections, &GenServer.call(__MODULE__, {:recognize, &1, resized_image}))
+    {detections, _confidences} = detect_text(resized_image)
+    recognitions = Enum.map(detections, &recognize_text(resized_image, &1))
 
     detections =
       Enum.map(detections, fn points ->
-        Nx.multiply(
-          Evision.Mat.to_nx(Evision.boxPoints(points), Nx.BinaryBackend),
-          Nx.tensor([width / 736, height / 736], backend: Nx.BinaryBackend)
+        Nx.as_type(
+          Nx.multiply(
+            Evision.Mat.to_nx(Evision.boxPoints(points), Nx.BinaryBackend),
+            Nx.tensor([width / 736, height / 736], backend: Nx.BinaryBackend)
+          ),
+          :s32
         )
-        |> Nx.as_type(:s32)
       end)
 
     Enum.zip(recognitions, detections)
+  end
+
+  def detect_text(image) do
+    GenServer.call(__MODULE__, {:detect, image}, :infinity)
+  end
+
+  def recognize_text(image, detection) do
+    GenServer.call(__MODULE__, {:recognize, detection, image})
   end
 
   # Server
@@ -42,27 +51,27 @@ defmodule ParkingLot.ALPR.Recognizer do
 
   @impl true
   def handle_continue(:init, nil) do
-    detector = TextDetection.DB.init(:td500_resnet18)
-    recognizer = TextRecognition.CRNN.init(:cn)
-    charset = TextRecognition.CRNN.get_charset(:cn)
+    opts = [backend: cv_DNN_BACKEND_CUDA(), target: cv_DNN_TARGET_CUDA()]
 
-    {:noreply, %{detector: detector, recognizer: recognizer, charset: charset}}
+    detector = TextDetection.DB.init(:td500_resnet18, opts)
+    recognizer = TextRecognition.CRNN.init(:ch, opts)
+
+    {:noreply, %{detector: detector, recognizer: recognizer}}
   end
 
   @impl true
-  def handle_call({:detect, image}, _from, state) do
-    %{detector: detector} = state
-
+  def handle_call({:detect, image}, _from, %{detector: detector} = state) do
     inference = TextDetection.DB.infer(detector, image)
+
     {:reply, inference, state}
   end
 
   @impl true
-  def handle_call({:recognize, detection, image}, _from, state) do
-    %{recognizer: recognizer, charset: charset} = state
+  def handle_call({:recognize, detection, image}, _from, %{recognizer: recognizer} = state) do
+    opts = [to_gray: false, charset: TextRecognition.CRNN.get_charset(:ch)]
 
-    infer_opts = [to_gray: false, charset: charset]
-    inference = TextRecognition.CRNN.infer(recognizer, image, detection, infer_opts)
+    inference = TextRecognition.CRNN.infer(recognizer, image, detection, opts)
+
     {:reply, inference, state}
   end
 end

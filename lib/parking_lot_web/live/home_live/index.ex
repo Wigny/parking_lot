@@ -7,17 +7,17 @@ defmodule ParkingLotWeb.HomeLive.Index do
       Phoenix.PubSub.subscribe(ParkingLot.PubSub, "alpr")
     end
 
-    {:ok, assign(socket, :previews, %{})}
+    {:ok, assign(socket, :recognitions, %{})}
   end
 
   @impl true
-  def handle_info({:recognition, _id, nil}, socket) do
-    {:noreply, socket}
-  end
+  def handle_info({:recognition, id, recognition}, socket) do
+    %{preview: preview, vehicle: vehicle} = recognition
 
-  @impl true
-  def handle_info({:recognition, id, {_texts, preview}}, socket) do
-    {:noreply, update(socket, :previews, &Map.put(&1, id, to_canvas(preview)))}
+    {:noreply,
+     update(socket, :recognitions, fn recognitions ->
+       Map.put(recognitions, id, %{preview: to_canvas(preview), vehicle: vehicle})
+     end)}
   end
 
   defp to_canvas(frame) do

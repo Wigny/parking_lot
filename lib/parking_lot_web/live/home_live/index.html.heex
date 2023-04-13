@@ -1,15 +1,31 @@
-<section :for={{id, preview} <- @previews} :if={preview} class="row">
-  <canvas
-    id={"preview_#{id}"}
-    data-image={preview.image}
-    width={preview.width}
-    height={preview.height}
-    phx-hook="DrawCanvas"
-    style="
+<div :for={{id, recognition} <- @recognitions}>
+  <section class="row">
+    <canvas
+      :if={recognition.preview}
+      id={"preview_#{id}"}
+      data-image={recognition.preview.image}
+      width={recognition.preview.width}
+      height={recognition.preview.height}
+      phx-hook="DrawCanvas"
+      style="
       max-width: 100%;
       object-fit: contain;
       width: 100% !important;
       height: auto !important;
     "
-  />
-</section>
+    />
+  </section>
+  <section class="row">
+    <ul :if={recognition.vehicle}>
+      <li>
+        <strong>Vehicle:</strong>
+        <%= recognition.vehicle.model.name %> <%= recognition.vehicle.color.name %>
+      </li>
+
+      <li>
+        <strong>License plate:</strong>
+        <%= recognition.vehicle.license_plate %>
+      </li>
+    </ul>
+  </section>
+</div>

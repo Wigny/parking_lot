@@ -36,7 +36,7 @@ defmodule ParkingLot.ALPR do
 
     watcher = %{
       id: {Watcher, camera.id},
-      start: {Watcher, :start_link, [%{id: camera.id}]}
+      start: {Watcher, :start_link, [%{id: camera.id, type: camera.type}]}
     }
 
     [video, watcher | children]
