@@ -20,6 +20,13 @@ defmodule ParkingLotWeb.HomeLive.Index do
      end)}
   end
 
+    @impl true
+  def handle_info({:parking, id, parking}, socket) do
+    IO.inspect(parking)
+
+    {:noreply, socket}
+  end
+
   defp to_canvas(frame) do
     {_dimensions, [height, width]} = Evision.Mat.size(frame)
     jpeg = Evision.imencode(".jpeg", frame)

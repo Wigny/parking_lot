@@ -48,9 +48,9 @@ defmodule ParkingLot.ALPR.Watcher do
   end
 
   def handle_cast({:register, vehicle}, %{id: id, type: type} = state) do
-    parking = register_parking(type, vehicle)
-
-    Phoenix.PubSub.broadcast(ParkingLot.PubSub, "alpr", {:parking, id, parking})
+    with {:ok, parking} <- register_parking(type, vehicle) do
+      Phoenix.PubSub.broadcast(ParkingLot.PubSub, "alpr", {:parking, id, parking})
+    end
 
     {:noreply, state}
   end
@@ -80,7 +80,7 @@ defmodule ParkingLot.ALPR.Watcher do
 
     image
     |> Evision.polylines([points], true, {0, 255, 0}, thickness: 2)
-    |> Evision.putText(text, {b0, b1 + 50}, cv_FONT_HERSHEY_DUPLEX(), 2, {0, 0, 0}, thickness: 5)
+    |> Evision.putText(text, {b0, b1 + 50}, cv_FONT_HERSHEY_DUPLEX(), 2, {0, 0, 255}, thickness: 5)
   end
 
   # the external camera register the car entry
@@ -99,7 +99,7 @@ defmodule ParkingLot.ALPR.Watcher do
     last_parking = Parkings.get_last_parking(vehicle_id: vehicle.id)
 
     if match?(%{left_at: nil}, last_parking) do
-      Parkings.update_parking(last_parking, left_at: DateTime.utc_now())
+      Parkings.update_parking(last_parking, %{left_at: DateTime.utc_now()})
     else
       {:error, :already_left}
     end
