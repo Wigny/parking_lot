@@ -5,6 +5,16 @@ defmodule ParkingLotWeb.LiveHelpers do
 
   alias Phoenix.LiveView.JS
 
+  def uri(%{value: nil} = assigns) do
+    ~H""
+  end
+
+  def uri(assigns) do
+    ~H"""
+    <a style="color: inherit;"><%= URI.to_string(@value) %></a>
+    """
+  end
+
   def mask(%{value: value, pattern: pattern} = assigns) do
     assigns = assign(assigns, :text, mask_text(value, pattern))
 

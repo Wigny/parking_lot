@@ -13,4 +13,19 @@ defmodule ParkingLot.Changeset do
       end
     end)
   end
+
+  def validate_uri(changeset, field) do
+    validate_change(changeset, field, fn ^field, uri ->
+      cond do
+        is_nil(uri.scheme) -> [{field, "is missing scheme"}]
+        is_nil(uri.host) -> [{field, "is missing host"}]
+        not valid_host?(uri.host) -> [{field, "has invalid host"}]
+        true -> []
+      end
+    end)
+  end
+
+  defp valid_host?(host) do
+    match?({:ok, _hostent}, :inet.gethostbyname(to_charlist(host)))
+  end
 end
