@@ -3,7 +3,7 @@ defmodule ParkingLot.Repo.Migrations.CreateVehiclesDrivers do
 
   def change do
     create table(:vehicles_drivers) do
-      add :active, :boolean, default: false, null: false
+      add :active, :boolean, default: true, null: false
       add :driver_id, references(:drivers, on_delete: :nothing)
       add :vehicle_id, references(:vehicles, on_delete: :nothing)
 

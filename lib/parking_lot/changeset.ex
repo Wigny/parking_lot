@@ -2,14 +2,18 @@ defmodule ParkingLot.Changeset do
   @moduledoc false
 
   import Ecto.Changeset
-  alias ParkingLot.CheckDigit
+  alias ParkingLot.{CheckDigits, Digits}
 
-  def validate_check_digit(changeset, field) do
-    validate_change(changeset, field, fn ^field, digits ->
-      if CheckDigit.valid?(digits, field) do
-        []
-      else
-        [{field, "has invalid check digit"}]
+  def validate_digits(changeset, field, opts) do
+    changeset
+    |> validate_length(field, is: opts[:length])
+    |> validate_change(field, fn ^field, value ->
+      digits = Digits.to_digits(value, length: opts[:length])
+
+      cond do
+        Digits.duplicated?(digits) -> [{field, "has invalid digits"}]
+        not CheckDigits.valid?(digits, opts[:weights]) -> [{field, "has invalid check digit"}]
+        true -> []
       end
     end)
   end

@@ -18,7 +18,7 @@ defmodule ParkingLot.Cameras.Camera do
   def changeset(camera, attrs) do
     camera
     |> cast(attrs, [:type, :uri])
-    |> validate_required([:type])
+    |> validate_required([:type, :uri])
     |> validate_uri(:uri)
     |> unique_constraint(:uri)
     |> unique_constraint(:type)

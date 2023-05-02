@@ -8,7 +8,7 @@ defmodule ParkingLot.Repo.Migrations.CreateDrivers do
       add :cnh, :string
       add :email, :string
       add :phone, :string
-      add :active, :boolean, default: false, null: false
+      add :active, :boolean, default: false, null: true
 
       timestamps()
     end

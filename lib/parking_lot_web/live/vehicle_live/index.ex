@@ -6,7 +6,7 @@ defmodule ParkingLotWeb.VehicleLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, :vehicles, list_vehicles())}
+    {:ok, stream(socket, :vehicles, Customers.list_vehicles())}
   end
 
   @impl true
@@ -33,14 +33,15 @@ defmodule ParkingLotWeb.VehicleLive.Index do
   end
 
   @impl true
+  def handle_info({ParkingLotWeb.VehicleLive.FormComponent, {:saved, vehicle}}, socket) do
+    {:noreply, stream_insert(socket, :vehicles, vehicle)}
+  end
+
+  @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     vehicle = Customers.get_vehicle!(id)
     {:ok, _} = Customers.delete_vehicle(vehicle)
 
-    {:noreply, assign(socket, :vehicles, list_vehicles())}
-  end
-
-  defp list_vehicles do
-    Customers.list_vehicles()
+    {:noreply, stream_delete(socket, :vehicles, vehicle)}
   end
 end

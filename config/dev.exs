@@ -16,7 +16,8 @@ config :parking_lot, ParkingLotWeb.Endpoint,
   debug_errors: true,
   secret_key_base: "jVItoF805EN9xxoN60jjyWeEq4Aff7cVTT9RNyYCFC0VeuXxWu5kGVDgVGCKX2aF",
   watchers: [
-    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]}
+    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
+    tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
   ],
   server: true
 
@@ -25,8 +26,7 @@ config :parking_lot, ParkingLotWeb.Endpoint,
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/parking_lot_web/(live|views)/.*(ex)$",
-      ~r"lib/parking_lot_web/templates/.*(eex)$"
+      ~r"lib/parking_lot_web/(controllers|live|components)/.*(ex|heex)$"
     ]
   ]
 

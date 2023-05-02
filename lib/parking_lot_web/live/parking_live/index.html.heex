@@ -1,45 +1,65 @@
-<h1>Listing Parkings</h1>
+<.header>
+  Listing Parkings
+  <:actions>
+    <.link patch={~p"/parkings/new"}>
+      <.button>New Parking</.button>
+    </.link>
+  </:actions>
+</.header>
 
-<table>
-  <thead>
-    <tr>
-      <th>Vehicle</th>
-      <th>Entered at</th>
-      <th>Left at</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody id="parkings">
-    <%= for parking <- @parkings do %>
-      <tr id={"parking-#{parking.id}"}>
-        <td><%= parking.vehicle.license_plate %></td>
-        <td>
-          <time
-            is="relative-time"
-            datetime={parking.entered_at}
-            phx-update="ignore"
-            id={Ecto.UUID.generate()}
-          >
-            <%= parking.entered_at %>
-          </time>
-        </td>
-        <td>
-          <time
-            is="relative-time"
-            datetime={parking.left_at}
-            phx-update="ignore"
-            id={Ecto.UUID.generate()}
-          >
-            <%= parking.left_at %>
-          </time>
-        </td>
+<.table
+  id="parkings"
+  rows={@streams.parkings}
+  row_click={fn {_id, parking} -> JS.navigate(~p"/parkings/#{parking}") end}
+>
+  <:col :let={{_id, parking}} label="Vehicle">
+    <%= parking.vehicle.license_plate %>
+  </:col>
+  <:col :let={{_id, parking}} label="Entered at">
+    <time
+      id={Ecto.UUID.generate()}
+      is="relative-time"
+      datetime={parking.entered_at}
+      phx-update="ignore"
+    >
+      <%= parking.entered_at %>
+    </time>
+  </:col>
+  <:col :let={{_id, parking}} label="Left at">
+    <time
+      id={Ecto.UUID.generate()}
+      is="relative-time"
+      datetime={parking.left_at}
+      phx-update="ignore"
+    >
+      <%= parking.left_at %>
+    </time>
+  </:col>
+  <:action :let={{_id, parking}}>
+    <.link navigate={~p"/parkings/#{parking}"}>Show</.link>
+  </:action>
+  <:action :let={{id, parking}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: parking.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
 
-        <td>
-          <span>
-            <.link navigate={Routes.parking_show_path(@socket, :show, parking)}>Show</.link>
-          </span>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="parking-modal"
+  show
+  on_cancel={JS.patch(~p"/parkings")}
+>
+  <.live_component
+    module={ParkingLotWeb.ParkingLive.FormComponent}
+    id={@parking.id || :new}
+    title={@page_title}
+    action={@live_action}
+    parking={@parking}
+    patch={~p"/parkings"}
+  />
+</.modal>

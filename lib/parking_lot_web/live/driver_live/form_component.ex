@@ -10,7 +10,7 @@ defmodule ParkingLotWeb.DriverLive.FormComponent do
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(:changeset, changeset)}
+     |> assign_form(changeset)}
   end
 
   @impl true
@@ -20,7 +20,7 @@ defmodule ParkingLotWeb.DriverLive.FormComponent do
       |> Customers.change_driver(driver_params)
       |> Map.put(:action, :validate)
 
-    {:noreply, assign(socket, :changeset, changeset)}
+    {:noreply, assign_form(socket, changeset)}
   end
 
   def handle_event("save", %{"driver" => driver_params}, socket) do
@@ -29,27 +29,37 @@ defmodule ParkingLotWeb.DriverLive.FormComponent do
 
   defp save_driver(socket, :edit, driver_params) do
     case Customers.update_driver(socket.assigns.driver, driver_params) do
-      {:ok, _driver} ->
+      {:ok, driver} ->
+        notify_parent({:saved, driver})
+
         {:noreply,
          socket
          |> put_flash(:info, "Driver updated successfully")
-         |> push_navigate(to: socket.assigns.return_to)}
+         |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, :changeset, changeset)}
+        {:noreply, assign_form(socket, changeset)}
     end
   end
 
   defp save_driver(socket, :new, driver_params) do
     case Customers.create_driver(driver_params) do
-      {:ok, _driver} ->
+      {:ok, driver} ->
+        notify_parent({:saved, driver})
+
         {:noreply,
          socket
          |> put_flash(:info, "Driver created successfully")
-         |> push_navigate(to: socket.assigns.return_to)}
+         |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, changeset: changeset)}
+        {:noreply, assign_form(socket, changeset)}
     end
   end
+
+  defp assign_form(socket, %Ecto.Changeset{} = changeset) do
+    assign(socket, :form, to_form(changeset))
+  end
+
+  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 end

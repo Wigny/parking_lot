@@ -12,7 +12,8 @@ defmodule ParkingLotWeb.VehicleDriverLive.FormComponent do
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(changeset: changeset, drivers: drivers, vehicles: vehicles)}
+     |> assign(drivers: drivers, vehicles: vehicles)
+     |> assign_form(changeset)}
   end
 
   @impl true
@@ -22,7 +23,7 @@ defmodule ParkingLotWeb.VehicleDriverLive.FormComponent do
       |> Customers.change_vehicle_driver(vehicle_driver_params)
       |> Map.put(:action, :validate)
 
-    {:noreply, assign(socket, :changeset, changeset)}
+    {:noreply, assign_form(socket, changeset)}
   end
 
   def handle_event("save", %{"vehicle_driver" => vehicle_driver_params}, socket) do
@@ -31,27 +32,37 @@ defmodule ParkingLotWeb.VehicleDriverLive.FormComponent do
 
   defp save_vehicle_driver(socket, :edit, vehicle_driver_params) do
     case Customers.update_vehicle_driver(socket.assigns.vehicle_driver, vehicle_driver_params) do
-      {:ok, _vehicle_driver} ->
+      {:ok, vehicle_driver} ->
+        notify_parent({:saved, vehicle_driver})
+
         {:noreply,
          socket
          |> put_flash(:info, "Vehicle driver updated successfully")
-         |> push_navigate(to: socket.assigns.return_to)}
+         |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, :changeset, changeset)}
+        {:noreply, assign_form(socket, changeset)}
     end
   end
 
   defp save_vehicle_driver(socket, :new, vehicle_driver_params) do
     case Customers.create_vehicle_driver(vehicle_driver_params) do
-      {:ok, _vehicle_driver} ->
+      {:ok, vehicle_driver} ->
+        notify_parent({:saved, vehicle_driver})
+
         {:noreply,
          socket
          |> put_flash(:info, "Vehicle driver created successfully")
-         |> push_navigate(to: socket.assigns.return_to)}
+         |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, changeset: changeset)}
+        {:noreply, assign_form(socket, changeset)}
     end
   end
+
+  defp assign_form(socket, %Ecto.Changeset{} = changeset) do
+    assign(socket, :form, to_form(changeset))
+  end
+
+  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 end

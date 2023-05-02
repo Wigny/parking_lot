@@ -1,34 +1,32 @@
-<h1>Show Camera</h1>
+<.header>
+  Camera <%= @camera.id %>
+  <:subtitle>This is a camera record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/cameras/#{@camera}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit camera</.button>
+    </.link>
+  </:actions>
+</.header>
 
-<%= if @live_action in [:edit] do %>
-  <.modal return_to={Routes.camera_show_path(@socket, :show, @camera)}>
-    <.live_component
-      module={ParkingLotWeb.CameraLive.FormComponent}
-      id={@camera.id}
-      title={@page_title}
-      action={@live_action}
-      camera={@camera}
-      return_to={Routes.camera_show_path(@socket, :show, @camera)}
-    />
-  </.modal>
-<% end %>
+<.list>
+  <:item title="Type"><%= @camera.type %></:item>
+  <:item title="URI"><.uri value={@camera.uri} /></:item>
+</.list>
 
-<ul>
-  <li>
-    <strong>Type:</strong>
-    <%= Macro.camelize(to_string(@camera.type)) %>
-  </li>
+<.back navigate={~p"/cameras"}>Back to cameras</.back>
 
-  <li>
-    <strong>URI:</strong>
-    <.uri value={@camera.uri} />
-  </li>
-</ul>
-
-<span>
-  <.link patch={Routes.camera_show_path(@socket, :edit, @camera)} class="button">Edit</.link>
-</span>
-|
-<span>
-  <.link navigate={Routes.camera_index_path(@socket, :index)}>Back</.link>
-</span>
+<.modal
+  :if={@live_action == :edit}
+  id="camera-modal"
+  show
+  on_cancel={JS.patch(~p"/cameras/#{@camera}")}
+>
+  <.live_component
+    module={ParkingLotWeb.CameraLive.FormComponent}
+    id={@camera.id}
+    title={@page_title}
+    action={@live_action}
+    camera={@camera}
+    patch={~p"/cameras/#{@camera}"}
+  />
+</.modal>

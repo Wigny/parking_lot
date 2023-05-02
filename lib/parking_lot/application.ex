@@ -8,10 +8,10 @@ defmodule ParkingLot.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # Start the Ecto repository
-      ParkingLot.Repo,
       # Start the Telemetry supervisor
       ParkingLotWeb.Telemetry,
+      # Start the Ecto repository
+      ParkingLot.Repo,
       # Start the PubSub system
       {Phoenix.PubSub, name: ParkingLot.PubSub},
       # Start the Endpoint (http/https)

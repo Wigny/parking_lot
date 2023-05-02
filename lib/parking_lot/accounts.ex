@@ -3,26 +3,18 @@ defmodule ParkingLot.Accounts do
   The Accounts context.
   """
 
-  import Ecto.Query
-
+  import Ecto.Query, warn: false
   alias ParkingLot.Repo
-  alias ParkingLot.Accounts.{User, UserSession}
+
+  alias ParkingLot.Accounts.{Session, User}
 
   @session_validity_in_days 60
 
-  def fetch_or_create_user(attrs) do
-    if user = get_user_by_email(attrs.email) do
-      {:ok, user}
-    else
-      register_user(attrs)
-    end
-  end
-
-  def get_user_by_email(email) do
+  def get_user(email: email) do
     Repo.get_by(User, email: email)
   end
 
-  def get_user_by_session_token(token) do
+  def get_user(session: [token: token]) do
     User
     |> join(:left, [user], assoc(user, :sessions))
     |> where([user, session], session.token == ^token)
@@ -31,23 +23,20 @@ defmodule ParkingLot.Accounts do
     |> Repo.one()
   end
 
-  def register_user(attrs) do
+  def create_user(attrs) do
     %User{}
-    |> User.registration_changeset(attrs)
+    |> User.changeset(attrs)
     |> Repo.insert()
   end
 
-  def generate_user_session_token(user) do
-    session =
-      %UserSession{}
-      |> UserSession.generation_changeset(%{user_id: user.id})
-      |> Repo.insert!()
-
-    session.token
+  def create_session!(attrs) do
+    %Session{}
+    |> Session.changeset(attrs)
+    |> Repo.insert!()
   end
 
-  def delete_session_token(token) do
-    UserSession
+  def delete_sessions(token: token) do
+    Session
     |> where(token: ^token)
     |> Repo.delete_all()
 
