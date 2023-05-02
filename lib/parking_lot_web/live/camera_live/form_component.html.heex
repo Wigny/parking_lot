@@ -14,7 +14,7 @@
     <%= error_tag(f, :type) %>
 
     <%= label(f, :uri, "URI") %>
-    <%= uri_input(f, :uri, phx_debounce: "blur", phx_hook: "ReadClipboard") %>
+    <%= uri_input(f, :uri, phx_debounce: "blur") %>
     <%= error_tag(f, :uri) %>
 
     <div>
