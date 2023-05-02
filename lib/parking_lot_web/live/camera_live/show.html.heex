@@ -1,0 +1,34 @@
+<h1>Show Camera</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.camera_show_path(@socket, :show, @camera)}>
+    <.live_component
+      module={ParkingLotWeb.CameraLive.FormComponent}
+      id={@camera.id}
+      title={@page_title}
+      action={@live_action}
+      camera={@camera}
+      return_to={Routes.camera_show_path(@socket, :show, @camera)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+  <li>
+    <strong>Type:</strong>
+    <%= Macro.camelize(to_string(@camera.type)) %>
+  </li>
+
+  <li>
+    <strong>URI:</strong>
+    <.uri value={@camera.uri} />
+  </li>
+</ul>
+
+<span>
+  <.link patch={Routes.camera_show_path(@socket, :edit, @camera)} class="button">Edit</.link>
+</span>
+|
+<span>
+  <.link navigate={Routes.camera_index_path(@socket, :index)}>Back</.link>
+</span>
