@@ -29,7 +29,7 @@ defmodule ParkingLotWeb.Router do
     pipe_through [:browser, :require_authenticated_user]
 
     live_session :ensure_authenticated, on_mount: {ParkingLotWeb.UserAuth, :ensure_authenticated} do
-      live "/", HomeLive.Index, :index
+      live "/home", HomeLive.Index, :index
 
       scope "/drivers", DriverLive do
         live "/", Index, :index
