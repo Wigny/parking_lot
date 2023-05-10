@@ -1,4 +1,6 @@
 defmodule ParkingLot.ALPR.Watcher do
+  @moduledoc false
+
   use GenServer
 
   alias ParkingLot.{Customers, Parkings}

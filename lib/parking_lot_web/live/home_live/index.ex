@@ -21,9 +21,7 @@ defmodule ParkingLotWeb.HomeLive.Index do
   end
 
   @impl true
-  def handle_info({:parking, id, parking}, socket) do
-    IO.inspect(parking)
-
+  def handle_info({:parking, _id, _parking}, socket) do
     {:noreply, socket}
   end
 
