@@ -40,7 +40,7 @@ defmodule ParkingLot.Customers do
     |> preload_vehicle()
   end
 
-  def get_vehicle!(id) when is_binary(id) do
+  def get_vehicle!(id) do
     Vehicle
     |> Repo.get!(id)
     |> preload_vehicle()
