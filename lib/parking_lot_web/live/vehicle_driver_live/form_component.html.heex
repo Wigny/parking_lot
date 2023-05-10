@@ -1,30 +1,36 @@
 <div>
-  <h2><%= @title %></h2>
+  <.header>
+    <%= @title %>
+    <:subtitle>Use this form to manage vehicle_driver records in your database.</:subtitle>
+  </.header>
 
-  <.form
-    :let={f}
-    for={@changeset}
+  <.simple_form
+    for={@form}
     id="vehicle_driver-form"
     phx-target={@myself}
     phx-change="validate"
     phx-submit="save"
   >
-    <%= label(f, :driver_id) %>
-    <%= select(f, :driver_id, Enum.map(@drivers, &{&1.name, &1.id}), prompt: "Choose the driver") %>
-    <%= error_tag(f, :driver_id) %>
+    <.input
+      field={@form[:driver_id]}
+      type="select"
+      label="Driver"
+      prompt="Choose the driver"
+      options={for driver <- @drivers, do: {driver.name, driver.id}}
+    />
 
-    <%= label(f, :vehicle_id) %>
-    <%= select(f, :vehicle_id, Enum.map(@vehicles, &{&1.license_plate, &1.id}),
-      prompt: "Choose the vehicle"
-    ) %>
-    <%= error_tag(f, :vehicle_id) %>
+    <.input
+      field={@form[:vehicle_id]}
+      type="select"
+      label="Vehicle"
+      prompt="Choose the vehicle"
+      options={for vehicle <- @vehicles, do: {vehicle.license_plate, vehicle.id}}
+    />
 
-    <%= label(f, :active) %>
-    <%= checkbox(f, :active) %>
-    <%= error_tag(f, :active) %>
+    <.input field={@form[:active]} type="checkbox" label="Active" />
 
-    <div>
-      <%= submit("Save", phx_disable_with: "Saving...") %>
-    </div>
-  </.form>
+    <:actions>
+      <.button phx-disable-with="Saving...">Save Vehicle driver</.button>
+    </:actions>
+  </.simple_form>
 </div>

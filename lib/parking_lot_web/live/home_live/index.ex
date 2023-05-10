@@ -20,7 +20,7 @@ defmodule ParkingLotWeb.HomeLive.Index do
      end)}
   end
 
-    @impl true
+  @impl true
   def handle_info({:parking, id, parking}, socket) do
     IO.inspect(parking)
 

@@ -11,13 +11,13 @@ defmodule ParkingLot.Repo.Migrations.CreateUsersAuthTables do
 
     create unique_index(:users, [:email])
 
-    create table(:user_sessions) do
+    create table(:sessions) do
       add :user_id, references(:users, on_delete: :delete_all), null: false
       add :token, :binary, null: false
       timestamps(updated_at: false)
     end
 
-    create index(:user_sessions, [:user_id])
-    create unique_index(:user_sessions, [:token])
+    create index(:sessions, [:user_id])
+    create unique_index(:sessions, [:token])
   end
 end

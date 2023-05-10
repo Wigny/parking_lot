@@ -4,17 +4,19 @@ defmodule ParkingLot.CustomersFixtures do
   entities via the `ParkingLot.Customers` context.
   """
 
-  alias ParkingLot.CheckDigit
+  alias ParkingLot.CheckDigits
   alias ParkingLot.Customers
   alias ParkingLot.Digits
   alias ParkingLot.VehiclesFixtures
 
   def unique_driver_cpf do
-    CheckDigit.generate(:cpf)
+    cpf = CheckDigits.generate(Digits.random(9), [Enum.to_list(10..2), Enum.to_list(11..2)])
+    Digits.to_string(cpf)
   end
 
   def unique_driver_cnh do
-    CheckDigit.generate(:cnh)
+    cnh = CheckDigits.generate(Digits.random(9), [Enum.to_list(2..10), Enum.concat(3..11, [2])])
+    Digits.to_string(cnh)
   end
 
   def unique_driver_email do
@@ -22,9 +24,8 @@ defmodule ParkingLot.CustomersFixtures do
   end
 
   def unique_driver_phone do
-    0..9
-    |> Digits.random(11)
-    |> Digits.to_string()
+    phone = Digits.random(11)
+    Digits.to_string(phone)
   end
 
   def valid_driver_attributes(attrs \\ %{}) do
@@ -49,25 +50,25 @@ defmodule ParkingLot.CustomersFixtures do
 
   def unique_vehicle_license_plate(version \\ :mercosul)
 
-  def unique_vehicle_license_plate(:legacy) do
-    letters = Enum.map(?A..?Z, &<<&1::utf8>>)
-    numbers = Enum.map(?0..?9, &<<&1::utf8>>)
-
-    Enum.join([
-      Digits.random(letters, 3),
-      Digits.random(numbers, 4)
-    ])
-  end
-
   def unique_vehicle_license_plate(:mercosul) do
     letters = Enum.map(?A..?Z, &<<&1::utf8>>)
     numbers = Enum.map(?0..?9, &<<&1::utf8>>)
 
     Enum.join([
-      Digits.random(letters, 3),
-      Digits.random(numbers, 1),
-      Digits.random(letters, 1),
-      Digits.random(numbers, 2)
+      Digits.random(3, letters),
+      Digits.random(1, numbers),
+      Digits.random(1, letters),
+      Digits.random(2, numbers)
+    ])
+  end
+
+  def unique_vehicle_license_plate(:legacy) do
+    letters = Enum.map(?A..?Z, &<<&1::utf8>>)
+    numbers = Enum.map(?0..?9, &<<&1::utf8>>)
+
+    Enum.join([
+      Digits.random(3, letters),
+      Digits.random(4, numbers)
     ])
   end
 

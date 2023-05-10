@@ -10,17 +10,11 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
-insert_each = fn enumerable, change_fun ->
-  enumerable
-  |> Enum.map(fn elem -> then(elem, change_fun) end)
-  |> Enum.map(&Repo.insert!/1)
-end
-
 unless Mix.env() == :test do
   alias ParkingLot.Repo
   alias ParkingLot.Vehicles
 
-  apply(insert_each, [
+  Enum.map(
     [
       "Amarelo",
       "Azul",
@@ -39,10 +33,14 @@ unless Mix.env() == :test do
       "Vermelha",
       "Fantasia"
     ],
-    &Vehicles.change_color(%Vehicles.Color{}, %{name: &1})
-  ])
+    fn color ->
+      %Vehicles.Color{}
+      |> Vehicles.change_color(%{name: color})
+      |> Repo.insert!()
+    end
+  )
 
-  apply(insert_each, [
+  Enum.map(
     [
       "Automóvel",
       "Caminhão",
@@ -67,6 +65,10 @@ unless Mix.env() == :test do
       "Triciclo",
       "Utilitário"
     ],
-    &Vehicles.change_type(%Vehicles.Type{}, %{name: &1})
-  ])
+    fn type ->
+      %Vehicles.Type{}
+      |> Vehicles.change_type(%{name: type})
+      |> Repo.insert!()
+    end
+  )
 end

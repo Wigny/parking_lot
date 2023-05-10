@@ -4,7 +4,7 @@ defmodule ParkingLot.Repo.Migrations.CreateVehicles do
   def change do
     create table(:vehicles) do
       add :license_plate, :string
-      add :active, :boolean, default: false, null: false
+      add :active, :boolean, default: false, null: true
       add :type_id, references(:vehicle_types, on_delete: :nothing)
       add :model_id, references(:vehicle_models, on_delete: :nothing)
       add :color_id, references(:vehicle_colors, on_delete: :nothing)

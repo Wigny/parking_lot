@@ -8,7 +8,7 @@ defmodule ParkingLot.ParkingsTest do
 
     import ParkingLot.ParkingsFixtures
 
-    @invalid_attrs %{vehicle_id: nil}
+    @invalid_attrs %{vehicle_id: nil, entered_at: nil, left_at: nil}
 
     test "list_parkings/0 returns all parkings" do
       parking = parking_fixture()
@@ -25,6 +25,8 @@ defmodule ParkingLot.ParkingsTest do
 
       assert {:ok, %Parking{} = parking} = Parkings.create_parking(valid_attrs)
       assert parking.vehicle_id == valid_attrs.vehicle_id
+      assert parking.entered_at == valid_attrs.entered_at
+      assert parking.left_at == valid_attrs.left_at
     end
 
     test "create_parking/1 with invalid data returns error changeset" do
@@ -37,6 +39,8 @@ defmodule ParkingLot.ParkingsTest do
 
       assert {:ok, %Parking{} = parking} = Parkings.update_parking(parking, update_attrs)
       assert parking.vehicle_id == update_attrs.vehicle_id
+      assert parking.entered_at == update_attrs.entered_at
+      assert parking.left_at == update_attrs.left_at
     end
 
     test "update_parking/2 with invalid data returns error changeset" do

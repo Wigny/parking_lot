@@ -1,36 +1,48 @@
-<h1>Show Parking</h1>
+<.header>
+  Parking <%= @parking.id %>
+  <:subtitle>This is a parking record from your database.</:subtitle>
+</.header>
 
-<ul>
-  <li>
-    <strong>Vehicle:</strong>
+<.list>
+  <:item title="Vehicle">
     <%= @parking.vehicle.license_plate %>
-  </li>
-
-  <li>
-    <strong>Entered at:</strong>
+  </:item>
+  <:item title="Entered at">
     <time
+      id={Ecto.UUID.generate()}
       is="relative-time"
       datetime={@parking.entered_at}
       phx-update="ignore"
-      id={Ecto.UUID.generate()}
     >
       <%= @parking.entered_at %>
     </time>
-  </li>
-
-  <li>
-    <strong>Left at:</strong>
+  </:item>
+  <:item title="Left at">
     <time
+      id={Ecto.UUID.generate()}
       is="relative-time"
       datetime={@parking.left_at}
       phx-update="ignore"
-      id={Ecto.UUID.generate()}
     >
       <%= @parking.left_at %>
     </time>
-  </li>
-</ul>
+  </:item>
+</.list>
 
-<span>
-  <.link navigate={Routes.parking_index_path(@socket, :index)}>Back</.link>
-</span>
+<.back navigate={~p"/parkings"}>Back to parkings</.back>
+
+<.modal
+  :if={@live_action == :edit}
+  id="parking-modal"
+  show
+  on_cancel={JS.patch(~p"/parkings/#{@parking}")}
+>
+  <.live_component
+    module={ParkingLotWeb.ParkingLive.FormComponent}
+    id={@parking.id}
+    title={@page_title}
+    action={@live_action}
+    parking={@parking}
+    patch={~p"/parkings/#{@parking}"}
+  />
+</.modal>

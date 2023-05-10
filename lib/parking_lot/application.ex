@@ -6,8 +6,8 @@ defmodule ParkingLot.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      ParkingLot.Repo,
       ParkingLotWeb.Telemetry,
+      ParkingLot.Repo,
       {Phoenix.PubSub, name: ParkingLot.PubSub},
       ParkingLotWeb.Endpoint,
       {Registry, keys: :unique, name: ParkingLot.Registry},

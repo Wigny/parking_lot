@@ -6,33 +6,33 @@ defmodule ParkingLot.VehiclesFixtures do
 
   alias ParkingLot.Vehicles
 
-  def unique_color_color, do: "some color#{System.unique_integer([:positive])}"
+  def unique_color_name, do: "some name#{System.unique_integer([:positive])}"
 
   def color_fixture(attrs \\ %{}) do
     {:ok, color} =
       attrs
-      |> Enum.into(%{name: unique_color_color()})
+      |> Enum.into(%{name: unique_color_name()})
       |> Vehicles.create_color()
 
     color
   end
 
-  def unique_brand_brand, do: "some brand#{System.unique_integer([:positive])}"
+  def unique_brand_name, do: "some name#{System.unique_integer([:positive])}"
 
   def brand_fixture(attrs \\ %{}) do
     {:ok, brand} =
       attrs
-      |> Enum.into(%{name: unique_brand_brand()})
+      |> Enum.into(%{name: unique_brand_name()})
       |> Vehicles.create_brand()
 
     brand
   end
 
-  def unique_model_model, do: "some model#{System.unique_integer([:positive])}"
+  def unique_model_name, do: "some name#{System.unique_integer([:positive])}"
 
   def valid_model_attributes(attrs \\ %{}) do
     attrs
-    |> Enum.into(%{name: unique_model_model()})
+    |> Enum.into(%{name: unique_model_name()})
     |> Map.put_new_lazy(:brand_id, fn ->
       brand = brand_fixture()
       brand.id
@@ -48,12 +48,12 @@ defmodule ParkingLot.VehiclesFixtures do
     model
   end
 
-  def unique_type_type, do: "some type#{System.unique_integer([:positive])}"
+  def unique_type_name, do: "some name#{System.unique_integer([:positive])}"
 
   def type_fixture(attrs \\ %{}) do
     {:ok, type} =
       attrs
-      |> Enum.into(%{name: unique_type_type()})
+      |> Enum.into(%{name: unique_type_name()})
       |> Vehicles.create_type()
 
     type

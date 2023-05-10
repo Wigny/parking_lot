@@ -1,64 +1,63 @@
-<h1>Listing Drivers</h1>
+<.header>
+  Listing Drivers
+  <:actions>
+    <.link patch={~p"/drivers/new"}>
+      <.button>New Driver</.button>
+    </.link>
+  </:actions>
+</.header>
 
-<%= if @live_action in [:new, :edit] do %>
-  <.modal return_to={Routes.driver_index_path(@socket, :index)}>
-    <.live_component
-      module={ParkingLotWeb.DriverLive.FormComponent}
-      id={@driver.id || :new}
-      title={@page_title}
-      action={@live_action}
-      driver={@driver}
-      return_to={Routes.driver_index_path(@socket, :index)}
-    />
-  </.modal>
-<% end %>
+<.table
+  id="drivers"
+  rows={@streams.drivers}
+  row_click={fn {_id, driver} -> JS.navigate(~p"/drivers/#{driver}") end}
+>
+  <:col :let={{_id, driver}} label="Name">
+    <%= driver.name %>
+  </:col>
+  <:col :let={{_id, driver}} label="CPF">
+    <.mask value={driver.cpf} pattern="000.000.000-00" />
+  </:col>
+  <:col :let={{_id, driver}} label="CNH">
+    <%= driver.cnh %>
+  </:col>
+  <:col :let={{_id, driver}} label="E-mail">
+    <%= driver.email %>
+  </:col>
+  <:col :let={{_id, driver}} label="Phone">
+    <.mask value={driver.phone} pattern="(00) 0 0000-0000" />
+  </:col>
+  <:col :let={{_id, driver}} label="Active">
+    <%= driver.active %>
+  </:col>
+  <:action :let={{_id, driver}}>
+    <div class="sr-only">
+      <.link navigate={~p"/drivers/#{driver}"}>Show</.link>
+    </div>
+    <.link patch={~p"/drivers/#{driver}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, driver}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: driver.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>CPF</th>
-      <th>CNH</th>
-      <th>Email</th>
-      <th>Phone</th>
-      <th>Active?</th>
-
-      <th></th>
-    </tr>
-  </thead>
-  <tbody id="drivers">
-    <%= for driver <- @drivers do %>
-      <tr id={"driver-#{driver.id}"}>
-        <td><%= driver.name %></td>
-        <td><.mask value={driver.cpf} pattern="000.000.000-00" /></td>
-        <td><%= driver.cnh %></td>
-        <td><%= driver.email %></td>
-        <td><.mask value={driver.phone} pattern="(00) 0 0000-0000" /></td>
-        <td><%= driver.active %></td>
-
-        <td>
-          <span>
-            <.link navigate={Routes.driver_show_path(@socket, :show, driver)}>Show</.link>
-          </span>
-          <span>
-            <.link patch={Routes.driver_index_path(@socket, :edit, driver)}>Edit</.link>
-          </span>
-          <span>
-            <.link
-              href="#"
-              phx-click="delete"
-              phx-value-id={driver.id}
-              data-confirm="Are you sure?"
-            >
-              Delete
-            </.link>
-          </span>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<span>
-  <.link patch={Routes.driver_index_path(@socket, :new)}>New Driver</.link>
-</span>
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="driver-modal"
+  show
+  on_cancel={JS.patch(~p"/drivers")}
+>
+  <.live_component
+    module={ParkingLotWeb.DriverLive.FormComponent}
+    id={@driver.id || :new}
+    title={@page_title}
+    action={@live_action}
+    driver={@driver}
+    patch={~p"/drivers"}
+  />
+</.modal>

@@ -19,15 +19,15 @@ defmodule ParkingLotWeb.ConnCase do
 
   using do
     quote do
+      # The default endpoint for testing
+      @endpoint ParkingLotWeb.Endpoint
+
+      use ParkingLotWeb, :verified_routes
+
       # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
       import ParkingLotWeb.ConnCase
-
-      alias ParkingLotWeb.Router.Helpers, as: Routes
-
-      # The default endpoint for testing
-      @endpoint ParkingLotWeb.Endpoint
     end
   end
 
@@ -55,7 +55,7 @@ defmodule ParkingLotWeb.ConnCase do
   It returns an updated `conn`.
   """
   def log_in_user(conn, user) do
-    token = ParkingLot.Accounts.generate_user_session_token(user)
+    %{token: token} = ParkingLot.Accounts.create_session!(%{user_id: user.id})
 
     conn
     |> Phoenix.ConnTest.init_test_session(%{})

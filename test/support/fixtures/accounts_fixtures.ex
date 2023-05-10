@@ -16,8 +16,18 @@ defmodule ParkingLot.AccountsFixtures do
     {:ok, user} =
       attrs
       |> valid_user_attributes()
-      |> Accounts.register_user()
+      |> Accounts.create_user()
 
     user
+  end
+
+  def session_fixture(attrs \\ %{}) do
+    attrs
+    |> Map.new()
+    |> Map.put_new_lazy(:user_id, fn ->
+      user = user_fixture()
+      user.id
+    end)
+    |> Accounts.create_session!()
   end
 end

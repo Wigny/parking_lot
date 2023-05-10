@@ -1,62 +1,54 @@
-<h1>Listing vehicles-drivers</h1>
+<.header>
+  Listing Vehicles drivers
+  <:actions>
+    <.link patch={~p"/vehicles_drivers/new"}>
+      <.button>New Vehicle driver</.button>
+    </.link>
+  </:actions>
+</.header>
 
-<%= if @live_action in [:new, :edit] do %>
-  <.modal return_to={Routes.vehicle_driver_index_path(@socket, :index)}>
-    <.live_component
-      module={ParkingLotWeb.VehicleDriverLive.FormComponent}
-      id={@vehicle_driver.id || :new}
-      title={@page_title}
-      action={@live_action}
-      vehicle_driver={@vehicle_driver}
-      return_to={Routes.vehicle_driver_index_path(@socket, :index)}
-    />
-  </.modal>
-<% end %>
+<.table
+  id="vehicles_drivers"
+  rows={@streams.vehicles_drivers}
+  row_click={fn {_id, vehicle_driver} -> JS.navigate(~p"/vehicles_drivers/#{vehicle_driver}") end}
+>
+  <:col :let={{_id, vehicle_driver}} label="Driver">
+    <%= vehicle_driver.driver.name %>
+  </:col>
+  <:col :let={{_id, vehicle_driver}} label="Vehicle">
+    <%= vehicle_driver.vehicle.license_plate %>
+  </:col>
+  <:col :let={{_id, vehicle_driver}} label="Active">
+    <%= vehicle_driver.active %>
+  </:col>
+  <:action :let={{_id, vehicle_driver}}>
+    <div class="sr-only">
+      <.link navigate={~p"/vehicles_drivers/#{vehicle_driver}"}>Show</.link>
+    </div>
+    <.link patch={~p"/vehicles_drivers/#{vehicle_driver}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, vehicle_driver}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: vehicle_driver.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
 
-<table>
-  <thead>
-    <tr>
-      <th>Drivers</th>
-      <th>Vehicles</th>
-      <th>Active</th>
-
-      <th></th>
-    </tr>
-  </thead>
-  <tbody id="vehicles_drivers">
-    <%= for vehicle_driver <- @vehicles_drivers do %>
-      <tr id={"vehicle_driver-#{vehicle_driver.id}"}>
-        <td><%= vehicle_driver.driver.name %></td>
-        <td><%= vehicle_driver.vehicle.license_plate %></td>
-        <td><%= vehicle_driver.active %></td>
-
-        <td>
-          <span>
-            <.link navigate={Routes.vehicle_driver_show_path(@socket, :show, vehicle_driver)}>
-              Show
-            </.link>
-          </span>
-          <span>
-            <.link patch={Routes.vehicle_driver_index_path(@socket, :edit, vehicle_driver)}>
-              Edit
-            </.link>
-          </span>
-          <span>
-            <.link
-              href="#"
-              phx-click="delete"
-              phx-value-id={vehicle_driver.id}
-              data-confirm="Are you sure?"
-            >
-              Delete
-            </.link>
-          </span>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<span>
-  <.link patch={Routes.vehicle_driver_index_path(@socket, :new)}>New vehicle-driver</.link>
-</span>
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="vehicle_driver-modal"
+  show
+  on_cancel={JS.patch(~p"/vehicles_drivers")}
+>
+  <.live_component
+    module={ParkingLotWeb.VehicleDriverLive.FormComponent}
+    id={@vehicle_driver.id || :new}
+    title={@page_title}
+    action={@live_action}
+    vehicle_driver={@vehicle_driver}
+    patch={~p"/vehicles_drivers"}
+  />
+</.modal>

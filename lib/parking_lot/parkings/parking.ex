@@ -17,7 +17,7 @@ defmodule ParkingLot.Parkings.Parking do
   @doc false
   def changeset(parking, attrs) do
     parking
-    |> cast(attrs, [:vehicle_id])
-    |> validate_required([:vehicle_id])
+    |> cast(attrs, [:vehicle_id, :entered_at, :left_at])
+    |> validate_required([:vehicle_id, :entered_at])
   end
 end

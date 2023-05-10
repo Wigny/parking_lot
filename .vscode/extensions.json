@@ -1,8 +1,9 @@
 {
-	"recommendations": [
-		"jakebecker.elixir-ls",
-		"phoenixframework.phoenix",
-		"mtxr.sqltools",
-		"mtxr.sqltools-driver-pg"
-	]
+  "recommendations": [
+    "jakebecker.elixir-ls",
+    "phoenixframework.phoenix",
+    "bradlc.vscode-tailwindcss",
+    "mtxr.sqltools",
+    "mtxr.sqltools-driver-pg"
+  ]
 }
