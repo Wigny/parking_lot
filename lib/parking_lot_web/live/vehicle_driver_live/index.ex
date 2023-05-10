@@ -6,7 +6,7 @@ defmodule ParkingLotWeb.VehicleDriverLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, :vehicles_drivers, list_vehicles_drivers())}
+    {:ok, stream(socket, :vehicles_drivers, Customers.list_vehicles_drivers())}
   end
 
   @impl true
@@ -16,20 +16,28 @@ defmodule ParkingLotWeb.VehicleDriverLive.Index do
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
-    |> assign(:page_title, "Edit vehicle-driver")
+    |> assign(:page_title, "Edit Vehicle driver")
     |> assign(:vehicle_driver, Customers.get_vehicle_driver!(id))
   end
 
   defp apply_action(socket, :new, _params) do
     socket
-    |> assign(:page_title, "New vehicle-driver")
+    |> assign(:page_title, "New Vehicle driver")
     |> assign(:vehicle_driver, %VehicleDriver{})
   end
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing vehicles-drivers")
+    |> assign(:page_title, "Listing Vehicles drivers")
     |> assign(:vehicle_driver, nil)
+  end
+
+  @impl true
+  def handle_info(
+        {ParkingLotWeb.VehicleDriverLive.FormComponent, {:saved, vehicle_driver}},
+        socket
+      ) do
+    {:noreply, stream_insert(socket, :vehicles_drivers, vehicle_driver)}
   end
 
   @impl true
@@ -37,10 +45,6 @@ defmodule ParkingLotWeb.VehicleDriverLive.Index do
     vehicle_driver = Customers.get_vehicle_driver!(id)
     {:ok, _} = Customers.delete_vehicle_driver(vehicle_driver)
 
-    {:noreply, assign(socket, :vehicles_drivers, list_vehicles_drivers())}
-  end
-
-  defp list_vehicles_drivers do
-    Customers.list_vehicles_drivers()
+    {:noreply, stream_delete(socket, :vehicles_drivers, vehicle_driver)}
   end
 end

@@ -1,24 +1,28 @@
 <div>
-  <h2><%= @title %></h2>
+  <.header>
+    <%= @title %>
+    <:subtitle>Use this form to manage camera records in your database.</:subtitle>
+  </.header>
 
-  <.form
-    :let={f}
-    for={@changeset}
+  <.simple_form
+    for={@form}
     id="camera-form"
     phx-target={@myself}
     phx-change="validate"
     phx-submit="save"
   >
-    <%= label(f, :type) %>
-    <%= select(f, :type, select_type_values(), prompt: "Choose a value") %>
-    <%= error_tag(f, :type) %>
+    <.input
+      field={@form[:type]}
+      type="select"
+      label="Type"
+      prompt="Choose a value"
+      options={Ecto.Enum.values(ParkingLot.Cameras.Camera, :type)}
+    />
 
-    <%= label(f, :uri, "URI") %>
-    <%= uri_input(f, :uri, phx_debounce: "blur") %>
-    <%= error_tag(f, :uri) %>
+    <.input field={@form[:uri]} type="uri" label="URI" phx-debounce="blur" />
 
-    <div>
-      <%= submit("Save", phx_disable_with: "Saving...") %>
-    </div>
-  </.form>
+    <:actions>
+      <.button phx-disable-with="Saving...">Save Camera</.button>
+    </:actions>
+  </.simple_form>
 </div>

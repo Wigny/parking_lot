@@ -6,7 +6,7 @@ defmodule ParkingLotWeb.DriverLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, :drivers, list_drivers())}
+    {:ok, stream(socket, :drivers, Customers.list_drivers())}
   end
 
   @impl true
@@ -33,14 +33,15 @@ defmodule ParkingLotWeb.DriverLive.Index do
   end
 
   @impl true
+  def handle_info({ParkingLotWeb.DriverLive.FormComponent, {:saved, driver}}, socket) do
+    {:noreply, stream_insert(socket, :drivers, driver)}
+  end
+
+  @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     driver = Customers.get_driver!(id)
     {:ok, _} = Customers.delete_driver(driver)
 
-    {:noreply, assign(socket, :drivers, list_drivers())}
-  end
-
-  defp list_drivers do
-    Customers.list_drivers()
+    {:noreply, stream_delete(socket, :drivers, driver)}
   end
 end

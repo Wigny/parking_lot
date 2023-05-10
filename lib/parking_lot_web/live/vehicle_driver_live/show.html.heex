@@ -1,41 +1,33 @@
-<h1>Show vehicle-driver</h1>
+<.header>
+  Vehicle driver <%= @vehicle_driver.id %>
+  <:subtitle>This is a vehicle_driver record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/vehicles_drivers/#{@vehicle_driver}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit vehicle_driver</.button>
+    </.link>
+  </:actions>
+</.header>
 
-<%= if @live_action in [:edit] do %>
-  <.modal return_to={Routes.vehicle_driver_show_path(@socket, :show, @vehicle_driver)}>
-    <.live_component
-      module={ParkingLotWeb.VehicleDriverLive.FormComponent}
-      id={@vehicle_driver.id}
-      title={@page_title}
-      action={@live_action}
-      vehicle_driver={@vehicle_driver}
-      return_to={Routes.vehicle_driver_show_path(@socket, :show, @vehicle_driver)}
-    />
-  </.modal>
-<% end %>
+<.list>
+  <:item title="Driver"><%= @vehicle_driver.driver.name %></:item>
+  <:item title="Vehicle"><%= @vehicle_driver.vehicle.license_plate %></:item>
+  <:item title="Active"><%= @vehicle_driver.active %></:item>
+</.list>
 
-<ul>
-  <li>
-    <strong>Driver:</strong>
-    <%= @vehicle_driver.driver.name %>
-  </li>
+<.back navigate={~p"/vehicles_drivers"}>Back to vehicles_drivers</.back>
 
-  <li>
-    <strong>Vehicle:</strong>
-    <%= @vehicle_driver.vehicle.license_plate %>
-  </li>
-
-  <li>
-    <strong>Active:</strong>
-    <%= @vehicle_driver.active %>
-  </li>
-</ul>
-
-<span>
-  <.link patch={Routes.vehicle_driver_show_path(@socket, :edit, @vehicle_driver)} class="button">
-    Edit
-  </.link>
-</span>
-|
-<span>
-  <.link navigate={Routes.vehicle_driver_index_path(@socket, :index)}>Back</.link>
-</span>
+<.modal
+  :if={@live_action == :edit}
+  id="vehicle_driver-modal"
+  show
+  on_cancel={JS.patch(~p"/vehicles_drivers/#{@vehicle_driver}")}
+>
+  <.live_component
+    module={ParkingLotWeb.VehicleDriverLive.FormComponent}
+    id={@vehicle_driver.id}
+    title={@page_title}
+    action={@live_action}
+    vehicle_driver={@vehicle_driver}
+    patch={~p"/vehicles_drivers/#{@vehicle_driver}"}
+  />
+</.modal>

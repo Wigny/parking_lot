@@ -8,19 +8,14 @@ defmodule ParkingLot.Accounts.User do
 
   schema "users" do
     field :email, :string
-    has_many :sessions, ParkingLot.Accounts.UserSession
+    has_many :sessions, ParkingLot.Accounts.Session
 
     timestamps()
   end
 
-  def registration_changeset(user, attrs) do
+  def changeset(user, attrs) do
     user
     |> cast(attrs, [:email])
-    |> validate_email()
-  end
-
-  defp validate_email(changeset) do
-    changeset
     |> validate_required([:email])
     |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "must have the @ sign and no spaces")
     |> validate_length(:email, max: 160)
