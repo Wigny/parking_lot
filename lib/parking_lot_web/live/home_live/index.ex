@@ -1,6 +1,6 @@
 defmodule ParkingLotWeb.HomeLive.Index do
   use ParkingLotWeb, :live_view
-
+  import ParkingLotWeb.HomeLive.CanvasComponent
   @impl true
   def mount(_params, _session, socket) do
     if connected?(socket) do
@@ -12,24 +12,11 @@ defmodule ParkingLotWeb.HomeLive.Index do
 
   @impl true
   def handle_info({:recognition, id, recognition}, socket) do
-    %{preview: preview, vehicle: vehicle} = recognition
-
-    {:noreply,
-     update(socket, :recognitions, fn recognitions ->
-       Map.put(recognitions, id, %{preview: to_canvas(preview), vehicle: vehicle})
-     end)}
+    {:noreply, update(socket, :recognitions, &Map.put(&1, id, recognition))}
   end
 
   @impl true
   def handle_info({:parking, _id, _parking}, socket) do
     {:noreply, socket}
-  end
-
-  defp to_canvas(frame) do
-    {_dimensions, [height, width]} = Evision.Mat.size(frame)
-    jpeg = Evision.imencode(".jpeg", frame)
-    image = "data:image/jpeg;charset=utf-8;base64,#{Base.encode64(jpeg)}"
-
-    %{width: width, height: height, image: image}
   end
 end

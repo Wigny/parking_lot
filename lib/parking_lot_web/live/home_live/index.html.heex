@@ -1,19 +1,6 @@
 <div :for={{id, recognition} <- @recognitions}>
   <section class="row">
-    <canvas
-      :if={recognition.preview}
-      id={"preview_#{id}"}
-      data-image={recognition.preview.image}
-      width={recognition.preview.width}
-      height={recognition.preview.height}
-      phx-hook="DrawCanvas"
-      style="
-      max-width: 100%;
-      object-fit: contain;
-      width: 100% !important;
-      height: auto !important;
-    "
-    />
+    <.preview :if={recognition.preview} id={"preview_#{id}"} frame={recognition.preview} />
   </section>
   <section class="row">
     <ul :if={recognition.vehicle}>
