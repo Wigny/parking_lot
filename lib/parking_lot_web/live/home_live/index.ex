@@ -7,7 +7,10 @@ defmodule ParkingLotWeb.HomeLive.Index do
       Phoenix.PubSub.subscribe(ParkingLot.PubSub, "alpr")
     end
 
-    {:ok, assign(socket, :recognitions, %{})}
+    {:ok,
+     socket
+     |> assign(:recognitions, %{})
+     |> stream(:last_parkings, [])}
   end
 
   @impl true
@@ -16,7 +19,7 @@ defmodule ParkingLotWeb.HomeLive.Index do
   end
 
   @impl true
-  def handle_info({:parking, _id, _parking}, socket) do
-    {:noreply, socket}
+  def handle_info({:parking, parking}, socket) do
+    {:noreply, stream_insert(socket, :last_parkings, parking)}
   end
 end

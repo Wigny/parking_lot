@@ -629,6 +629,17 @@ defmodule ParkingLotWeb.CoreComponents do
     |> mask()
   end
 
+  attr(:id, :string, required: true)
+  attr(:value, :string, required: true)
+
+  def time(assigns) do
+    ~H"""
+    <time id={@id} is="relative-time" datetime={@value} phx-update="ignore">
+      <%= @value %>
+    </time>
+    """
+  end
+
   ## JS Commands
 
   def show(js \\ %JS{}, selector) do

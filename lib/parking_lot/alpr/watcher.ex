@@ -28,6 +28,13 @@ defmodule ParkingLot.ALPR.Watcher do
 
     send(self(), :recognize)
 
+    GenServer.cast(self(), {:notify, %{frame: frame, inferences: inferences}})
+
+    {:noreply, state}
+  end
+
+  @impl true
+  def handle_cast({:notify, %{frame: frame, inferences: inferences}}, %{id: id} = state) do
     recognition = find_license_plate_recognition(inferences)
 
     preview = visualize_recognition(frame, recognition)
@@ -39,19 +46,18 @@ defmodule ParkingLot.ALPR.Watcher do
       {:recognition, id, %{preview: preview, vehicle: vehicle}}
     )
 
-    # GenServer.cast(self(), {:register, vehicle})
+    GenServer.cast(self(), {:register, vehicle})
 
     {:noreply, state}
   end
 
-  @impl true
   def handle_cast({:register, nil}, state) do
     {:noreply, state}
   end
 
-  def handle_cast({:register, vehicle}, %{id: id, type: type} = state) do
+  def handle_cast({:register, vehicle}, %{type: type} = state) do
     with {:ok, parking} <- register_parking(type, vehicle) do
-      Phoenix.PubSub.broadcast(ParkingLot.PubSub, "alpr", {:parking, id, parking})
+      Phoenix.PubSub.broadcast(ParkingLot.PubSub, "alpr", {:parking, parking})
     end
 
     {:noreply, state}
@@ -85,17 +91,6 @@ defmodule ParkingLot.ALPR.Watcher do
     |> Evision.putText(text, {b0, b1 + 50}, cv_FONT_HERSHEY_DUPLEX(), 2, {0, 0, 255}, thickness: 5)
   end
 
-  # the external camera register the car entry
-  defp register_parking(:external, vehicle) do
-    last_parking = Parkings.get_last_parking(vehicle_id: vehicle.id)
-
-    if match?(%{left_at: nil}, last_parking) do
-      {:error, :already_entered}
-    else
-      Parkings.create_parking(%{vehicle_id: vehicle.id, entered_at: DateTime.utc_now()})
-    end
-  end
-
   # the internal camera register the car exit
   defp register_parking(:internal, vehicle) do
     last_parking = Parkings.get_last_parking(vehicle_id: vehicle.id)
@@ -104,6 +99,17 @@ defmodule ParkingLot.ALPR.Watcher do
       Parkings.update_parking(last_parking, %{left_at: DateTime.utc_now()})
     else
       {:error, :already_left}
+    end
+  end
+
+  # the external camera register the car entry
+  defp register_parking(:external, vehicle) do
+    last_parking = Parkings.get_last_parking(vehicle_id: vehicle.id)
+
+    if match?(%{left_at: nil}, last_parking) do
+      {:error, :already_entered}
+    else
+      Parkings.create_parking(%{vehicle_id: vehicle.id, entered_at: DateTime.utc_now()})
     end
   end
 end

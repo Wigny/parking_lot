@@ -1,24 +1,5 @@
-<div :for={{id, recognition} <- @recognitions}>
-  <section class="row">
-    <.preview :if={recognition.preview} id={"preview_#{id}"} frame={recognition.preview} />
-  </section>
-  <section class="row">
-    <ul :if={recognition.vehicle}>
-      <li>
-        <strong>Vehicle:</strong>
-        <%= recognition.vehicle.model.name %> <%= recognition.vehicle.color.name %>
-      </li>
-
-      <li>
-        <strong>License plate:</strong>
-        <%= recognition.vehicle.license_plate %>
-      </li>
-    </ul>
-  </section>
-</div>
-
 <div class="flex w-full sm:w-auto">
-  <div class="mt-10 grid grid-cols-1 sm:grid-cols-5 gap-x-6 gap-y-4">
+  <div class="mb-10 grid grid-cols-1 sm:grid-cols-5 gap-x-6 gap-y-4">
     <a
       :for={
         {path, icon, title} <- [
@@ -40,3 +21,25 @@
     </a>
   </div>
 </div>
+
+<div class="flex">
+  <div :for={{id, recognition} <- @recognitions} class="w-1/2">
+    <.preview :if={recognition.preview} id={"preview_#{id}"} frame={recognition.preview} />
+  </div>
+</div>
+
+<.table
+  id="last_parkings"
+  rows={@streams.last_parkings}
+  row_click={fn {_id, parking} -> JS.navigate(~p"/parkings/#{parking}") end}
+>
+  <:col :let={{_id, parking}} label="Vehicle">
+    <%= parking.vehicle.license_plate %>
+  </:col>
+  <:col :let={{_id, parking}} label="Entered at">
+    <.time id={Ecto.UUID.generate()} value={parking.entered_at} />
+  </:col>
+  <:col :let={{_id, parking}} label="Left at">
+    <.time id={Ecto.UUID.generate()} value={parking.left_at} />
+  </:col>
+</.table>

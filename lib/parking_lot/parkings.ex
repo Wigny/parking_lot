@@ -25,6 +25,7 @@ defmodule ParkingLot.Parkings do
     |> where(^where)
     |> last(order_by)
     |> Repo.one()
+    |> preload_parking()
   end
 
   def create_parking(attrs \\ %{}) do
@@ -57,6 +58,6 @@ defmodule ParkingLot.Parkings do
   end
 
   def preload_parking(parking) do
-    Repo.preload(parking, :vehicle)
+    Repo.preload(parking, vehicle: [[model: [:brand]], :color, :type])
   end
 end
