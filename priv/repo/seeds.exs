@@ -12,7 +12,7 @@
 
 unless Mix.env() == :test do
   alias ParkingLot.Repo
-  alias ParkingLot.{Customers, Vehicles}
+  alias ParkingLot.Vehicles
 
   Enum.map(
     [

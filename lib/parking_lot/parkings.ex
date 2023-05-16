@@ -20,6 +20,14 @@ defmodule ParkingLot.Parkings do
     |> preload_parking()
   end
 
+  def get_last_parking(where, order_by \\ nil) when is_list(where) do
+    Parking
+    |> where(^where)
+    |> last(order_by)
+    |> Repo.one()
+    |> preload_parking()
+  end
+
   def create_parking(attrs \\ %{}) do
     %Parking{}
     |> Parking.changeset(attrs)
@@ -50,6 +58,6 @@ defmodule ParkingLot.Parkings do
   end
 
   def preload_parking(parking) do
-    Repo.preload(parking, :vehicle)
+    Repo.preload(parking, vehicle: [[model: [:brand]], :color, :type])
   end
 end

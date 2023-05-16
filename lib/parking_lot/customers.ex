@@ -46,6 +46,13 @@ defmodule ParkingLot.Customers do
     |> preload_vehicle()
   end
 
+  def get_vehicle(where) when is_list(where) do
+    Vehicle
+    |> where(^where)
+    |> Repo.one()
+    |> preload_vehicle()
+  end
+
   def create_vehicle(attrs \\ %{}) do
     %Vehicle{}
     |> Vehicle.changeset(attrs)
