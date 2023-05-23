@@ -21,7 +21,7 @@ defmodule ParkingLot.Customers.Vehicle do
   def changeset(vehicle, attrs) do
     vehicle
     |> cast(attrs, ~w[license_plate type_id model_id color_id active]a)
-    |> validate_required(~w[license_plate type_id model_id color_id active]a)
+    |> validate_required(~w[license_plate]a)
     |> validate_length(:license_plate, is: 7)
     |> validate_format(
       :license_plate,

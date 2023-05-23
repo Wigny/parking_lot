@@ -38,7 +38,7 @@ defmodule ParkingLot.ALPR.Watcher do
     recognition = find_license_plate_recognition(inferences)
 
     preview = visualize_recognition(frame, recognition)
-    vehicle = with {plate, _} <- recognition, do: Customers.get_vehicle(license_plate: plate)
+    vehicle = get_or_create_vehicle(recognition)
 
     Phoenix.PubSub.broadcast(
       ParkingLot.PubSub,
@@ -56,7 +56,7 @@ defmodule ParkingLot.ALPR.Watcher do
   end
 
   def handle_cast({:register, vehicle}, %{type: type} = state) do
-    with {:ok, parking} <- register_parking(type, vehicle) do
+    with {:ok, parking} <- Parkings.register_parking(type, vehicle) do
       Phoenix.PubSub.broadcast(ParkingLot.PubSub, "alpr", {:parking, parking})
     end
 
@@ -91,25 +91,16 @@ defmodule ParkingLot.ALPR.Watcher do
     |> Evision.putText(text, {b0, b1 + 50}, cv_FONT_HERSHEY_DUPLEX(), 2, {0, 0, 255}, thickness: 5)
   end
 
-  # the internal camera register the car exit
-  defp register_parking(:internal, vehicle) do
-    last_parking = Parkings.get_last_parking(vehicle_id: vehicle.id)
-
-    if match?(%{left_at: nil}, last_parking) do
-      Parkings.update_parking(last_parking, %{left_at: DateTime.utc_now()})
-    else
-      {:error, :already_left}
-    end
+  defp get_or_create_vehicle(nil) do
+    nil
   end
 
-  # the external camera register the car entry
-  defp register_parking(:external, vehicle) do
-    last_parking = Parkings.get_last_parking(vehicle_id: vehicle.id)
-
-    if match?(%{left_at: nil}, last_parking) do
-      {:error, :already_entered}
+  defp get_or_create_vehicle({plate, _}) do
+    if vehicle = Customers.get_vehicle(license_plate: plate) do
+      vehicle
     else
-      Parkings.create_parking(%{vehicle_id: vehicle.id, entered_at: DateTime.utc_now()})
+      {:ok, vehicle} = Customers.create_vehicle(%{license_plate: plate})
+      vehicle
     end
   end
 end
