@@ -10,7 +10,7 @@ defmodule ParkingLot.ALPR.Text.RecognizerTest do
       %{image: Evision.imread(@license_plate)}
     end
 
-    test "recognizes texts in image", %{image: image} do
+    test "recognizes plate digits in image", %{image: image} do
       assert "RSW6A87" = Recognizer.infer(image)
     end
   end

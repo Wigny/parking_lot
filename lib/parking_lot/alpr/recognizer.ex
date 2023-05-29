@@ -21,6 +21,8 @@ defmodule ParkingLot.ALPR.Recognizer do
 
       if match?(%Evision.Mat{}, area) do
         recognize_text(area)
+      else
+        nil
       end
     end
   end

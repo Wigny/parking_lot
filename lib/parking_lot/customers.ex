@@ -34,6 +34,15 @@ defmodule ParkingLot.Customers do
     Driver.changeset(driver, attrs)
   end
 
+  def get_or_create_vehicle(attrs) when is_list(attrs) do
+    if vehicle = get_vehicle(attrs) do
+      {:ok, vehicle}
+    else
+      attrs = Map.new(attrs)
+      create_vehicle(attrs)
+    end
+  end
+
   def list_vehicles do
     Vehicle
     |> Repo.all()

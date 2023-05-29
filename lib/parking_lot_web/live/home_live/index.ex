@@ -14,8 +14,8 @@ defmodule ParkingLotWeb.HomeLive.Index do
   end
 
   @impl true
-  def handle_info({:recognition, id, recognition}, socket) do
-    {:noreply, update(socket, :recognitions, &Map.put(&1, id, recognition))}
+  def handle_info({:preview, id, preview}, socket) do
+    {:noreply, update(socket, :recognitions, &Map.put(&1, id, preview))}
   end
 
   @impl true
