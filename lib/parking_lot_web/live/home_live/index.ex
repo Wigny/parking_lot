@@ -10,7 +10,7 @@ defmodule ParkingLotWeb.HomeLive.Index do
     {:ok,
      socket
      |> assign(:recognitions, %{})
-     |> stream(:last_parkings, [])}
+     |> stream(:last_parkings, [], limit: 10)}
   end
 
   @impl true
@@ -20,6 +20,6 @@ defmodule ParkingLotWeb.HomeLive.Index do
 
   @impl true
   def handle_info({:parking, parking}, socket) do
-    {:noreply, stream_insert(socket, :last_parkings, parking)}
+    {:noreply, stream_insert(socket, :last_parkings, parking, at: 0)}
   end
 end
