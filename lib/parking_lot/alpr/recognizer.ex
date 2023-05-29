@@ -1,12 +1,11 @@
 defmodule ParkingLot.ALPR.Recognizer do
   @moduledoc """
-  Based on https://github.com/opencv/opencv_zoo/tree/master/models/text_recognition_crnn by
-  https://github.com/cocoa-xu/evision/pull/143
+  Based on https://web.inf.ufpr.br/vri/publications/layout-independent-alpr/
   """
 
   use GenServer
   import Evision.Constant
-  alias Evision.DNN
+  alias Evision.{DNN, Zoo}
 
   # Client
 
@@ -15,18 +14,15 @@ defmodule ParkingLot.ALPR.Recognizer do
   end
 
   def infer(image) do
-    # {_classIds, _conf, detections} = detect_text(image)
+    {_classIds, _conf, detections} = detect_text(image)
 
-    # Enum.map(detections, fn {x, y, w, h} ->
-    #   area = image[[y..(y + h), x..(x + w)]]
+    with {x, y, w, h} <- List.first(detections) do
+      area = image[[y..(y + h), x..(x + w)]]
 
-    #   if match?(%Evision.Mat{}, area) do
-    #     Evision.imwrite("area.jpg", area)
-    #     recognize_text(area)
-    #   end
-    # end)
-
-    recognize_text(Evision.imread("lib/parking_lot/alpr/plate.png"))
+      if match?(%Evision.Mat{}, area) do
+        recognize_text(area)
+      end
+    end
   end
 
   def detect_text(image) do
@@ -46,43 +42,39 @@ defmodule ParkingLot.ALPR.Recognizer do
 
   @impl true
   def handle_continue(:init, nil) do
-    opts = [backend: cv_DNN_BACKEND_CUDA(), target: cv_DNN_TARGET_CUDA()]
+    detector = detector_init()
+    recognizer = recognizer_init()
+    charset = charset_init()
 
-    detector = detector_init(opts)
-    recognizer = recognizer_init(opts)
-
-    {:noreply, %{detector: detector, recognizer: recognizer}}
+    {:noreply, %{detector: detector, recognizer: recognizer, charset: charset}}
   end
 
   @impl true
   def handle_call({:detect, image}, _from, %{detector: detector} = state) do
-    inference = DNN.DetectionModel.detect(detector, image, confThreshold: 0.2, nmsThreshold: 0.4)
+    inference = DNN.DetectionModel.detect(detector, image, confThreshold: 0.01)
     {:reply, inference, state}
   end
 
   @impl true
-  def handle_call({:recognize, image}, _from, %{recognizer: recognizer} = state) do
-    blob =
-      DNN.blobFromImage(image, scalefactor: 1 / 255, size: {352, 128}, swapRB: true, crop: false)
+  def handle_call({:recognize, image}, _from, state) do
+    %{recognizer: recognizer, charset: charset} = state
 
-    out_names = DNN.Net.getUnconnectedOutLayersNames(recognizer)
+    blob = DNN.blobFromImage(image, scalefactor: 1 / 255, size: {352, 128}, swapRB: true)
 
     recognizer = DNN.Net.setInput(recognizer, blob)
 
-    [outputBlob] = DNN.Net.forward(recognizer, outBlobNames: out_names)
-
-    charset = Enum.map(Enum.concat(?0..?9, ?A..?Z), &<<&1::utf8>>)
+    output_layers_names = DNN.Net.getUnconnectedOutLayersNames(recognizer)
+    [outputBlob] = DNN.Net.forward(recognizer, outBlobNames: output_layers_names)
 
     output = Evision.Mat.to_nx(outputBlob, Nx.BinaryBackend)
 
-    for i <- 0..(Nx.axis_size(output, 0) - 1), reduce: [] do
-      acc ->
+    inference =
+      0..(Nx.axis_size(output, 0) - 1)
+      |> Enum.reduce([], fn i, acc ->
         scores = output[[i, 5..-1//1]]
 
         class_id = Nx.to_number(Nx.argmax(scores))
         confidence = Nx.to_number(scores[class_id])
-
-        if confidence != 0, do: IO.inspect({class_id, confidence}, limit: :infinity)
 
         if confidence > 0.5 do
           char = Enum.at(charset, class_id)
@@ -90,53 +82,60 @@ defmodule ParkingLot.ALPR.Recognizer do
         else
           acc
         end
-    end
-    |> IO.inspect()
+      end)
+      |> Enum.join()
 
-    {:reply, nil, state}
+    {:reply, inference, state}
   end
 
-  defp detector_init(opts) do
+  defp detector_init() do
     {:ok, config} =
-      Evision.Zoo.download(
+      Zoo.download(
         "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-detection-layout-classification.cfg",
-        "lp-detection-layout-classification.cfg"
+        "detection.cfg"
       )
 
     {:ok, model} =
-      Evision.Zoo.download(
+      Zoo.download(
         "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-detection-layout-classification.weights",
-        "lp-detection-layout-classification.weights"
+        "detection.weights"
       )
 
     net = DNN.readNetFromDarknet(config, darknetModel: model)
-    DNN.Net.setPreferableBackend(net, opts[:backend])
-    DNN.Net.setPreferableTarget(net, opts[:target])
+    DNN.Net.setPreferableTarget(net, cv_DNN_TARGET_CPU())
 
     model = DNN.DetectionModel.detectionModel(net)
 
-    DNN.DetectionModel.setInputParams(model, size: {416, 416}, scale: 1 / 255, swapRB: true)
+    DNN.DetectionModel.setInputParams(model, scale: 1 / 255, size: {416, 416}, swapRB: true)
 
     model
   end
 
-  defp recognizer_init(opts) do
+  defp recognizer_init() do
     {:ok, config} =
       Evision.Zoo.download(
         "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-recognition.cfg",
-        "lp-recognition.cfg"
+        "recognition.cfg"
       )
 
     {:ok, model} =
       Evision.Zoo.download(
         "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-recognition.weights",
-        "lp-recognition.weights"
+        "recognition.weights"
       )
 
     net = DNN.readNetFromDarknet(config, darknetModel: model)
-    DNN.Net.setPreferableBackend(net, opts[:backend])
-    DNN.Net.setPreferableTarget(net, opts[:target])
-
+    DNN.Net.setPreferableTarget(net, cv_DNN_TARGET_CPU())
     net
+  end
+
+  defp charset_init() do
+    {:ok, names} =
+      Evision.Zoo.download(
+        "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-recognition.names",
+        "recognition.names"
+      )
+
+    String.split(File.read!(names), "\n")
   end
 end
