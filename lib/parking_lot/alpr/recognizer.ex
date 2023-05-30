@@ -7,6 +7,22 @@ defmodule ParkingLot.ALPR.Recognizer do
   import Evision.Constant
   alias Evision.{DNN, Zoo}
 
+  @models %{
+    detector: %{
+      config:
+        "https://inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-detection-layout-classification.cfg",
+      model:
+        "https://inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-detection-layout-classification.weights"
+    },
+    recognizer: %{
+      config: "https://inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-recognition.cfg",
+      model:
+        "https://inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-recognition.weights",
+      classes:
+        "https://inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-recognition.names"
+    }
+  }
+
   # Client
 
   def start_link(_opts \\ []) do
@@ -54,6 +70,7 @@ defmodule ParkingLot.ALPR.Recognizer do
   @impl true
   def handle_call({:detect, image}, _from, %{detector: detector} = state) do
     inference = DNN.DetectionModel.detect(detector, image, confThreshold: 0.01)
+
     {:reply, inference, state}
   end
 
@@ -91,17 +108,8 @@ defmodule ParkingLot.ALPR.Recognizer do
   end
 
   defp detector_init() do
-    {:ok, config} =
-      Zoo.download(
-        "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-detection-layout-classification.cfg",
-        "detection.cfg"
-      )
-
-    {:ok, model} =
-      Zoo.download(
-        "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-detection-layout-classification.weights",
-        "detection.weights"
-      )
+    {:ok, config} = Zoo.download(@models.detector.config, "detection.cfg")
+    {:ok, model} = Zoo.download(@models.detector.model, "detection.weights")
 
     net = DNN.readNetFromDarknet(config, darknetModel: model)
     DNN.Net.setPreferableTarget(net, cv_DNN_TARGET_CPU())
@@ -114,17 +122,8 @@ defmodule ParkingLot.ALPR.Recognizer do
   end
 
   defp recognizer_init() do
-    {:ok, config} =
-      Evision.Zoo.download(
-        "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-recognition.cfg",
-        "recognition.cfg"
-      )
-
-    {:ok, model} =
-      Evision.Zoo.download(
-        "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-recognition.weights",
-        "recognition.weights"
-      )
+    {:ok, config} = Zoo.download(@models.recognizer.config, "recognition.cfg")
+    {:ok, model} = Zoo.download(@models.recognizer.model, "recognition.weights")
 
     net = DNN.readNetFromDarknet(config, darknetModel: model)
     DNN.Net.setPreferableTarget(net, cv_DNN_TARGET_CPU())
@@ -132,11 +131,7 @@ defmodule ParkingLot.ALPR.Recognizer do
   end
 
   defp charset_init() do
-    {:ok, names} =
-      Evision.Zoo.download(
-        "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-recognition.names",
-        "recognition.names"
-      )
+    {:ok, names} = Zoo.download(@models.recognizer.classes, "recognition.names")
 
     String.split(File.read!(names), "\n")
   end
