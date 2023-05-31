@@ -45,6 +45,9 @@ COPY mix.exs mix.lock ./
 RUN mix deps.get --only $MIX_ENV
 RUN mkdir config
 
+COPY assets/package.json assets/package-lock.json ./assets/
+RUN npm install --prefix assets
+
 # copy compile-time config files before we compile dependencies
 # to ensure any relevant config change will trigger the dependencies
 # to be re-compiled.
@@ -56,8 +59,6 @@ COPY priv priv
 COPY lib lib
 
 COPY assets assets
-
-RUN npm install --prefix assets
 
 # compile assets
 RUN mix assets.deploy
