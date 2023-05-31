@@ -9,6 +9,8 @@ defmodule ParkingLot.ALPR.Video do
 
   alias Evision.VideoCapture
 
+  @fps 60
+
   # Client
 
   def start_link(%{stream: stream}, opts \\ [name: __MODULE__]) do
@@ -56,9 +58,9 @@ defmodule ParkingLot.ALPR.Video do
 
   @impl true
   def handle_info(:grab, video) do
-    true = VideoCapture.grab(video)
+    Process.send_after(self(), :grab, floor(:timer.seconds(1) / @fps))
 
-    Process.send_after(self(), :grab, floor(:timer.seconds(1) / video.fps))
+    true = VideoCapture.grab(video)
 
     {:noreply, video}
   end

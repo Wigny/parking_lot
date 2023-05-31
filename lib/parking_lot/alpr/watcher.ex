@@ -32,10 +32,12 @@ defmodule ParkingLot.ALPR.Watcher do
     {:noreply, state}
   end
 
+  @impl true
   def handle_cast({:register, nil}, state) do
     {:noreply, state}
   end
 
+  @impl true
   def handle_cast({:register, recognition}, %{type: type} = state) do
     with {:ok, vehicle} <- Customers.get_or_create_vehicle(license_plate: recognition),
          {:ok, parking} <- Parkings.register_parking(type, vehicle) do
