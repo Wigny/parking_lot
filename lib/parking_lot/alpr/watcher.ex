@@ -38,9 +38,9 @@ defmodule ParkingLot.ALPR.Watcher do
   end
 
   @impl true
-  def handle_cast({:register, recognition}, %{type: type} = state) do
+  def handle_cast({:register, recognition}, state) do
     with {:ok, vehicle} <- Customers.get_or_create_vehicle(license_plate: recognition),
-         {:ok, parking} <- Parkings.register_parking(type, vehicle) do
+         {:ok, parking} <- Parkings.register_parking(vehicle) do
       Phoenix.PubSub.broadcast(ParkingLot.PubSub, "alpr", {:parking, parking})
     end
 

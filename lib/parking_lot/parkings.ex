@@ -61,6 +61,17 @@ defmodule ParkingLot.Parkings do
     Repo.preload(parking, vehicle: [[model: [:brand]], :color, :type])
   end
 
+  # single cam
+  def register_parking(vehicle) do
+    last_parking = get_last_parking(vehicle_id: vehicle.id)
+
+    if match?(%{left_at: nil}, last_parking) do
+      update_parking(last_parking, %{left_at: DateTime.utc_now()})
+    else
+      create_parking(%{vehicle_id: vehicle.id, entered_at: DateTime.utc_now()})
+    end
+  end
+
   # the internal camera register the car exit
   def register_parking(:internal, vehicle) do
     last_parking = get_last_parking(vehicle_id: vehicle.id)
