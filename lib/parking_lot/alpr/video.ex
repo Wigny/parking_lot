@@ -45,15 +45,15 @@ defmodule ParkingLot.ALPR.Video do
   end
 
   @impl true
-  def handle_call(:frame, _from, %{isOpened: false} = video) do
-    {:stop, "Video stream isn't opened", video}
-  end
-
-  @impl true
   def handle_call(:frame, _from, video) do
     frame = VideoCapture.retrieve(video)
 
     {:reply, frame, video}
+  end
+
+  @impl true
+  def handle_info(:grab, %{isOpened: false} = video) do
+    {:stop, "Video stream isn't opened", video}
   end
 
   @impl true
