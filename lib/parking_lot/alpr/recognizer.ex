@@ -11,13 +11,15 @@ defmodule ParkingLot.ALPR.Recognizer do
     detector: %{
       config:
         "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-detection-layout-classification.cfg",
-      model:
-        "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-detection-layout-classification.weights"
+      weights:
+        "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-detection-layout-classification.weights",
+      classes:
+        "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-detection-layout-classification.names"
     },
     recognizer: %{
       config:
         "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-recognition.cfg",
-      model:
+      weights:
         "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-recognition.weights",
       classes:
         "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-recognition.names"
@@ -31,20 +33,14 @@ defmodule ParkingLot.ALPR.Recognizer do
   end
 
   def infer(image) do
-    {_classIds, _conf, detections} = detect_text(image)
-
-    with {x, y, w, h} <- List.first(detections) do
+    with {x, y, w, h} <- detect_license_plate(image) do
       area = image[[y..(y + h), x..(x + w)]]
 
-      if match?(%Evision.Mat{}, area) do
-        recognize_text(area)
-      else
-        nil
-      end
+      recognize_text(area)
     end
   end
 
-  def detect_text(image) do
+  def detect_license_plate(image) do
     GenServer.call(__MODULE__, {:detect, image}, :infinity)
   end
 
@@ -61,68 +57,78 @@ defmodule ParkingLot.ALPR.Recognizer do
 
   @impl true
   def handle_continue(:init, nil) do
-    detector = detector_init()
-    recognizer = recognizer_init()
-    charset = charset_init()
+    opts = [target_device: cv_DNN_TARGET_CPU(), cache_dir: System.tmp_dir!()]
 
-    {:noreply, %{detector: detector, recognizer: recognizer, charset: charset}}
+    detector = detector_init(@models.detector, opts)
+    recognizer = recognizer_init(@models.recognizer, opts)
+
+    {:noreply, %{detector: detector, recognizer: recognizer}}
   end
 
   @impl true
   def handle_call({:detect, image}, _from, %{detector: detector} = state) do
-    inference = DNN.DetectionModel.detect(detector, image, confThreshold: 0.01)
+    inferences = infer(detector, image, confThreshold: 0.01)
 
-    {:reply, inference, state}
+    area = with {_class, _confidence, box} <- List.first(inferences), do: box
+    {:reply, area, state}
   end
 
   @impl true
-  def handle_call({:recognize, image}, _from, %{recognizer: recognizer, charset: charset} = state) do
-    detect_opts = [confThreshold: 0.5, nmsThreshold: 0.25]
+  def handle_call({:recognize, image}, _from, %{recognizer: recognizer} = state) do
+    opts = [confThreshold: 0.5, nmsThreshold: 0.25]
+    inferences = infer(recognizer, image, opts)
 
-    {classIds, _confidences, _boxes} = DNN.DetectionModel.detect(recognizer, image, detect_opts)
-
-    inferences = Enum.map(classIds, fn class -> Enum.at(charset, class) end)
-
-    {:reply, "RSW6A87", state}
+    characters = Enum.map(inferences, fn {class, _confidence, _box} -> class end)
+    {:reply, characters, state}
   end
 
-  defp detector_init() do
-    download_opts = [cache_dir: System.tmp_dir!()]
+  defp detector_init(model, opts) do
+    download_opts = [cache_dir: opts[:cache_dir]]
 
-    {:ok, config} = Zoo.download(@models.detector.config, "detection.cfg", download_opts)
-    {:ok, model} = Zoo.download(@models.detector.model, "detection.weights", download_opts)
+    {:ok, config} = Zoo.download(model.config, "detection.cfg", download_opts)
+    {:ok, weights} = Zoo.download(model.weights, "detection.weights", download_opts)
+    {:ok, classes} = Zoo.download(model.classes, "detection.names", download_opts)
 
-    net = DNN.readNetFromDarknet(config, darknetModel: model)
-    DNN.Net.setPreferableTarget(net, cv_DNN_TARGET_CPU())
+    net = DNN.readNetFromDarknet(config, darknetModel: weights)
+    DNN.Net.setPreferableTarget(net, opts[:target_device])
 
     model = DNN.DetectionModel.detectionModel(net)
 
     DNN.DetectionModel.setInputParams(model, scale: 1 / 255, size: {416, 416}, swapRB: true)
 
-    model
+    classes = String.split(File.read!(classes), "\n")
+
+    {model, classes}
   end
 
-  defp recognizer_init() do
-    download_opts = [cache_dir: System.tmp_dir!()]
+  defp recognizer_init(model, opts) do
+    download_opts = [cache_dir: opts[:cache_dir]]
 
-    {:ok, config} = Zoo.download(@models.recognizer.config, "recognition.cfg", download_opts)
-    {:ok, model} = Zoo.download(@models.recognizer.model, "recognition.weights", download_opts)
+    {:ok, config} = Zoo.download(model.config, "recognition.cfg", download_opts)
+    {:ok, weights} = Zoo.download(model.weights, "recognition.weights", download_opts)
+    {:ok, classes} = Zoo.download(model.classes, "recognition.names", download_opts)
 
-    net = DNN.readNetFromDarknet(config, darknetModel: model)
-    DNN.Net.setPreferableTarget(net, cv_DNN_TARGET_CPU())
+    net = DNN.readNetFromDarknet(config, darknetModel: weights)
+    DNN.Net.setPreferableTarget(net, opts[:target_device])
 
     model = DNN.DetectionModel.detectionModel(net)
 
     DNN.DetectionModel.setInputParams(model, scale: 1 / 255, size: {352, 128}, swapRB: true)
 
-    model
+    classes = String.split(File.read!(classes), "\n")
+
+    {model, classes}
   end
 
-  defp charset_init do
-    download_opts = [cache_dir: System.tmp_dir!()]
+  defp infer({net, classes}, image, opts) do
+    detection = DNN.DetectionModel.detect(net, image, opts)
 
-    {:ok, names} = Zoo.download(@models.recognizer.classes, "recognition.names", download_opts)
-
-    String.split(File.read!(names), "\n")
+    detection
+    |> Tuple.to_list()
+    |> Enum.zip()
+    |> Enum.map(fn {classId, confidence, box} ->
+      class = Enum.at(classes, classId)
+      {class, confidence, box}
+    end)
   end
 end
