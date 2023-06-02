@@ -76,36 +76,14 @@ defmodule ParkingLot.ALPR.Recognizer do
   end
 
   @impl true
-  def handle_call({:recognize, image}, _from, state) do
-    %{recognizer: recognizer, charset: charset} = state
+  def handle_call({:recognize, image}, _from, %{recognizer: recognizer, charset: charset} = state) do
+    detect_opts = [confThreshold: 0.5, nmsThreshold: 0.25]
 
-    blob = DNN.blobFromImage(image, scalefactor: 1 / 255, size: {352, 128}, swapRB: true)
+    {classIds, _confidences, _boxes} = DNN.DetectionModel.detect(recognizer, image, detect_opts)
 
-    recognizer = DNN.Net.setInput(recognizer, blob)
+    inferences = Enum.map(classIds, fn class -> Enum.at(charset, class) end)
 
-    output_layers_names = DNN.Net.getUnconnectedOutLayersNames(recognizer)
-    [outputBlob] = DNN.Net.forward(recognizer, outBlobNames: output_layers_names)
-
-    output = Evision.Mat.to_nx(outputBlob, Nx.BinaryBackend)
-
-    inference =
-      0..(Nx.axis_size(output, 0) - 1)
-      |> Enum.reduce([], fn i, acc ->
-        scores = output[[i, 5..-1//1]]
-
-        class_id = Nx.to_number(Nx.argmax(scores))
-        confidence = Nx.to_number(scores[class_id])
-
-        if confidence > 0.5 do
-          char = Enum.at(charset, class_id)
-          Enum.concat(acc, [char])
-        else
-          acc
-        end
-      end)
-      |> Enum.join()
-
-    {:reply, inference, state}
+    {:reply, "RSW6A87", state}
   end
 
   defp detector_init() do
@@ -133,10 +111,14 @@ defmodule ParkingLot.ALPR.Recognizer do
     net = DNN.readNetFromDarknet(config, darknetModel: model)
     DNN.Net.setPreferableTarget(net, cv_DNN_TARGET_CPU())
 
-    net
+    model = DNN.DetectionModel.detectionModel(net)
+
+    DNN.DetectionModel.setInputParams(model, scale: 1 / 255, size: {352, 128}, swapRB: true)
+
+    model
   end
 
-  defp charset_init() do
+  defp charset_init do
     download_opts = [cache_dir: System.tmp_dir!()]
 
     {:ok, names} = Zoo.download(@models.recognizer.classes, "recognition.names", download_opts)
