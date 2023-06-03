@@ -5,7 +5,8 @@ defmodule ParkingLot.ALPR.Recognizer do
 
   use GenServer
   import Evision.Constant
-  alias Evision.{DNN, Zoo}
+  alias Evision.DNN
+  require Logger
 
   @models %{
     detector: %{
@@ -33,10 +34,14 @@ defmodule ParkingLot.ALPR.Recognizer do
   end
 
   def infer(image) do
-    with {x, y, w, h} <- detect_license_plate(image) do
-      area = image[[y..(y + h), x..(x + w)]]
+    detections = detect_license_plate(image)
 
-      recognize_text(area)
+    with {_class, _confidence, {x, y, width, height}} <- List.first(detections) do
+      recognitions = recognize_text(image[[y..(y + height), x..(x + width)]])
+
+      recognitions
+      |> Enum.sort_by(fn {_class, _confidence, {x, y, _width, _height}} -> {x, y} end)
+      |> Enum.map(fn {class, _confidence, _box} -> class end)
     end
   end
 
@@ -57,10 +62,8 @@ defmodule ParkingLot.ALPR.Recognizer do
 
   @impl true
   def handle_continue(:init, nil) do
-    opts = [target_device: cv_DNN_TARGET_CPU(), cache_dir: System.tmp_dir!()]
-
-    detector = detector_init(@models.detector, opts)
-    recognizer = recognizer_init(@models.recognizer, opts)
+    detector = init_model(:detector, scale: 1 / 255, size: {416, 416}, swapRB: true)
+    recognizer = init_model(:recognizer, scale: 1 / 255, size: {352, 128}, swapRB: true)
 
     {:noreply, %{detector: detector, recognizer: recognizer}}
   end
@@ -69,59 +72,38 @@ defmodule ParkingLot.ALPR.Recognizer do
   def handle_call({:detect, image}, _from, %{detector: detector} = state) do
     inferences = infer(detector, image, confThreshold: 0.01)
 
-    area = with {_class, _confidence, box} <- List.first(inferences), do: box
-    {:reply, area, state}
+    {:reply, inferences, state}
   end
 
   @impl true
   def handle_call({:recognize, image}, _from, %{recognizer: recognizer} = state) do
-    opts = [confThreshold: 0.5, nmsThreshold: 0.25]
-    inferences = infer(recognizer, image, opts)
+    inferences = infer(recognizer, image, confThreshold: 0.5, nmsThreshold: 0.25)
 
-    characters = Enum.map(inferences, fn {class, _confidence, _box} -> class end)
-    {:reply, characters, state}
+    {:reply, inferences, state}
   end
 
-  defp detector_init(model, opts) do
-    download_opts = [cache_dir: opts[:cache_dir]]
+  defp init_model(model, input_params) do
+    %{config: config_url, weights: weights_url, classes: classes_url} = @models[model]
 
-    {:ok, config} = Zoo.download(model.config, "detection.cfg", download_opts)
-    {:ok, weights} = Zoo.download(model.weights, "detection.weights", download_opts)
-    {:ok, classes} = Zoo.download(model.classes, "detection.names", download_opts)
+    Logger.info("Initializing the `license plate #{model}` neural network")
 
-    net = DNN.readNetFromDarknet(config, darknetModel: weights)
-    DNN.Net.setPreferableTarget(net, opts[:target_device])
+    {:ok, config_path} = Evision.Zoo.download(config_url, Path.basename(config_url))
+    {:ok, weights_path} = Evision.Zoo.download(weights_url, Path.basename(weights_url))
+    {:ok, classes_path} = Evision.Zoo.download(classes_url, Path.basename(classes_url))
 
-    model = DNN.DetectionModel.detectionModel(net)
+    classes = String.split(File.read!(classes_path), "\n")
 
-    DNN.DetectionModel.setInputParams(model, scale: 1 / 255, size: {416, 416}, swapRB: true)
+    network = DNN.readNetFromDarknet(config_path, darknetModel: weights_path)
+    DNN.Net.setPreferableTarget(network, cv_DNN_TARGET_CPU())
 
-    classes = String.split(File.read!(classes), "\n")
+    model = DNN.DetectionModel.detectionModel(network)
+    DNN.DetectionModel.setInputParams(model, input_params)
 
     {model, classes}
   end
 
-  defp recognizer_init(model, opts) do
-    download_opts = [cache_dir: opts[:cache_dir]]
-
-    {:ok, config} = Zoo.download(model.config, "recognition.cfg", download_opts)
-    {:ok, weights} = Zoo.download(model.weights, "recognition.weights", download_opts)
-    {:ok, classes} = Zoo.download(model.classes, "recognition.names", download_opts)
-
-    net = DNN.readNetFromDarknet(config, darknetModel: weights)
-    DNN.Net.setPreferableTarget(net, opts[:target_device])
-
-    model = DNN.DetectionModel.detectionModel(net)
-
-    DNN.DetectionModel.setInputParams(model, scale: 1 / 255, size: {352, 128}, swapRB: true)
-
-    classes = String.split(File.read!(classes), "\n")
-
-    {model, classes}
-  end
-
-  defp infer({net, classes}, image, opts) do
-    detection = DNN.DetectionModel.detect(net, image, opts)
+  defp infer({model, classes}, image, opts) do
+    detection = DNN.DetectionModel.detect(model, image, opts)
 
     detection
     |> Tuple.to_list()
