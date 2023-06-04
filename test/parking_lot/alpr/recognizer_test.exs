@@ -11,7 +11,7 @@ defmodule ParkingLot.ALPR.Text.RecognizerTest do
     end
 
     test "recognizes plate digits in image", %{image: image} do
-      assert "RSW6A87" = Recognizer.infer(image)
+      assert ~w"R S W 6 A 8 7" == Recognizer.infer(image)
     end
   end
 end
