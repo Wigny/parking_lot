@@ -3,9 +3,8 @@ defmodule ParkingLot.ALPR.Watcher do
 
   use GenServer
 
-  alias ParkingLot.{Customers, Parkings}
+  alias ParkingLot.{Algorithm, Customers, Parkings}
   alias ParkingLot.ALPR.{Recognizer, Video}
-  alias ParkingLot.Algorithm
 
   def start_link(%{camera: camera}, opts \\ []) do
     GenServer.start_link(__MODULE__, %{camera: camera}, opts)

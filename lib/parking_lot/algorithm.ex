@@ -1,4 +1,6 @@
 defmodule ParkingLot.Algorithm do
+  @moduledoc false
+
   def majority_voting(enumerable) do
     Enum.zip_with(enumerable, fn elem -> average(elem, :mode) end)
   end

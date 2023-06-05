@@ -8,6 +8,8 @@ defmodule ParkingLot.ALPR.Recognizer do
   require Logger
 
   defmodule NeuralNetwork do
+    @moduledoc false
+
     alias Evision.DNN
 
     defstruct ~w[model classes]a
