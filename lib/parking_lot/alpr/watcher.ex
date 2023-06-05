@@ -4,6 +4,7 @@ defmodule ParkingLot.ALPR.Watcher do
   use GenServer
 
   alias ParkingLot.{Algorithm, Customers, Parkings}
+  alias ParkingLot.Customers.Vehicle
   alias ParkingLot.ALPR.{Recognizer, Video}
 
   def start_link(%{camera: camera}, opts \\ []) do
@@ -44,7 +45,7 @@ defmodule ParkingLot.ALPR.Watcher do
     recognition = Algorithm.majority_voting(recognitions)
     parking_action = Keyword.get([internal: :leave, external: :entry], camera.type)
 
-    with {:ok, vehicle} <- Customers.get_vehicle(license_plate: Enum.join(recognition)),
+    with %Vehicle{} = vehicle <- Customers.get_vehicle(license_plate: Enum.join(recognition)),
          {:ok, parking} <- Parkings.register_parking(parking_action, vehicle) do
       Phoenix.PubSub.broadcast(ParkingLot.PubSub, "alpr", {:parking, parking})
     end
