@@ -48,9 +48,9 @@ defmodule ParkingLot.CustomersFixtures do
     driver
   end
 
-  def unique_vehicle_license_plate(version \\ :mercosul)
+  def unique_vehicle_license_plate(version \\ :mercosur)
 
-  def unique_vehicle_license_plate(:mercosul) do
+  def unique_vehicle_license_plate(:mercosur) do
     letters = Enum.map(?A..?Z, &<<&1::utf8>>)
     numbers = Enum.map(?0..?9, &<<&1::utf8>>)
 

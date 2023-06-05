@@ -89,26 +89,33 @@ defmodule ParkingLot.ALPR.Recognizer do
   end
 
   def infer(image) do
-    with [{_class, _confidence, license_plate_box} | _] <- detect_license_plate(image) do
-      recognitions = recognize_license_plate(image, license_plate_box)
+    license_plates = detect_license_plate(image)
 
-      recognitions
-      |> Enum.sort_by(fn {_class, _confidence, {axis_x, axis_y, _width, _height}} ->
-        {axis_x, axis_y}
-      end)
-      |> Enum.map(fn {class, _confidence, _box} ->
-        class
-      end)
+    with %Evision.Mat{} = area <- List.first(license_plates) do
+      recognize_license_plate(area)
     end
   end
 
+  @spec detect_license_plate(image) :: [image] when image: Evision.Mat.t()
   def detect_license_plate(image) do
-    GenServer.call(__MODULE__, {:detect_license_plate, image}, :infinity)
+    detections = GenServer.call(__MODULE__, {:detect_license_plate, image}, :infinity)
+
+    for {_class, _confidence, box} <- detections do
+      Evision.Mat.roi(image, box)
+    end
   end
 
-  def recognize_license_plate(image, bounding_box) do
-    license_plate = Evision.Mat.roi(image, bounding_box)
-    GenServer.call(__MODULE__, {:recognize_license_plate, license_plate})
+  @spec recognize_license_plate(image :: Evision.Mat.t()) :: [binary]
+  def recognize_license_plate(image) do
+    recognitions = GenServer.call(__MODULE__, {:recognize_license_plate, image})
+
+    recognitions
+    |> Enum.sort_by(fn {_class, _confidence, {axis_x, axis_y, _width, _height}} ->
+      {axis_x, axis_y}
+    end)
+    |> Enum.map(fn {class, _confidence, _box} ->
+      class
+    end)
   end
 
   # Server
