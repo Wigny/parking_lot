@@ -275,16 +275,6 @@ defmodule ParkingLotWeb.CoreComponents do
     |> input()
   end
 
-  def input(%{type: "uri"} = assigns) do
-    assigns
-    |> assign(:type, "url")
-    |> update(:value, fn
-      %URI{} = uri -> URI.to_string(uri)
-      other -> other
-    end)
-    |> input()
-  end
-
   def input(%{type: "digits"} = assigns) do
     assigns
     |> assign(:type, "text")
@@ -588,16 +578,6 @@ defmodule ParkingLotWeb.CoreComponents do
   def icon(%{name: "hero-" <> _} = assigns) do
     ~H"""
     <span class={[@name, @class]} />
-    """
-  end
-
-  def uri(%{value: nil} = assigns) do
-    ~H""
-  end
-
-  def uri(assigns) do
-    ~H"""
-    <a style="color: inherit;"><%= URI.to_string(@value) %></a>
     """
   end
 
