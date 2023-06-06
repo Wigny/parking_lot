@@ -23,8 +23,8 @@
 </div>
 
 <div class="flex">
-  <div :for={{id, recognition} <- @recognitions} class="w-1/2">
-    <.preview :if={recognition.preview} id={"preview_#{id}"} frame={recognition.preview} />
+  <div :for={{id, frame} <- @recognitions} class="w-1/2">
+    <.preview :if={frame} id={"preview_#{id}"} frame={frame} />
   </div>
 </div>
 

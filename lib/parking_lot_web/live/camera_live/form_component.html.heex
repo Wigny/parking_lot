@@ -19,7 +19,7 @@
       options={Ecto.Enum.values(ParkingLot.Cameras.Camera, :type)}
     />
 
-    <.input field={@form[:uri]} type="uri" label="URI" phx-debounce="blur" />
+    <.input field={@form[:uri]} type="url" label="URI" phx-debounce="blur" />
 
     <:actions>
       <.button phx-disable-with="Saving...">Save Camera</.button>

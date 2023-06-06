@@ -9,6 +9,8 @@ defmodule ParkingLot.ALPR.Video do
 
   alias Evision.VideoCapture
 
+  @fps 60
+
   # Client
 
   def start_link(%{stream: stream}, opts \\ [name: __MODULE__]) do
@@ -43,11 +45,6 @@ defmodule ParkingLot.ALPR.Video do
   end
 
   @impl true
-  def handle_call(:frame, _from, %{isOpened: false} = video) do
-    {:stop, "Video stream isn't opened", video}
-  end
-
-  @impl true
   def handle_call(:frame, _from, video) do
     frame = VideoCapture.retrieve(video)
 
@@ -55,10 +52,15 @@ defmodule ParkingLot.ALPR.Video do
   end
 
   @impl true
-  def handle_info(:grab, video) do
-    true = VideoCapture.grab(video)
+  def handle_info(:grab, %{isOpened: false} = video) do
+    {:stop, "Video stream isn't opened", video}
+  end
 
-    Process.send_after(self(), :grab, floor(:timer.seconds(1) / video.fps))
+  @impl true
+  def handle_info(:grab, video) do
+    Process.send_after(self(), :grab, floor(:timer.seconds(1) / @fps))
+
+    true = VideoCapture.grab(video)
 
     {:noreply, video}
   end
