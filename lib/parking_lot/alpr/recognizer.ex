@@ -15,15 +15,7 @@ defmodule ParkingLot.ALPR.Recognizer do
     defstruct ~w[model classes]a
 
     @models %{
-      vehicle_detection: %{
-        config:
-          "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/vehicle-detection.cfg",
-        weights:
-          "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/vehicle-detection.weights",
-        classes:
-          "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/vehicle-detection.names"
-      },
-      lp_detection: %{
+      detection: %{
         config:
           "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-detection-layout-classification.cfg",
         weights:
@@ -31,7 +23,7 @@ defmodule ParkingLot.ALPR.Recognizer do
         classes:
           "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-detection-layout-classification.names"
       },
-      lp_recognition: %{
+      recognition: %{
         config:
           "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-recognition.cfg",
         weights:
@@ -96,7 +88,7 @@ defmodule ParkingLot.ALPR.Recognizer do
     end
   end
 
-  @spec detect_license_plate(image) :: [image] when image: Evision.Mat.t()
+  @spec detect_license_plate(image) :: [image] when image: Evision.Mat.maybe_mat_in()
   def detect_license_plate(image) do
     detections = GenServer.call(__MODULE__, {:detect_license_plate, image}, :infinity)
 
@@ -121,7 +113,7 @@ defmodule ParkingLot.ALPR.Recognizer do
   # Server
 
   @impl true
-  def init(_state) do
+  def init(_args) do
     {:ok, nil, {:continue, :init}}
   end
 
@@ -129,23 +121,23 @@ defmodule ParkingLot.ALPR.Recognizer do
   def handle_continue(:init, nil) do
     Logger.info("Initializing the neural network models")
 
-    lp_detection = NeuralNetwork.init(:lp_detection, width: 416, height: 416)
-    lp_recognition = NeuralNetwork.init(:lp_recognition, width: 352, height: 128)
+    detection = NeuralNetwork.init(:detection, width: 416, height: 416)
+    recognition = NeuralNetwork.init(:recognition, width: 352, height: 128)
 
-    {:noreply, %{lp_detection: lp_detection, lp_recognition: lp_recognition}}
+    {:noreply, %{detection: detection, recognition: recognition}}
   end
 
   @impl true
-  def handle_call({:detect_license_plate, image}, _from, %{lp_detection: network} = state) do
-    inferences = NeuralNetwork.infer(network, image, threshold: 0.01)
+  def handle_call({:detect_license_plate, image}, _from, %{detection: model} = models) do
+    inferences = NeuralNetwork.infer(model, image, threshold: 0.01)
 
-    {:reply, inferences, state}
+    {:reply, inferences, models}
   end
 
   @impl true
-  def handle_call({:recognize_license_plate, image}, _from, %{lp_recognition: network} = state) do
-    inferences = NeuralNetwork.infer(network, image, threshold: 0.5, nms_threshold: 0.25)
+  def handle_call({:recognize_license_plate, image}, _from, %{recognition: model} = models) do
+    inferences = NeuralNetwork.infer(model, image, threshold: 0.5, nms_threshold: 0.25)
 
-    {:reply, inferences, state}
+    {:reply, inferences, models}
   end
 end

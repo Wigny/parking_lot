@@ -3,7 +3,7 @@ defmodule ParkingLot.ALPR.Watcher do
 
   use GenServer
 
-  alias ParkingLot.{Algorithm, Customers, Parkings}
+  alias ParkingLot.{Customers, Parkings}
   alias ParkingLot.Customers.Vehicle
   alias ParkingLot.ALPR.{Recognizer, Video}
 
@@ -40,9 +40,9 @@ defmodule ParkingLot.ALPR.Watcher do
     {:noreply, state}
   end
 
-  # when the license plate was already recognized: finds the most frequently predicted characters and register parking
+  # when the license plate was already recognized: finds the most frequently predicted characters (temporal redundancy) and register parking
   def handle_cast({:register, nil}, %{recognitions: recognitions, camera: camera} = state) do
-    recognition = Algorithm.majority_voting(recognitions)
+    recognition = majority_voting(recognitions)
     parking_action = Keyword.get([internal: :leave, external: :entry], camera.type)
 
     with %Vehicle{} = vehicle <- Customers.get_vehicle(license_plate: Enum.join(recognition)),
@@ -56,5 +56,14 @@ defmodule ParkingLot.ALPR.Watcher do
   # when the license plate is being recognized: adds it into the queue
   def handle_cast({:register, recognition}, %{recognitions: recognitions} = state) do
     {:noreply, %{state | recognitions: [recognition | recognitions]}}
+  end
+
+  defp majority_voting(enumerable) do
+    Enum.zip_with(enumerable, fn characters ->
+      characters
+      |> Enum.frequencies()
+      |> Enum.max_by(fn {_character, frequency} -> frequency end)
+      |> then(fn {character, _frequency} -> character end)
+    end)
   end
 end
