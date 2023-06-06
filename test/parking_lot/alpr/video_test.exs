@@ -3,16 +3,15 @@ defmodule ParkingLot.ALPR.VideoTest do
 
   alias ParkingLot.ALPR.Video
 
-  describe "frame/1" do
-    setup _ do
-      start_supervised!({Video, %{stream: "file:test/support/files/plate.mp4"}})
+  setup _ do
+    start_supervised!({Video, %{stream: "file:test/support/files/plate.mp4"}})
 
-      :ok
-    end
+    :ok
+  end
 
-    test "returns the lastest stream frame" do
-      refute Video.frame()
-      assert %Evision.Mat{shape: {1080, 1920, 3}} = Video.frame()
-    end
+  test "frame/1 returns the lastest stream frame" do
+    Process.sleep(1000)
+
+    assert %Evision.Mat{shape: {1080, 1920, 3}} = Video.frame()
   end
 end

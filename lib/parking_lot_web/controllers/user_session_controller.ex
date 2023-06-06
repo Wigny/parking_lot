@@ -13,7 +13,7 @@ defmodule ParkingLotWeb.UserSessionController do
   end
 
   def create(%{assigns: %{ueberauth_auth: auth}} = conn, _params) do
-    case fetch_or_create_user(email: auth.info.email) do
+    case Accounts.get_or_create_user(email: auth.info.email) do
       {:ok, user} ->
         conn
         |> put_flash(:info, "Welcome back!")
@@ -30,13 +30,5 @@ defmodule ParkingLotWeb.UserSessionController do
     conn
     |> put_flash(:info, "Logged out successfully.")
     |> log_out_user()
-  end
-
-  defp fetch_or_create_user(attrs) do
-    if user = Accounts.get_user(email: attrs[:email]) do
-      {:ok, user}
-    else
-      Accounts.create_user(%{email: attrs[:email]})
-    end
   end
 end

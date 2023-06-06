@@ -5,23 +5,74 @@ defmodule ParkingLot.ALPR.Recognizer do
 
   use GenServer
   import Evision.Constant
-  alias Evision.{DNN, Zoo}
+  require Logger
 
-  @models %{
-    detector: %{
-      config:
-        "https://inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-detection-layout-classification.cfg",
-      model:
-        "https://inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-detection-layout-classification.weights"
-    },
-    recognizer: %{
-      config: "https://inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-recognition.cfg",
-      model:
-        "https://inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-recognition.weights",
-      classes:
-        "https://inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-recognition.names"
+  defmodule NeuralNetwork do
+    @moduledoc false
+
+    alias Evision.DNN
+
+    defstruct ~w[model classes]a
+
+    @models %{
+      detection: %{
+        config:
+          "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-detection-layout-classification.cfg",
+        weights:
+          "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-detection-layout-classification.weights",
+        classes:
+          "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-detection-layout-classification.names"
+      },
+      recognition: %{
+        config:
+          "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-recognition.cfg",
+        weights:
+          "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-recognition.weights",
+        classes:
+          "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-recognition.names"
+      }
     }
-  }
+
+    def init(model, opts) do
+      %{config: config_url, weights: weights_url, classes: classes_url} = @models[model]
+
+      {:ok, config_path} = Evision.Zoo.download(config_url, Path.basename(config_url))
+      {:ok, weights_path} = Evision.Zoo.download(weights_url, Path.basename(weights_url))
+      {:ok, classes_path} = Evision.Zoo.download(classes_url, Path.basename(classes_url))
+
+      classes = String.split(File.read!(classes_path), "\n")
+
+      network = DNN.readNetFromDarknet(config_path, darknetModel: weights_path)
+      DNN.Net.setPreferableTarget(network, cv_DNN_TARGET_CPU())
+
+      model =
+        network
+        |> DNN.DetectionModel.detectionModel()
+        |> DNN.DetectionModel.setInputParams(
+          scale: 1 / 255,
+          size: {opts[:width], opts[:height]},
+          swapRB: true
+        )
+
+      struct!(__MODULE__, model: model, classes: classes)
+    end
+
+    def infer(%__MODULE__{model: model, classes: classes}, image, opts) do
+      detect_opts = [
+        confThreshold: opts[:threshold],
+        nmsThreshold: opts[:nms_threshold]
+      ]
+
+      model
+      |> DNN.DetectionModel.detect(image, detect_opts)
+      |> Tuple.to_list()
+      |> Enum.zip()
+      |> Enum.map(fn {class_id, confidence, box} ->
+        class = Enum.at(classes, class_id)
+        {class, confidence, box}
+      end)
+    end
+  end
 
   # Client
 
@@ -30,109 +81,63 @@ defmodule ParkingLot.ALPR.Recognizer do
   end
 
   def infer(image) do
-    {_classIds, _conf, detections} = detect_text(image)
+    license_plates = detect_license_plate(image)
 
-    with {x, y, w, h} <- List.first(detections) do
-      area = image[[y..(y + h), x..(x + w)]]
-
-      if match?(%Evision.Mat{}, area) do
-        recognize_text(area)
-      else
-        nil
-      end
+    with %Evision.Mat{} = area <- List.first(license_plates) do
+      recognize_license_plate(area)
     end
   end
 
-  def detect_text(image) do
-    GenServer.call(__MODULE__, {:detect, image}, :infinity)
+  @spec detect_license_plate(image) :: [image] when image: Evision.Mat.maybe_mat_in()
+  def detect_license_plate(image) do
+    detections = GenServer.call(__MODULE__, {:detect_license_plate, image}, :infinity)
+
+    for {_class, _confidence, box} <- detections do
+      Evision.Mat.roi(image, box)
+    end
   end
 
-  def recognize_text(image) do
-    GenServer.call(__MODULE__, {:recognize, image})
+  @spec recognize_license_plate(image :: Evision.Mat.t()) :: [binary]
+  def recognize_license_plate(image) do
+    recognitions = GenServer.call(__MODULE__, {:recognize_license_plate, image})
+
+    recognitions
+    |> Enum.sort_by(fn {_class, _confidence, {axis_x, axis_y, _width, _height}} ->
+      {axis_x, axis_y}
+    end)
+    |> Enum.map(fn {class, _confidence, _box} ->
+      class
+    end)
   end
 
   # Server
 
   @impl true
-  def init(_state) do
+  def init(_args) do
     {:ok, nil, {:continue, :init}}
   end
 
   @impl true
   def handle_continue(:init, nil) do
-    detector = detector_init()
-    recognizer = recognizer_init()
-    charset = charset_init()
+    Logger.info("Initializing the neural network models")
 
-    {:noreply, %{detector: detector, recognizer: recognizer, charset: charset}}
+    detection = NeuralNetwork.init(:detection, width: 416, height: 416)
+    recognition = NeuralNetwork.init(:recognition, width: 352, height: 128)
+
+    {:noreply, %{detection: detection, recognition: recognition}}
   end
 
   @impl true
-  def handle_call({:detect, image}, _from, %{detector: detector} = state) do
-    inference = DNN.DetectionModel.detect(detector, image, confThreshold: 0.01)
+  def handle_call({:detect_license_plate, image}, _from, %{detection: model} = models) do
+    inferences = NeuralNetwork.infer(model, image, threshold: 0.01)
 
-    {:reply, inference, state}
+    {:reply, inferences, models}
   end
 
   @impl true
-  def handle_call({:recognize, image}, _from, state) do
-    %{recognizer: recognizer, charset: charset} = state
+  def handle_call({:recognize_license_plate, image}, _from, %{recognition: model} = models) do
+    inferences = NeuralNetwork.infer(model, image, threshold: 0.5, nms_threshold: 0.25)
 
-    blob = DNN.blobFromImage(image, scalefactor: 1 / 255, size: {352, 128}, swapRB: true)
-
-    recognizer = DNN.Net.setInput(recognizer, blob)
-
-    output_layers_names = DNN.Net.getUnconnectedOutLayersNames(recognizer)
-    [outputBlob] = DNN.Net.forward(recognizer, outBlobNames: output_layers_names)
-
-    output = Evision.Mat.to_nx(outputBlob, Nx.BinaryBackend)
-
-    inference =
-      0..(Nx.axis_size(output, 0) - 1)
-      |> Enum.reduce([], fn i, acc ->
-        scores = output[[i, 5..-1//1]]
-
-        class_id = Nx.to_number(Nx.argmax(scores))
-        confidence = Nx.to_number(scores[class_id])
-
-        if confidence > 0.5 do
-          char = Enum.at(charset, class_id)
-          Enum.concat(acc, [char])
-        else
-          acc
-        end
-      end)
-      |> Enum.join()
-
-    {:reply, inference, state}
-  end
-
-  defp detector_init() do
-    {:ok, config} = Zoo.download(@models.detector.config, "detection.cfg")
-    {:ok, model} = Zoo.download(@models.detector.model, "detection.weights")
-
-    net = DNN.readNetFromDarknet(config, darknetModel: model)
-    DNN.Net.setPreferableTarget(net, cv_DNN_TARGET_CPU())
-
-    model = DNN.DetectionModel.detectionModel(net)
-
-    DNN.DetectionModel.setInputParams(model, scale: 1 / 255, size: {416, 416}, swapRB: true)
-
-    model
-  end
-
-  defp recognizer_init() do
-    {:ok, config} = Zoo.download(@models.recognizer.config, "recognition.cfg")
-    {:ok, model} = Zoo.download(@models.recognizer.model, "recognition.weights")
-
-    net = DNN.readNetFromDarknet(config, darknetModel: model)
-    DNN.Net.setPreferableTarget(net, cv_DNN_TARGET_CPU())
-    net
-  end
-
-  defp charset_init() do
-    {:ok, names} = Zoo.download(@models.recognizer.classes, "recognition.names")
-
-    String.split(File.read!(names), "\n")
+    {:reply, inferences, models}
   end
 end

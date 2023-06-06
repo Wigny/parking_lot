@@ -10,6 +10,14 @@ defmodule ParkingLot.Accounts do
 
   @session_validity_in_days 60
 
+  def get_or_create_user(attrs) do
+    if user = get_user(email: attrs[:email]) do
+      {:ok, user}
+    else
+      create_user(%{email: attrs[:email]})
+    end
+  end
+
   def get_user(email: email) do
     Repo.get_by(User, email: email)
   end

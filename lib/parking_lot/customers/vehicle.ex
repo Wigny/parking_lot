@@ -25,7 +25,7 @@ defmodule ParkingLot.Customers.Vehicle do
     |> validate_length(:license_plate, is: 7)
     |> validate_format(
       :license_plate,
-      ~r/(?<legacy>[A-Z]{3}-?[0-9]{4})|(?<mercosul>[A-Z]{3}[0-9][A-Z][0-9]{2})/
+      ~r/(?<legacy>[A-Z]{3}-?[0-9]{4})|(?<mercosur>[A-Z]{3}[0-9][A-Z][0-9]{2})/
     )
     |> unique_constraint(:license_plate)
     |> assoc_constraint(:type)

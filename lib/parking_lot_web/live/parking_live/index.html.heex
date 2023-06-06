@@ -33,14 +33,6 @@
   <:action :let={{_id, parking}}>
     <.link navigate={~p"/parkings/#{parking}"}>Show</.link>
   </:action>
-  <:action :let={{id, parking}}>
-    <.link
-      phx-click={JS.push("delete", value: %{id: parking.id}) |> hide("##{id}")}
-      data-confirm="Are you sure?"
-    >
-      Delete
-    </.link>
-  </:action>
 </.table>
 
 <.modal
