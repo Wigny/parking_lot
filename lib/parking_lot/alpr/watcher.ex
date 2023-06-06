@@ -40,7 +40,8 @@ defmodule ParkingLot.ALPR.Watcher do
     {:noreply, state}
   end
 
-  # when the license plate was already recognized: finds the most frequently predicted characters (temporal redundancy) and register parking
+  # when the license plate was already recognized: finds the most frequently
+  # predicted characters (temporal redundancy) and register parking
   def handle_cast({:register, nil}, %{recognitions: recognitions, camera: camera} = state) do
     recognition = majority_voting(recognitions)
     parking_action = Keyword.get([internal: :leave, external: :entry], camera.type)
