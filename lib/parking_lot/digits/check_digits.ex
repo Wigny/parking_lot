@@ -1,4 +1,4 @@
-defmodule ParkingLot.CheckDigits do
+defmodule ParkingLot.Digits.CheckDigits do
   @moduledoc """
   Utils for validating the check digits,
   based on https://github.com/klawdyo/validation-br/tree/v.1.4.2
