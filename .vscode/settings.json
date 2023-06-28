@@ -14,7 +14,12 @@
     ]
   },
   "emmet.includeLanguages": {
-    "phoenix-heex": "html"
+    "phoenix-heex": "html",
+    "elixir": "html",
+  },
+  "tailwindCSS.includeLanguages": {
+    "phoenix-heex": "html",
+    "elixir": "html",
   },
   "files.associations": {
     "*.heex": "phoenix-heex"
