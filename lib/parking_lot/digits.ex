@@ -25,12 +25,10 @@ defmodule ParkingLot.Digits do
   end
 
   def parse(value) when is_binary(value) do
-    value = String.replace(value, ~r/\D/, "")
-
-    case Integer.parse(value) do
-      {digits, ""} -> pad_leading(parse(digits), String.length(value))
-      :error -> []
-    end
+    value
+    |> String.replace(~r/\D/, "")
+    |> String.split("", trim: true)
+    |> Enum.map(&String.to_integer/1)
   end
 
   def to_string(digits) do
