@@ -7,7 +7,7 @@ defmodule ParkingLotWeb.Router do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_live_flash
-    plug :put_root_layout, {ParkingLotWeb.Layouts, :root}
+    plug :put_root_layout, html: {ParkingLotWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :fetch_current_user
@@ -18,7 +18,7 @@ defmodule ParkingLotWeb.Router do
   end
 
   scope "/", ParkingLotWeb do
-    pipe_through [:browser]
+    pipe_through :browser
 
     get "/", PageController, :home
 

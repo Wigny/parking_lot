@@ -30,6 +30,8 @@ config :parking_lot, ParkingLotWeb.Endpoint,
     ]
   ]
 
+config :parking_lot, dev_routes: true
+
 config :logger, :console, format: "[$level] $message\n"
 
 config :phoenix, :stacktrace_depth, 20

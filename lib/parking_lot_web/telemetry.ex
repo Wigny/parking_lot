@@ -45,7 +45,7 @@ defmodule ParkingLotWeb.Telemetry do
       summary("phoenix.socket_connected.duration",
         unit: {:native, :millisecond}
       ),
-      summary("phoenix.channel_join.duration",
+      summary("phoenix.channel_joined.duration",
         unit: {:native, :millisecond}
       ),
       summary("phoenix.channel_handled_in.duration",
