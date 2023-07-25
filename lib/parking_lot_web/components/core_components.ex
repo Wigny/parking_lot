@@ -3,7 +3,7 @@ defmodule ParkingLotWeb.CoreComponents do
   Provides core UI components.
 
   At the first glance, this module may seem daunting, but its goal is
-  to provide some core building blocks in your application, such modals,
+  to provide some core building blocks in your application, such as modals,
   tables, and forms. The components are mostly markup and well documented
   with doc strings and declarative assigns. You may customize and style
   them in any way you want, based on your application growth and needs.
@@ -16,7 +16,6 @@ defmodule ParkingLotWeb.CoreComponents do
   """
   use Phoenix.Component
 
-  alias Phoenix.HTML.Form
   alias Phoenix.LiveView.JS
   import ParkingLotWeb.Gettext
 
@@ -37,10 +36,10 @@ defmodule ParkingLotWeb.CoreComponents do
       </.modal>
 
   """
-  attr(:id, :string, required: true)
-  attr(:show, :boolean, default: false)
-  attr(:on_cancel, JS, default: %JS{})
-  slot(:inner_block, required: true)
+  attr :id, :string, required: true
+  attr :show, :boolean, default: false
+  attr :on_cancel, JS, default: %JS{}
+  slot :inner_block, required: true
 
   def modal(assigns) do
     ~H"""
@@ -98,13 +97,13 @@ defmodule ParkingLotWeb.CoreComponents do
       <.flash kind={:info} flash={@flash} />
       <.flash kind={:info} phx-mounted={show("#flash")}>Welcome Back!</.flash>
   """
-  attr(:id, :string, default: "flash", doc: "the optional id of flash container")
-  attr(:flash, :map, default: %{}, doc: "the map of flash messages to display")
-  attr(:title, :string, default: nil)
-  attr(:kind, :atom, values: [:info, :error], doc: "used for styling and flash lookup")
-  attr(:rest, :global, doc: "the arbitrary HTML attributes to add to the flash container")
+  attr :id, :string, default: "flash", doc: "the optional id of flash container"
+  attr :flash, :map, default: %{}, doc: "the map of flash messages to display"
+  attr :title, :string, default: nil
+  attr :kind, :atom, values: [:info, :error], doc: "used for styling and flash lookup"
+  attr :rest, :global, doc: "the arbitrary HTML attributes to add to the flash container"
 
-  slot(:inner_block, doc: "the optional inner block that renders the flash message")
+  slot :inner_block, doc: "the optional inner block that renders the flash message"
 
   def flash(assigns) do
     ~H"""
@@ -140,21 +139,33 @@ defmodule ParkingLotWeb.CoreComponents do
 
       <.flash_group flash={@flash} />
   """
-  attr(:flash, :map, required: true, doc: "the map of flash messages")
+  attr :flash, :map, required: true, doc: "the map of flash messages"
 
   def flash_group(assigns) do
     ~H"""
     <.flash kind={:info} title="Success!" flash={@flash} />
     <.flash kind={:error} title="Error!" flash={@flash} />
     <.flash
-      id="disconnected"
+      id="client-error"
       kind={:error}
       title="We can't find the internet"
-      phx-disconnected={show("#disconnected")}
-      phx-connected={hide("#disconnected")}
+      phx-disconnected={show(".phx-client-error #client-error")}
+      phx-connected={hide("#client-error")}
       hidden
     >
       Attempting to reconnect <.icon name="hero-arrow-path" class="ml-1 h-3 w-3 animate-spin" />
+    </.flash>
+
+    <.flash
+      id="server-error"
+      kind={:error}
+      title="Something went wrong!"
+      phx-disconnected={show(".phx-server-error #server-error")}
+      phx-connected={hide("#server-error")}
+      hidden
+    >
+      Hang in there while we get back on track
+      <.icon name="hero-arrow-path" class="ml-1 h-3 w-3 animate-spin" />
     </.flash>
     """
   end
@@ -172,16 +183,15 @@ defmodule ParkingLotWeb.CoreComponents do
         </:actions>
       </.simple_form>
   """
-  attr(:for, :any, required: true, doc: "the datastructure for the form")
-  attr(:as, :any, default: nil, doc: "the server side parameter to collect all input under")
+  attr :for, :any, required: true, doc: "the datastructure for the form"
+  attr :as, :any, default: nil, doc: "the server side parameter to collect all input under"
 
-  attr(:rest, :global,
-    include: ~w(autocomplete name rel action enctype method novalidate target),
+  attr :rest, :global,
+    include: ~w(autocomplete name rel action enctype method novalidate target multipart),
     doc: "the arbitrary HTML attributes to apply to the form tag"
-  )
 
-  slot(:inner_block, required: true)
-  slot(:actions, doc: "the slot for form actions, such as a submit button")
+  slot :inner_block, required: true
+  slot :actions, doc: "the slot for form actions, such as a submit button"
 
   def simple_form(assigns) do
     ~H"""
@@ -204,11 +214,11 @@ defmodule ParkingLotWeb.CoreComponents do
       <.button>Send!</.button>
       <.button phx-click="go" class="ml-2">Send!</.button>
   """
-  attr(:type, :string, default: nil)
-  attr(:class, :string, default: nil)
-  attr(:rest, :global, include: ~w(disabled form name value))
+  attr :type, :string, default: nil
+  attr :class, :string, default: nil
+  attr :rest, :global, include: ~w(disabled form name value)
 
-  slot(:inner_block, required: true)
+  slot :inner_block, required: true
 
   def button(assigns) do
     ~H"""
@@ -229,42 +239,52 @@ defmodule ParkingLotWeb.CoreComponents do
   @doc """
   Renders an input with label and error messages.
 
-  A `%Phoenix.HTML.Form{}` and field name may be passed to the input
-  to build input names and error messages, or all the attributes and
-  errors may be passed explicitly.
+  A `Phoenix.HTML.FormField` may be passed as argument,
+  which is used to retrieve the input name, id, and values.
+  Otherwise all attributes may be passed explicitly.
+
+  ## Types
+
+  This function accepts all HTML input types, considering that:
+
+    * You may also set `type="select"` to render a `<select>` tag
+
+    * `type="checkbox"` is used exclusively to render boolean values
+
+    * For live file uploads, see `Phoenix.Component.live_file_input/1`
+
+  See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input
+  for more information.
 
   ## Examples
 
       <.input field={@form[:email]} type="email" />
       <.input name="my-input" errors={["oh no!"]} />
   """
-  attr(:id, :any, default: nil)
-  attr(:name, :any)
-  attr(:label, :string, default: nil)
-  attr(:value, :any)
+  attr :id, :any, default: nil
+  attr :name, :any
+  attr :label, :string, default: nil
+  attr :value, :any
 
-  attr(:type, :string,
+  attr :type, :string,
     default: "text",
     values: ~w(checkbox color date datetime-local digits email file hidden month number password
-               range radio search select tel text textarea time uri url week)
-  )
+               range radio search select tel text textarea time url week)
 
-  attr(:field, Phoenix.HTML.FormField,
+  attr :field, Phoenix.HTML.FormField,
     doc: "a form field struct retrieved from the form, for example: @form[:email]"
-  )
 
-  attr(:errors, :list, default: [])
-  attr(:checked, :boolean, doc: "the checked flag for checkbox inputs")
-  attr(:prompt, :string, default: nil, doc: "the prompt for select inputs")
-  attr(:options, :list, doc: "the options to pass to Phoenix.HTML.Form.options_for_select/2")
-  attr(:multiple, :boolean, default: false, doc: "the multiple flag for select inputs")
+  attr :errors, :list, default: []
+  attr :checked, :boolean, doc: "the checked flag for checkbox inputs"
+  attr :prompt, :string, default: nil, doc: "the prompt for select inputs"
+  attr :options, :list, doc: "the options to pass to Phoenix.HTML.Form.options_for_select/2"
+  attr :multiple, :boolean, default: false, doc: "the multiple flag for select inputs"
 
-  attr(:rest, :global,
-    include: ~w(autocomplete cols disabled form inputmode list max maxlength min
-                minlength pattern placeholder readonly required rows size step)
-  )
+  attr :rest, :global,
+    include: ~w(accept autocomplete capture cols disabled form inputmode list max maxlength min
+                minlength multiple pattern placeholder readonly required rows size step)
 
-  slot(:inner_block)
+  slot :inner_block
 
   def input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
     assigns
@@ -279,17 +299,16 @@ defmodule ParkingLotWeb.CoreComponents do
     assigns
     |> assign(:type, "text")
     |> update(:rest, fn rest ->
-      Enum.concat(rest,
-        inputmode: "numeric",
-        pattern: "[0-9]*",
-        phx_hook: "InputPatternConstraint"
-      )
+      opts = [inputmode: "numeric", pattern: "[0-9]*", phx_hook: "InputPatternConstraint"]
+
+      Enum.concat(rest, opts)
     end)
     |> input()
   end
 
   def input(%{type: "checkbox", value: value} = assigns) do
-    assigns = assign_new(assigns, :checked, fn -> Form.normalize_value("checkbox", value) end)
+    assigns =
+      assign_new(assigns, :checked, fn -> Phoenix.HTML.Form.normalize_value("checkbox", value) end)
 
     ~H"""
     <div phx-feedback-for={@name}>
@@ -318,7 +337,7 @@ defmodule ParkingLotWeb.CoreComponents do
       <select
         id={@id}
         name={@name}
-        class="mt-1 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-zinc-400 focus:ring-0 sm:text-sm"
+        class="mt-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-zinc-400 focus:ring-0 sm:text-sm"
         multiple={@multiple}
         {@rest}
       >
@@ -339,12 +358,12 @@ defmodule ParkingLotWeb.CoreComponents do
         name={@name}
         class={[
           "mt-2 block w-full rounded-lg text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6",
-          "phx-no-feedback:border-zinc-300 phx-no-feedback:focus:border-zinc-400",
-          "min-h-[6rem] border-zinc-300 focus:border-zinc-400",
+          "min-h-[6rem] phx-no-feedback:border-zinc-300 phx-no-feedback:focus:border-zinc-400",
+          @errors == [] && "border-zinc-300 focus:border-zinc-400",
           @errors != [] && "border-rose-400 focus:border-rose-400"
         ]}
         {@rest}
-      ><%= Form.normalize_value("textarea", @value) %></textarea>
+      ><%= Phoenix.HTML.Form.normalize_value("textarea", @value) %></textarea>
       <.error :for={msg <- @errors}><%= msg %></.error>
     </div>
     """
@@ -359,11 +378,11 @@ defmodule ParkingLotWeb.CoreComponents do
         type={@type}
         name={@name}
         id={@id}
-        value={Form.normalize_value(@type, @value)}
+        value={Phoenix.HTML.Form.normalize_value(@type, @value)}
         class={[
           "mt-2 block w-full rounded-lg text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6",
           "phx-no-feedback:border-zinc-300 phx-no-feedback:focus:border-zinc-400",
-          "border-zinc-300 focus:border-zinc-400",
+          @errors == [] && "border-zinc-300 focus:border-zinc-400",
           @errors != [] && "border-rose-400 focus:border-rose-400"
         ]}
         {@rest}
@@ -376,8 +395,8 @@ defmodule ParkingLotWeb.CoreComponents do
   @doc """
   Renders a label.
   """
-  attr(:for, :string, default: nil)
-  slot(:inner_block, required: true)
+  attr :for, :string, default: nil
+  slot :inner_block, required: true
 
   def label(assigns) do
     ~H"""
@@ -390,7 +409,7 @@ defmodule ParkingLotWeb.CoreComponents do
   @doc """
   Generates a generic error message.
   """
-  slot(:inner_block, required: true)
+  slot :inner_block, required: true
 
   def error(assigns) do
     ~H"""
@@ -404,11 +423,11 @@ defmodule ParkingLotWeb.CoreComponents do
   @doc """
   Renders a header with title.
   """
-  attr(:class, :string, default: nil)
+  attr :class, :string, default: nil
 
-  slot(:inner_block, required: true)
-  slot(:subtitle)
-  slot(:actions)
+  slot :inner_block, required: true
+  slot :subtitle
+  slot :actions
 
   def header(assigns) do
     ~H"""
@@ -436,21 +455,20 @@ defmodule ParkingLotWeb.CoreComponents do
         <:col :let={user} label="username"><%= user.username %></:col>
       </.table>
   """
-  attr(:id, :string, required: true)
-  attr(:rows, :list, required: true)
-  attr(:row_id, :any, default: nil, doc: "the function for generating the row id")
-  attr(:row_click, :any, default: nil, doc: "the function for handling phx-click on each row")
+  attr :id, :string, required: true
+  attr :rows, :list, required: true
+  attr :row_id, :any, default: nil, doc: "the function for generating the row id"
+  attr :row_click, :any, default: nil, doc: "the function for handling phx-click on each row"
 
-  attr(:row_item, :any,
+  attr :row_item, :any,
     default: &Function.identity/1,
     doc: "the function for mapping each row before calling the :col and :action slots"
-  )
 
   slot :col, required: true do
-    attr(:label, :string)
+    attr :label, :string
   end
 
-  slot(:action, doc: "the slot for showing user actions in the last table column")
+  slot :action, doc: "the slot for showing user actions in the last table column"
 
   def table(assigns) do
     assigns =
@@ -514,7 +532,7 @@ defmodule ParkingLotWeb.CoreComponents do
       </.list>
   """
   slot :item, required: true do
-    attr(:title, :string, required: true)
+    attr :title, :string, required: true
   end
 
   def list(assigns) do
@@ -537,8 +555,8 @@ defmodule ParkingLotWeb.CoreComponents do
 
       <.back navigate={~p"/posts"}>Back to posts</.back>
   """
-  attr(:navigate, :any, required: true)
-  slot(:inner_block, required: true)
+  attr :navigate, :any, required: true
+  slot :inner_block, required: true
 
   def back(assigns) do
     ~H"""
@@ -555,10 +573,10 @@ defmodule ParkingLotWeb.CoreComponents do
   end
 
   @doc """
-  Renders a [Hero Icon](https://heroicons.com).
+  Renders a [Heroicon](https://heroicons.com).
 
-  Hero icons come in three styles – outline, solid, and mini.
-  By default, the outline style is used, but solid an mini may
+  Heroicons come in three styles – outline, solid, and mini.
+  By default, the outline style is used, but solid and mini may
   be applied by using the `-solid` and `-mini` suffix.
 
   You can customize the size and colors of the icons by setting
@@ -572,8 +590,8 @@ defmodule ParkingLotWeb.CoreComponents do
       <.icon name="hero-x-mark-solid" />
       <.icon name="hero-arrow-path" class="ml-1 w-3 h-3 animate-spin" />
   """
-  attr(:name, :string, required: true)
-  attr(:class, :string, default: nil)
+  attr :name, :string, required: true
+  attr :class, :string, default: nil
 
   def icon(%{name: "hero-" <> _} = assigns) do
     ~H"""
@@ -583,11 +601,11 @@ defmodule ParkingLotWeb.CoreComponents do
 
   attr(:value, :string, required: true)
   attr(:pattern, :string, required: true)
-  attr(:text, :string, default: "")
+  attr(:acc, :string, default: "")
 
   def mask(%{value: <<>>} = assigns) do
     ~H"""
-    <span><%= @text %></span>
+    <span><%= @acc %></span>
     """
   end
 
@@ -595,16 +613,16 @@ defmodule ParkingLotWeb.CoreComponents do
     %{value: <<v, value::binary>>} = assigns
 
     assigns
-    |> update(:text, fn text -> <<text::binary, v>> end)
+    |> update(:acc, fn acc -> <<acc::binary, v>> end)
     |> assign(value: value, pattern: pattern)
     |> mask()
   end
 
   def mask(%{pattern: <<p, pattern::binary>>} = assigns) do
-    %{text: text} = assigns
+    %{acc: acc} = assigns
 
     assigns
-    |> assign(:text, <<text::binary, p>>)
+    |> assign(:acc, <<acc::binary, p>>)
     |> assign(pattern: pattern)
     |> mask()
   end

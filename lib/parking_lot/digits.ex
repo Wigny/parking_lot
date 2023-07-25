@@ -1,31 +1,54 @@
 defmodule ParkingLot.Digits do
   @moduledoc false
 
-  def to_digits(value, opts \\ [])
+  @type t :: list(non_neg_integer)
 
-  def to_digits(value, opts) when is_integer(value) do
-    digits = Integer.digits(value)
-    to_digits(digits, opts)
+  defmacro sigil_d({:<<>>, _, [value]}, []) do
+    parse(value)
   end
 
-  def to_digits(value, opts) when is_binary(value) do
-    case Integer.parse(value) do
-      {digits, _binary} -> to_digits(digits, Keyword.put_new(opts, :length, String.length(value)))
-      :error -> []
-    end
+  @doc """
+  Parses a text or numerical representation of an digits sequence.
+
+  ## Examples
+
+      iex> ParkingLot.Digits.parse(123)
+      [1, 2, 3]
+      iex> ParkingLot.Digits.parse("123")
+      [1, 2, 3]
+      iex> ParkingLot.Digits.parse("12-3")
+      [1, 2, 3]
+  """
+
+  def parse(value) when is_integer(value) do
+    Integer.digits(value)
   end
 
-  def to_digits(value, length: length) when is_list(value) do
-    count = max(length - length(value), 0)
-    pad_leading(value, count, 0)
+  def parse(value) when is_binary(value) do
+    value
+    |> String.replace(~r/\D/, "")
+    |> String.split("", trim: true)
+    |> Enum.map(&String.to_integer/1)
   end
 
   def to_string(digits) do
     Enum.join(digits)
   end
 
-  def random(length, base \\ 0..9) do
-    generator = fn -> Enum.random(base) end
+  @doc """
+  Returns random digits given the desired length.
+
+  ### Example
+
+      # Although not necessary, let's seed the random algorithm
+      iex> :rand.seed(:exsss, {1, 2, 3})
+      iex> ParkingLot.Digits.random(3)
+      [6, 0, 4]
+      iex> ParkingLot.Digits.random(3, [3, 4, 5, 6])
+      [5, 5, 4]
+  """
+  def random(length, elements \\ 0..9) do
+    generator = fn -> Enum.random(elements) end
 
     generator
     |> Stream.repeatedly()
@@ -38,11 +61,28 @@ defmodule ParkingLot.Digits do
     length(uniq) == 1
   end
 
-  defp pad_leading(enum, 0, _padding) do
-    enum
-  end
+  @doc """
+  Returns a new digits sequence padded with 0 as the leading filler.
 
-  defp pad_leading(enum, count, padding) do
-    pad_leading([padding | enum], count - 1, padding)
+  ### Example
+
+      iex> ParkingLot.Digits.pad_leading([1, 2, 3], 4)
+      [0, 1, 2, 3]
+
+      iex> ParkingLot.Digits.pad_leading([1, 2, 3], 1)
+      [1, 2, 3]
+
+      iex> ParkingLot.Digits.pad_leading([1], 5)
+      [0, 0, 0, 0, 1]
+  """
+
+  def pad_leading(digits, count) do
+    digits_length = length(digits)
+
+    if digits_length >= count do
+      digits
+    else
+      Enum.concat(List.duplicate(0, count - digits_length), digits)
+    end
   end
 end

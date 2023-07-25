@@ -1,16 +1,17 @@
-defmodule ParkingLot.CheckDigitsTest do
+defmodule ParkingLot.Digits.CheckDigitsTest do
   use ParkingLot.DataCase
 
-  alias ParkingLot.{CheckDigits, Digits}
+  import ParkingLot.Digits
+  alias ParkingLot.Digits.CheckDigits
 
   @valid_digits %{
-    cpf: Digits.to_digits("15886489070"),
-    cnh: Digits.to_digits("69044271146")
+    cpf: ~d(15886489070),
+    cnh: ~d(69044271146)
   }
 
   @invalid_digits %{
-    cpf: Digits.to_digits("15886489071"),
-    cnh: Digits.to_digits("69044271147")
+    cpf: ~d(15886489071),
+    cnh: ~d(69044271147)
   }
 
   @weights %{
@@ -32,7 +33,7 @@ defmodule ParkingLot.CheckDigitsTest do
 
   describe "generate/2" do
     test "generates a valid digit with it's check digits" do
-      seed = Digits.random(9)
+      seed = ParkingLot.Digits.random(9)
 
       assert cpf = CheckDigits.generate(seed, @weights.cpf)
       assert CheckDigits.valid?(cpf, @weights.cpf)
