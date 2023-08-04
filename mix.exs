@@ -5,7 +5,7 @@ defmodule ParkingLot.MixProject do
     [
       app: :parking_lot,
       version: "0.1.0",
-      elixir: "~> 1.14",
+      elixir: "~> 1.15",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
@@ -42,7 +42,7 @@ defmodule ParkingLot.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:ueberauth_google, "~> 0.10"},
-      {:evision, "~> 0.1.31"},
+      {:evision, "~> 0.1.33"},
       {:nx, "~> 0.5"},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},

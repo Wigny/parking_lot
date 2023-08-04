@@ -21,8 +21,8 @@ defmodule ParkingLot.Digits.CheckDigits do
   end
 
   defp check_digit(digits, weights) do
-    digits
-    |> Enum.zip(weights)
+    [digits, weights]
+    |> Enum.zip()
     |> Enum.map(&Tuple.product/1)
     |> Enum.sum()
     |> mod11()
