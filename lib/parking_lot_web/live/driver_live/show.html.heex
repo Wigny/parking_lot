@@ -19,10 +19,12 @@
     <%= @driver.cnh %>
   </:item>
   <:item title="E-mail">
-    <%= @driver.email %>
+    <a href={"mailto:#{@driver.email}"}><%= @driver.email %></a>
   </:item>
   <:item title="Phone">
-    <.mask value={@driver.phone} pattern="(00) 0 0000-0000" />
+    <a href={"tel:#{@driver.phone}"}>
+      <.mask value={@driver.phone} pattern="(00) 0 0000-0000" />
+    </a>
   </:item>
   <:item title="Active">
     <%= @driver.active %>
