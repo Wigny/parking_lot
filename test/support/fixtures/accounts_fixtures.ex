@@ -8,7 +8,8 @@ defmodule ParkingLot.AccountsFixtures do
 
   def valid_user_attributes(attrs \\ %{}) do
     Enum.into(attrs, %{
-      email: "user#{System.unique_integer()}@example.com"
+      email: "user#{System.unique_integer()}@example.com",
+      admin: true
     })
   end
 

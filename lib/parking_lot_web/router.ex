@@ -27,6 +27,17 @@ defmodule ParkingLotWeb.Router do
     live_session :ensure_authenticated, on_mount: {ParkingLotWeb.UserAuth, :ensure_authenticated} do
       live "/home", HomeLive.Index, :index
 
+      scope "/parkings", ParkingLive do
+        live "/", Index, :index
+        live "/:id", Show, :show
+      end
+    end
+
+    live_session :ensure_authorized,
+      on_mount: [
+        {ParkingLotWeb.UserAuth, :ensure_authenticated},
+        {ParkingLotWeb.UserAuth, :ensure_authorized}
+      ] do
       scope "/drivers", DriverLive do
         live "/", Index, :index
         live "/new", Index, :new
@@ -52,11 +63,6 @@ defmodule ParkingLotWeb.Router do
 
         live "/:id", Show, :show
         live "/:id/show/edit", Show, :edit
-      end
-
-      scope "/parkings", ParkingLive do
-        live "/", Index, :index
-        live "/:id", Show, :show
       end
 
       scope "/cameras", CameraLive do
