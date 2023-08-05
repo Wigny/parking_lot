@@ -278,7 +278,7 @@ defmodule ParkingLotWeb.CoreComponents do
   attr :errors, :list, default: []
   attr :checked, :boolean, doc: "the checked flag for checkbox inputs"
   attr :prompt, :string, default: nil, doc: "the prompt for select inputs"
-  attr :options, :list, doc: "the options to pass to Form.options_for_select/2"
+  attr :options, :list, doc: "the options to pass to Phoenix.HTML.Form.options_for_select/2"
   attr :multiple, :boolean, default: false, doc: "the multiple flag for select inputs"
 
   attr :rest, :global,
