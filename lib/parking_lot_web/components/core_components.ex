@@ -16,6 +16,7 @@ defmodule ParkingLotWeb.CoreComponents do
   """
   use Phoenix.Component
 
+  alias Phoenix.HTML.Form
   alias Phoenix.LiveView.JS
   import ParkingLotWeb.Gettext
 
@@ -308,7 +309,7 @@ defmodule ParkingLotWeb.CoreComponents do
 
   def input(%{type: "checkbox", value: value} = assigns) do
     assigns =
-      assign_new(assigns, :checked, fn -> Phoenix.HTML.Form.normalize_value("checkbox", value) end)
+      assign_new(assigns, :checked, fn -> Form.normalize_value("checkbox", value) end)
 
     ~H"""
     <div phx-feedback-for={@name}>
@@ -342,7 +343,7 @@ defmodule ParkingLotWeb.CoreComponents do
         {@rest}
       >
         <option :if={@prompt} value=""><%= @prompt %></option>
-        <%= Phoenix.HTML.Form.options_for_select(@options, @value) %>
+        <%= Form.options_for_select(@options, @value) %>
       </select>
       <.error :for={msg <- @errors}><%= msg %></.error>
     </div>
@@ -363,7 +364,7 @@ defmodule ParkingLotWeb.CoreComponents do
           @errors != [] && "border-rose-400 focus:border-rose-400"
         ]}
         {@rest}
-      ><%= Phoenix.HTML.Form.normalize_value("textarea", @value) %></textarea>
+      ><%= Form.normalize_value("textarea", @value) %></textarea>
       <.error :for={msg <- @errors}><%= msg %></.error>
     </div>
     """
@@ -378,7 +379,7 @@ defmodule ParkingLotWeb.CoreComponents do
         type={@type}
         name={@name}
         id={@id}
-        value={Phoenix.HTML.Form.normalize_value(@type, @value)}
+        value={Form.normalize_value(@type, @value)}
         class={[
           "mt-2 block w-full rounded-lg text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6",
           "phx-no-feedback:border-zinc-300 phx-no-feedback:focus:border-zinc-400",

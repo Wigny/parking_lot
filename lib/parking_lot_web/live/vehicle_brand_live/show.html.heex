@@ -1,0 +1,31 @@
+<.header>
+  Brand <%= @brand.id %>
+  <:subtitle>This is a brand record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/vehicle/brands/#{@brand}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit brand</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name"><%= @brand.name %></:item>
+</.list>
+
+<.back navigate={~p"/vehicle/brands"}>Back to vehicle_brands</.back>
+
+<.modal
+  :if={@live_action == :edit}
+  id="brand-modal"
+  show
+  on_cancel={JS.patch(~p"/vehicle/brands/#{@brand}")}
+>
+  <.live_component
+    module={ParkingLotWeb.VehicleBrandLive.FormComponent}
+    id={@brand.id}
+    title={@page_title}
+    action={@live_action}
+    brand={@brand}
+    patch={~p"/vehicle/brands/#{@brand}"}
+  />
+</.modal>
