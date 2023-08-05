@@ -10,6 +10,7 @@ defmodule ParkingLot.Cameras.Camera do
   schema "cameras" do
     field :type, Ecto.Enum, values: [:internal, :external]
     field :uri, ParkingLot.Type.URI
+    field :on, :boolean
 
     timestamps()
   end
@@ -17,8 +18,8 @@ defmodule ParkingLot.Cameras.Camera do
   @doc false
   def changeset(camera, attrs) do
     camera
-    |> cast(attrs, [:type, :uri])
-    |> validate_required([:type, :uri])
+    |> cast(attrs, [:type, :uri, :on])
+    |> validate_required([:type, :uri, :on])
     |> validate_uri(:uri)
     |> unique_constraint(:uri)
     |> unique_constraint(:type)
