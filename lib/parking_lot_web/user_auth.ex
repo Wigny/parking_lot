@@ -165,6 +165,21 @@ defmodule ParkingLotWeb.UserAuth do
     end
   end
 
+  def on_mount(:ensure_authorized, _params, session, socket) do
+    socket = mount_current_user(session, socket)
+
+    if socket.assigns.current_user.admin do
+      {:cont, socket}
+    else
+      socket =
+        socket
+        |> Phoenix.LiveView.put_flash(:error, "You are not authorized to access this page.")
+        |> Phoenix.LiveView.redirect(to: ~p"/home")
+
+      {:halt, socket}
+    end
+  end
+
   def on_mount(:redirect_if_user_is_authenticated, _params, session, socket) do
     socket = mount_current_user(session, socket)
 
@@ -226,5 +241,5 @@ defmodule ParkingLotWeb.UserAuth do
 
   defp maybe_store_return_to(conn), do: conn
 
-  defp signed_in_path(_conn), do: ~p"/"
+  defp signed_in_path(_conn), do: ~p"/home"
 end
