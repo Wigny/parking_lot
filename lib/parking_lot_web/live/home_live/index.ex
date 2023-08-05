@@ -1,5 +1,6 @@
 defmodule ParkingLotWeb.HomeLive.Index do
   use ParkingLotWeb, :live_view
+
   import ParkingLotWeb.HomeLive.CanvasComponent
   @impl true
   def mount(_params, _session, socket) do
@@ -7,15 +8,18 @@ defmodule ParkingLotWeb.HomeLive.Index do
       Phoenix.PubSub.subscribe(ParkingLot.PubSub, "alpr")
     end
 
+    cameras = ParkingLot.Cameras.list_cameras()
+
     {:ok,
      socket
-     |> assign(:recognitions, %{})
+     |> assign(:cameras, cameras)
+     |> assign(:videos, %{})
      |> stream(:last_parkings, [], limit: 10)}
   end
 
   @impl true
-  def handle_info({:preview, id, preview}, socket) do
-    {:noreply, update(socket, :recognitions, &Map.put(&1, id, preview))}
+  def handle_info({:frame, camera_id, frame}, socket) do
+    {:noreply, update(socket, :videos, &Map.put(&1, camera_id, frame))}
   end
 
   @impl true

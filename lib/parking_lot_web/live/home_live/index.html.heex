@@ -1,5 +1,5 @@
 <div class="flex w-full sm:w-auto">
-  <div class="mb-10 grid grid-cols-1 sm:grid-cols-5 gap-x-6 gap-y-4">
+  <div class="mb-10 grid grid-cols-1 sm:grid-cols-7 gap-x-6 gap-y-4">
     <a
       :for={
         {path, icon, title} <- [
@@ -24,9 +24,11 @@
   </div>
 </div>
 
-<div class="flex">
-  <div :for={{id, frame} <- @recognitions} class="w-1/2">
-    <.preview :if={frame} id={"preview_#{id}"} frame={frame} />
+<div class="grid gap-4 grid-cols-2">
+  <div :for={camera <- @cameras}>
+    <.link navigate={~p"/cameras/#{camera}"}>
+      <.canvas id={"video_#{camera.id}"} frame={@videos[camera.id]} />
+    </.link>
   </div>
 </div>
 

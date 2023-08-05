@@ -27,7 +27,7 @@ defmodule ParkingLot.ALPR.Watcher do
 
     send(self(), :recognize)
 
-    Phoenix.PubSub.broadcast(ParkingLot.PubSub, "alpr", {:preview, camera.id, frame})
+    Phoenix.PubSub.broadcast(ParkingLot.PubSub, "alpr", {:frame, camera.id, frame})
     GenServer.cast(self(), {:register, recognition})
 
     {:noreply, state}

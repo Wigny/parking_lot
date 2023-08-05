@@ -18,7 +18,7 @@ defmodule ParkingLot.ALPR.Video do
   end
 
   def frame(server \\ __MODULE__) do
-    GenServer.call(server, :frame)
+    GenServer.call(server, :frame, :infinity)
   end
 
   # Server
