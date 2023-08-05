@@ -20,7 +20,7 @@ defmodule ParkingLotWeb.Router do
   scope "/", ParkingLotWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    get "/", PageController, :index
 
     delete "/users/log_out", UserSessionController, :delete
 
@@ -60,6 +60,24 @@ defmodule ParkingLotWeb.Router do
       end
 
       scope "/cameras", CameraLive do
+        live "/", Index, :index
+        live "/new", Index, :new
+        live "/:id/edit", Index, :edit
+
+        live "/:id", Show, :show
+        live "/:id/show/edit", Show, :edit
+      end
+
+      scope "/vehicle/models", VehicleModelLive do
+        live "/", Index, :index
+        live "/new", Index, :new
+        live "/:id/edit", Index, :edit
+
+        live "/:id", Show, :show
+        live "/:id/show/edit", Show, :edit
+      end
+
+      scope "/vehicle/brands", VehicleBrandLive do
         live "/", Index, :index
         live "/new", Index, :new
         live "/:id/edit", Index, :edit

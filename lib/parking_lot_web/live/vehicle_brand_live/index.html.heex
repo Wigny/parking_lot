@@ -1,0 +1,46 @@
+<.header>
+  Listing Vehicle brands
+  <:actions>
+    <.link patch={~p"/vehicle/brands/new"}>
+      <.button>New Brand</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="vehicle_brands"
+  rows={@streams.vehicle_brands}
+  row_click={fn {_id, brand} -> JS.navigate(~p"/vehicle/brands/#{brand}") end}
+>
+  <:col :let={{_id, brand}} label="Name"><%= brand.name %></:col>
+  <:action :let={{_id, brand}}>
+    <div class="sr-only">
+      <.link navigate={~p"/vehicle/brands/#{brand}"}>Show</.link>
+    </div>
+    <.link patch={~p"/vehicle/brands/#{brand}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, brand}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: brand.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="brand-modal"
+  show
+  on_cancel={JS.patch(~p"/vehicle/brands")}
+>
+  <.live_component
+    module={ParkingLotWeb.VehicleBrandLive.FormComponent}
+    id={@brand.id || :new}
+    title={@page_title}
+    action={@live_action}
+    brand={@brand}
+    patch={~p"/vehicle/brands"}
+  />
+</.modal>
