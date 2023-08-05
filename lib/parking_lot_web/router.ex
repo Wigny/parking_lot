@@ -20,8 +20,6 @@ defmodule ParkingLotWeb.Router do
   scope "/", ParkingLotWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
-
     delete "/users/log_out", UserSessionController, :delete
 
     live_session :ensure_authenticated, on_mount: {ParkingLotWeb.UserAuth, :ensure_authenticated} do
@@ -96,6 +94,8 @@ defmodule ParkingLotWeb.Router do
 
   scope "/", ParkingLotWeb do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
+
+    get "/", PageController, :index
 
     get "/users/log_in", UserSessionController, :request
     get "/users/log_in/callback", UserSessionController, :create
