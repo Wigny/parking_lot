@@ -19,5 +19,6 @@ defmodule ParkingLot.Vehicles.Brand do
     |> cast(attrs, [:name])
     |> validate_required([:name])
     |> unique_constraint(:name)
+    |> no_assoc_constraint(:models)
   end
 end

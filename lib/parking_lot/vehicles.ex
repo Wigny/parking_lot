@@ -53,7 +53,9 @@ defmodule ParkingLot.Vehicles do
   end
 
   def delete_brand(%Brand{} = brand) do
-    Repo.delete(brand)
+    brand
+    |> Brand.changeset(%{})
+    |> Repo.delete()
   end
 
   def change_brand(%Brand{} = brand, attrs \\ %{}) do
