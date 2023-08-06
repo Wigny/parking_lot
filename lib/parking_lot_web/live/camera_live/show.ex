@@ -16,6 +16,6 @@ defmodule ParkingLotWeb.CameraLive.Show do
      |> assign(:camera, Cameras.get_camera!(id))}
   end
 
-  defp page_title(:show), do: "Show Camera"
-  defp page_title(:edit), do: "Edit Camera"
+  defp page_title(:show), do: gettext("Show camera")
+  defp page_title(:edit), do: gettext("Edit camera")
 end

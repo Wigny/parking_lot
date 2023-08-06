@@ -110,3 +110,21 @@ msgstr ""
 
 msgid "must be equal to %{number}"
 msgstr ""
+
+## From Ecto.Changeset.validate_format/3
+msgid "has invalid digits"
+msgstr ""
+
+msgid "has invalid check digit"
+msgstr ""
+
+## From ParkingLot.Changeset.validate_uri/3
+msgid "is missing scheme"
+msgstr ""
+
+msgid "is missing host"
+msgstr ""
+
+## From Ecto.Changeset.validate_format/3
+msgid "has invalid host"
+msgstr ""

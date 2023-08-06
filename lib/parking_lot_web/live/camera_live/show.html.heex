@@ -1,20 +1,19 @@
 <.header>
-  Camera <%= @camera.id %>
-  <:subtitle>This is a camera record from your database.</:subtitle>
+  <%= gettext("Camera %{id}", id: @camera.id) %>
   <:actions>
     <.link patch={~p"/cameras/#{@camera}/show/edit"} phx-click={JS.push_focus()}>
-      <.button>Edit camera</.button>
+      <.button><%= gettext("Edit camera") %></.button>
     </.link>
   </:actions>
 </.header>
 
 <.list>
-  <:item title="Type"><%= @camera.type %></:item>
-  <:item title="URI"><%= @camera.uri %></:item>
-  <:item title="On"><%= @camera.on %></:item>
+  <:item title={gettext("Type")}><%= @camera.type %></:item>
+  <:item title={gettext("URI")}><a href={@camera.uri}><%= @camera.uri %></a></:item>
+  <:item title={gettext("On")}><%= @camera.on %></:item>
 </.list>
 
-<.back navigate={~p"/cameras"}>Back to cameras</.back>
+<.back navigate={~p"/cameras"}><%= gettext("Back to cameras") %></.back>
 
 <.modal
   :if={@live_action == :edit}

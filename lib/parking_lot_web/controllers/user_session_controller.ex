@@ -8,7 +8,7 @@ defmodule ParkingLotWeb.UserSessionController do
 
   def create(%{assigns: %{ueberauth_failure: _fails}} = conn, _params) do
     conn
-    |> put_flash(:error, "Failed to authenticate.")
+    |> put_flash(:error, gettext("Failed to authenticate."))
     |> redirect(to: ~p"/")
   end
 
@@ -16,7 +16,7 @@ defmodule ParkingLotWeb.UserSessionController do
     case Accounts.get_or_create_user(email: auth.info.email) do
       {:ok, user} ->
         conn
-        |> put_flash(:info, "Welcome back!")
+        |> put_flash(:info, gettext("Welcome back!"))
         |> log_in_user(user)
 
       {:error, reason} ->
@@ -28,7 +28,7 @@ defmodule ParkingLotWeb.UserSessionController do
 
   def delete(conn, _params) do
     conn
-    |> put_flash(:info, "Logged out successfully.")
+    |> put_flash(:info, gettext("Logged out successfully."))
     |> log_out_user()
   end
 end

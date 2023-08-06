@@ -25,15 +25,16 @@ defmodule ParkingLotWeb.VehicleModelLiveTest do
     test "lists all vehicle_models", %{conn: conn, model: model} do
       {:ok, _index_live, html} = live(conn, ~p"/vehicle/models")
 
-      assert html =~ "Listing Vehicle models"
+      assert html =~ "Listing models"
       assert html =~ model.name
     end
 
     test "saves new model", %{conn: conn, attrs: attrs} do
       {:ok, index_live, _html} = live(conn, ~p"/vehicle/models")
 
-      assert index_live |> element("a", "New Model") |> render_click() =~
-               "New Model"
+      assert index_live
+             |> element("a", "New model")
+             |> render_click() =~ "New model"
 
       assert_patch(index_live, ~p"/vehicle/models/new")
 
@@ -55,8 +56,9 @@ defmodule ParkingLotWeb.VehicleModelLiveTest do
     test "updates model in listing", %{conn: conn, model: model, attrs: attrs} do
       {:ok, index_live, _html} = live(conn, ~p"/vehicle/models")
 
-      assert index_live |> element("#vehicle_models-#{model.id} a", "Edit") |> render_click() =~
-               "Edit Model"
+      assert index_live
+             |> element("#vehicle_models-#{model.id} a", "Edit")
+             |> render_click() =~ "Edit model"
 
       assert_patch(index_live, ~p"/vehicle/models/#{model}/edit")
 
@@ -89,15 +91,16 @@ defmodule ParkingLotWeb.VehicleModelLiveTest do
     test "displays model", %{conn: conn, model: model} do
       {:ok, _show_live, html} = live(conn, ~p"/vehicle/models/#{model}")
 
-      assert html =~ "Show Model"
+      assert html =~ "Show model"
       assert html =~ model.name
     end
 
     test "updates model within modal", %{conn: conn, model: model, attrs: attrs} do
       {:ok, show_live, _html} = live(conn, ~p"/vehicle/models/#{model}")
 
-      assert show_live |> element("a", "Edit") |> render_click() =~
-               "Edit Model"
+      assert show_live
+             |> element("a", "Edit")
+             |> render_click() =~ "Edit model"
 
       assert_patch(show_live, ~p"/vehicle/models/#{model}/show/edit")
 

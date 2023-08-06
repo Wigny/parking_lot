@@ -1,13 +1,14 @@
 <.header>
-  Parking <%= @parking.id %>
-  <:subtitle>This is a parking record from your database.</:subtitle>
+  <%= gettext("Parking %{id}", id: @parking.id) %>
 </.header>
 
 <.list>
-  <:item title="Vehicle">
-    <%= @parking.vehicle.license_plate %>
+  <:item title={gettext("Vehicle")}>
+    <.link navigate={~p"/vehicles/#{@parking.vehicle.id}"}>
+      <%= @parking.vehicle.license_plate %>
+    </.link>
   </:item>
-  <:item title="Entered at">
+  <:item title={gettext("Entered at")}>
     <time
       id={Ecto.UUID.generate()}
       is="relative-time"
@@ -17,7 +18,7 @@
       <%= @parking.entered_at %>
     </time>
   </:item>
-  <:item title="Left at">
+  <:item title={gettext("Left at")}>
     <time
       id={Ecto.UUID.generate()}
       is="relative-time"
@@ -29,20 +30,4 @@
   </:item>
 </.list>
 
-<.back navigate={~p"/parkings"}>Back to parkings</.back>
-
-<.modal
-  :if={@live_action == :edit}
-  id="parking-modal"
-  show
-  on_cancel={JS.patch(~p"/parkings/#{@parking}")}
->
-  <.live_component
-    module={ParkingLotWeb.ParkingLive.FormComponent}
-    id={@parking.id}
-    title={@page_title}
-    action={@live_action}
-    parking={@parking}
-    patch={~p"/parkings/#{@parking}"}
-  />
-</.modal>
+<.back navigate={~p"/parkings"}><%= gettext("Back to parkings") %></.back>

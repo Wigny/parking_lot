@@ -21,15 +21,16 @@ defmodule ParkingLotWeb.VehicleBrandLiveTest do
     test "lists all vehicle_brands", %{conn: conn, brand: brand} do
       {:ok, _index_live, html} = live(conn, ~p"/vehicle/brands")
 
-      assert html =~ "Listing Vehicle brands"
+      assert html =~ "Listing brands"
       assert html =~ brand.name
     end
 
     test "saves new brand", %{conn: conn} do
       {:ok, index_live, _html} = live(conn, ~p"/vehicle/brands")
 
-      assert index_live |> element("a", "New Brand") |> render_click() =~
-               "New Brand"
+      assert index_live
+             |> element("a", "New brand")
+             |> render_click() =~ "New brand"
 
       assert_patch(index_live, ~p"/vehicle/brands/new")
 
@@ -52,7 +53,7 @@ defmodule ParkingLotWeb.VehicleBrandLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/vehicle/brands")
 
       assert index_live |> element("#vehicle_brands-#{brand.id} a", "Edit") |> render_click() =~
-               "Edit Brand"
+               "Edit brand"
 
       assert_patch(index_live, ~p"/vehicle/brands/#{brand}/edit")
 
@@ -85,7 +86,7 @@ defmodule ParkingLotWeb.VehicleBrandLiveTest do
     test "displays brand", %{conn: conn, brand: brand} do
       {:ok, _show_live, html} = live(conn, ~p"/vehicle/brands/#{brand}")
 
-      assert html =~ "Show Brand"
+      assert html =~ "Show brand"
       assert html =~ brand.name
     end
 
@@ -93,7 +94,7 @@ defmodule ParkingLotWeb.VehicleBrandLiveTest do
       {:ok, show_live, _html} = live(conn, ~p"/vehicle/brands/#{brand}")
 
       assert show_live |> element("a", "Edit") |> render_click() =~
-               "Edit Brand"
+               "Edit brand"
 
       assert_patch(show_live, ~p"/vehicle/brands/#{brand}/show/edit")
 

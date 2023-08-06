@@ -32,15 +32,16 @@ defmodule ParkingLotWeb.VehicleLiveTest do
     test "lists all vehicles", %{conn: conn, vehicle: vehicle} do
       {:ok, _index_live, html} = live(conn, ~p"/vehicles")
 
-      assert html =~ "Listing Vehicles"
+      assert html =~ "Listing vehicles"
       assert html =~ vehicle.license_plate
     end
 
     test "saves new vehicle", %{conn: conn, attrs: attrs} do
       {:ok, index_live, _html} = live(conn, ~p"/vehicles")
 
-      assert index_live |> element("a", "New Vehicle") |> render_click() =~
-               "New Vehicle"
+      assert index_live
+             |> element("a", "New vehicle")
+             |> render_click() =~ "New vehicle"
 
       assert_patch(index_live, ~p"/vehicles/new")
 
@@ -62,8 +63,9 @@ defmodule ParkingLotWeb.VehicleLiveTest do
     test "updates vehicle in listing", %{conn: conn, vehicle: vehicle, attrs: attrs} do
       {:ok, index_live, _html} = live(conn, ~p"/vehicles")
 
-      assert index_live |> element("#vehicles-#{vehicle.id} a", "Edit") |> render_click() =~
-               "Edit Vehicle"
+      assert index_live
+             |> element("#vehicles-#{vehicle.id} a", "Edit")
+             |> render_click() =~ "Edit vehicle"
 
       assert_patch(index_live, ~p"/vehicles/#{vehicle}/edit")
 
@@ -96,15 +98,16 @@ defmodule ParkingLotWeb.VehicleLiveTest do
     test "displays vehicle", %{conn: conn, vehicle: vehicle} do
       {:ok, _show_live, html} = live(conn, ~p"/vehicles/#{vehicle}")
 
-      assert html =~ "Show Vehicle"
+      assert html =~ "Show vehicle"
       assert html =~ vehicle.license_plate
     end
 
     test "updates vehicle within modal", %{conn: conn, vehicle: vehicle, attrs: attrs} do
       {:ok, show_live, _html} = live(conn, ~p"/vehicles/#{vehicle}")
 
-      assert show_live |> element("a", "Edit") |> render_click() =~
-               "Edit Vehicle"
+      assert show_live
+             |> element("a", "Edit")
+             |> render_click() =~ "Edit vehicle"
 
       assert_patch(show_live, ~p"/vehicles/#{vehicle}/show/edit")
 

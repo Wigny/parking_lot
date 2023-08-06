@@ -55,4 +55,6 @@ config :logger, :console,
 
 config :phoenix, :json_library, Jason
 
+config :gettext, :default_locale, "pt_BR"
+
 import_config "#{config_env()}.exs"

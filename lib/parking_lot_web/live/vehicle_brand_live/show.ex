@@ -16,6 +16,6 @@ defmodule ParkingLotWeb.VehicleBrandLive.Show do
      |> assign(:brand, Vehicles.get_brand!(id))}
   end
 
-  defp page_title(:show), do: "Show Brand"
-  defp page_title(:edit), do: "Edit Brand"
+  defp page_title(:show), do: gettext("Show brand")
+  defp page_title(:edit), do: gettext("Edit brand")
 end

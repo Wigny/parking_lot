@@ -1,20 +1,27 @@
 <.header>
-  Vehicle driver <%= @vehicle_driver.id %>
-  <:subtitle>This is a vehicle_driver record from your database.</:subtitle>
+  <%= gettext("Vehicle/Driver %{id}", id: @vehicle_driver.id) %>
   <:actions>
     <.link patch={~p"/vehicles_drivers/#{@vehicle_driver}/show/edit"} phx-click={JS.push_focus()}>
-      <.button>Edit vehicle_driver</.button>
+      <.button><%= gettext("Edit vehicle/driver") %></.button>
     </.link>
   </:actions>
 </.header>
 
 <.list>
-  <:item title="Driver"><%= @vehicle_driver.driver.name %></:item>
-  <:item title="Vehicle"><%= @vehicle_driver.vehicle.license_plate %></:item>
-  <:item title="Active"><%= @vehicle_driver.active %></:item>
+  <:item title={gettext("Driver")}>
+    <.link navigate={~p"/drivers/#{@vehicle_driver.driver.id}"}>
+      <%= @vehicle_driver.driver.name %>
+    </.link>
+  </:item>
+  <:item title={gettext("Vehicle")}>
+    <.link navigate={~p"/vehicles/#{@vehicle_driver.vehicle.id}"}>
+      <%= @vehicle_driver.vehicle.license_plate %>
+    </.link>
+  </:item>
+  <:item title={gettext("Active")}><%= @vehicle_driver.active %></:item>
 </.list>
 
-<.back navigate={~p"/vehicles_drivers"}>Back to vehicles_drivers</.back>
+<.back navigate={~p"/vehicles_drivers"}><%= gettext("Back to vehicles/drivers") %></.back>
 
 <.modal
   :if={@live_action == :edit}

@@ -1,7 +1,6 @@
 <div>
   <.header>
     <%= @title %>
-    <:subtitle>Use this form to manage driver records in your database.</:subtitle>
   </.header>
 
   <.simple_form
@@ -11,14 +10,26 @@
     phx-change="validate"
     phx-submit="save"
   >
-    <.input field={@form[:name]} type="text" label="Name" />
-    <.input field={@form[:cpf]} type="digits" label="CPF" maxlength={11} phx-debounce="blur" />
-    <.input field={@form[:cnh]} type="digits" label="CNH" maxlength={11} phx-debounce="blur" />
-    <.input field={@form[:email]} type="email" label="E-mail" phx-debounce="blur" />
-    <.input field={@form[:phone]} type="tel" label="Phone" maxlength={11} />
-    <.input field={@form[:active]} type="checkbox" label="Active" />
+    <.input field={@form[:name]} type="text" label={gettext("Name")} />
+    <.input
+      field={@form[:cpf]}
+      type="digits"
+      label={gettext("CPF")}
+      maxlength={11}
+      phx-debounce="blur"
+    />
+    <.input
+      field={@form[:cnh]}
+      type="digits"
+      label={gettext("CNH")}
+      maxlength={11}
+      phx-debounce="blur"
+    />
+    <.input field={@form[:email]} type="email" label={gettext("E-mail")} phx-debounce="blur" />
+    <.input field={@form[:phone]} type="tel" label={gettext("Phone")} maxlength={11} />
+    <.input field={@form[:active]} type="checkbox" label={gettext("Active")} />
     <:actions>
-      <.button phx-disable-with="Saving...">Save Driver</.button>
+      <.button phx-disable-with={gettext("Saving...")}><%= gettext("Save driver") %></.button>
     </:actions>
   </.simple_form>
 </div>

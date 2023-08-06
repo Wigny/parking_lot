@@ -16,6 +16,6 @@ defmodule ParkingLotWeb.VehicleLive.Show do
      |> assign(:vehicle, Customers.get_vehicle!(id))}
   end
 
-  defp page_title(:show), do: "Show Vehicle"
-  defp page_title(:edit), do: "Edit Vehicle"
+  defp page_title(:show), do: gettext("Show vehicle")
+  defp page_title(:edit), do: gettext("Edit vehicle")
 end

@@ -1,8 +1,8 @@
 <.header>
-  Listing Vehicles
+  <%= gettext("Listing vehicles") %>
   <:actions>
     <.link patch={~p"/vehicles/new"}>
-      <.button>New Vehicle</.button>
+      <.button><%= gettext("New vehicle") %></.button>
     </.link>
   </:actions>
 </.header>
@@ -12,24 +12,24 @@
   rows={@streams.vehicles}
   row_click={fn {_id, vehicle} -> JS.navigate(~p"/vehicles/#{vehicle}") end}
 >
-  <:col :let={{_id, vehicle}} label="License plate"><%= vehicle.license_plate %></:col>
-  <:col :let={{_id, vehicle}} label="Type"><%= vehicle.type.name %></:col>
-  <:col :let={{_id, vehicle}} label="Brand"><%= vehicle.model.brand.name %></:col>
-  <:col :let={{_id, vehicle}} label="Model"><%= vehicle.model.name %></:col>
-  <:col :let={{_id, vehicle}} label="Color"><%= vehicle.color.name %></:col>
-  <:col :let={{_id, vehicle}} label="Active"><%= vehicle.active %></:col>
+  <:col :let={{_id, vehicle}} label={gettext("License plate")}><%= vehicle.license_plate %></:col>
+  <:col :let={{_id, vehicle}} label={gettext("Type")}><%= vehicle.type.name %></:col>
+  <:col :let={{_id, vehicle}} label={gettext("Brand")}><%= vehicle.model.brand.name %></:col>
+  <:col :let={{_id, vehicle}} label={gettext("Model")}><%= vehicle.model.name %></:col>
+  <:col :let={{_id, vehicle}} label={gettext("Color")}><%= vehicle.color.name %></:col>
+  <:col :let={{_id, vehicle}} label={gettext("Active")}><%= vehicle.active %></:col>
   <:action :let={{_id, vehicle}}>
     <div class="sr-only">
-      <.link navigate={~p"/vehicles/#{vehicle}"}>Show</.link>
+      <.link navigate={~p"/vehicles/#{vehicle}"}><%= gettext("Show") %></.link>
     </div>
-    <.link patch={~p"/vehicles/#{vehicle}/edit"}>Edit</.link>
+    <.link patch={~p"/vehicles/#{vehicle}/edit"}><%= gettext("Edit") %></.link>
   </:action>
   <:action :let={{id, vehicle}}>
     <.link
       phx-click={JS.push("delete", value: %{id: vehicle.id}) |> hide("##{id}")}
-      data-confirm="Are you sure?"
+      data-confirm={gettext("Are you sure?")}
     >
-      Delete
+      <%= gettext("Delete") %>
     </.link>
   </:action>
 </.table>

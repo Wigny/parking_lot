@@ -10,6 +10,6 @@ defmodule ParkingLotWeb.ParkingLive.Index do
 
   @impl true
   def handle_params(_params, _url, socket) do
-    {:noreply, assign(socket, :page_title, "Listing Parkings")}
+    {:noreply, assign(socket, :page_title, gettext("Listing parkings"))}
   end
 end

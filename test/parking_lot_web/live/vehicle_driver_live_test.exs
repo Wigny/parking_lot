@@ -25,14 +25,15 @@ defmodule ParkingLotWeb.VehicleDriverLiveTest do
     test "lists all vehicles_drivers", %{conn: conn} do
       {:ok, _index_live, html} = live(conn, ~p"/vehicles_drivers")
 
-      assert html =~ "Listing Vehicles drivers"
+      assert html =~ "Listing vehicles/drivers"
     end
 
     test "saves new vehicle_driver", %{conn: conn, attrs: attrs} do
       {:ok, index_live, _html} = live(conn, ~p"/vehicles_drivers")
 
-      assert index_live |> element("a", "New Vehicle driver") |> render_click() =~
-               "New Vehicle driver"
+      assert index_live
+             |> element("a", "New vehicle/driver")
+             |> render_click() =~ "New vehicle/driver"
 
       assert_patch(index_live, ~p"/vehicles_drivers/new")
 
@@ -47,7 +48,7 @@ defmodule ParkingLotWeb.VehicleDriverLiveTest do
       assert_patch(index_live, ~p"/vehicles_drivers")
 
       html = render(index_live)
-      assert html =~ "Vehicle driver created successfully"
+      assert html =~ "Vehicle/driver created successfully"
     end
 
     test "updates vehicle_driver in listing", %{
@@ -59,8 +60,7 @@ defmodule ParkingLotWeb.VehicleDriverLiveTest do
 
       assert index_live
              |> element("#vehicles_drivers-#{vehicle_driver.id} a", "Edit")
-             |> render_click() =~
-               "Edit Vehicle driver"
+             |> render_click() =~ "Edit vehicle/driver"
 
       assert_patch(index_live, ~p"/vehicles_drivers/#{vehicle_driver}/edit")
 
@@ -75,7 +75,7 @@ defmodule ParkingLotWeb.VehicleDriverLiveTest do
       assert_patch(index_live, ~p"/vehicles_drivers")
 
       html = render(index_live)
-      assert html =~ "Vehicle driver updated successfully"
+      assert html =~ "Vehicle/driver updated successfully"
     end
 
     test "deletes vehicle_driver in listing", %{conn: conn, vehicle_driver: vehicle_driver} do
@@ -95,7 +95,7 @@ defmodule ParkingLotWeb.VehicleDriverLiveTest do
     test "displays vehicle_driver", %{conn: conn, vehicle_driver: vehicle_driver} do
       {:ok, _show_live, html} = live(conn, ~p"/vehicles_drivers/#{vehicle_driver}")
 
-      assert html =~ "Show Vehicle driver"
+      assert html =~ "Show vehicle/driver"
     end
 
     test "updates vehicle_driver within modal", %{
@@ -105,8 +105,9 @@ defmodule ParkingLotWeb.VehicleDriverLiveTest do
     } do
       {:ok, show_live, _html} = live(conn, ~p"/vehicles_drivers/#{vehicle_driver}")
 
-      assert show_live |> element("a", "Edit") |> render_click() =~
-               "Edit Vehicle driver"
+      assert show_live
+             |> element("a", "Edit")
+             |> render_click() =~ "Edit vehicle/driver"
 
       assert_patch(show_live, ~p"/vehicles_drivers/#{vehicle_driver}/show/edit")
 
@@ -121,7 +122,7 @@ defmodule ParkingLotWeb.VehicleDriverLiveTest do
       assert_patch(show_live, ~p"/vehicles_drivers/#{vehicle_driver}")
 
       html = render(show_live)
-      assert html =~ "Vehicle driver updated successfully"
+      assert html =~ "Vehicle/driver updated successfully"
     end
   end
 end

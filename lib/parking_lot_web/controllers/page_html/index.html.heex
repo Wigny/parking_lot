@@ -6,14 +6,16 @@
         Parking Lot
       </h1>
       <p class="mt-6 text-lg leading-8 text-gray-600">
-        Manage your parking lot' authorized drivers and vehicles while having the automated parking registrations powered by ALPR.
+        <%= gettext(
+          "Manage your parking lot' authorized drivers and vehicles along with the automated parking registrations powered by ALPR."
+        ) %>
       </p>
       <div class="mt-5 flex">
         <.link
           href={~p"/users/log_in"}
           class="rounded-lg bg-brand/80 hover:bg-brand/70 py-2 px-3 text-sm font-semibold leading-6 text-white"
         >
-          Log in now
+          <%= gettext("Log in now") %> <.icon name="hero-arrow-small-right" />
         </.link>
       </div>
     </div>

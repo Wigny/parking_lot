@@ -4,6 +4,7 @@ defmodule ParkingLotWeb.UserAuth do
   use ParkingLotWeb, :verified_routes
 
   import Plug.Conn
+  import ParkingLotWeb.Gettext
   import Phoenix.Controller
 
   alias ParkingLot.Accounts
@@ -158,7 +159,10 @@ defmodule ParkingLotWeb.UserAuth do
     else
       socket =
         socket
-        |> Phoenix.LiveView.put_flash(:error, "You must log in to access this page.")
+        |> Phoenix.LiveView.put_flash(
+          :error,
+          gettext("You must log in to access this page.")
+        )
         |> Phoenix.LiveView.redirect(to: ~p"/users/log_in")
 
       {:halt, socket}
@@ -173,7 +177,10 @@ defmodule ParkingLotWeb.UserAuth do
     else
       socket =
         socket
-        |> Phoenix.LiveView.put_flash(:error, "You are not authorized to access this page.")
+        |> Phoenix.LiveView.put_flash(
+          :error,
+          gettext("You are not authorized to access this page.")
+        )
         |> Phoenix.LiveView.redirect(to: ~p"/home")
 
       {:halt, socket}

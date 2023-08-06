@@ -34,7 +34,7 @@ defmodule ParkingLotWeb.CameraLive.FormComponent do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Camera updated successfully")
+         |> put_flash(:info, gettext("Camera updated successfully"))
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -49,7 +49,7 @@ defmodule ParkingLotWeb.CameraLive.FormComponent do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Camera created successfully")
+         |> put_flash(:info, gettext("Camera created successfully"))
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->

@@ -1,7 +1,6 @@
 <div>
   <.header>
     <%= @title %>
-    <:subtitle>Use this form to manage vehicle_driver records in your database.</:subtitle>
   </.header>
 
   <.simple_form
@@ -14,23 +13,25 @@
     <.input
       field={@form[:driver_id]}
       type="select"
-      label="Driver"
-      prompt="Choose the driver"
+      label={gettext("Driver")}
+      prompt={gettext("Choose the driver")}
       options={for driver <- @drivers, do: {driver.name, driver.id}}
     />
 
     <.input
       field={@form[:vehicle_id]}
       type="select"
-      label="Vehicle"
-      prompt="Choose the vehicle"
+      label={gettext("Vehicle")}
+      prompt={gettext("Choose the vehicle")}
       options={for vehicle <- @vehicles, do: {vehicle.license_plate, vehicle.id}}
     />
 
-    <.input field={@form[:active]} type="checkbox" label="Active" />
+    <.input field={@form[:active]} type="checkbox" label={gettext("Active")} />
 
     <:actions>
-      <.button phx-disable-with="Saving...">Save Vehicle driver</.button>
+      <.button phx-disable-with={gettext("Saving...")}>
+        <%= gettext("Save vehicle/driver") %>
+      </.button>
     </:actions>
   </.simple_form>
 </div>

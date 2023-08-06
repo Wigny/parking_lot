@@ -9,7 +9,6 @@ defmodule ParkingLotWeb.VehicleModelLive.FormComponent do
     <div>
       <.header>
         <%= @title %>
-        <:subtitle>Use this form to manage model records in your database.</:subtitle>
       </.header>
 
       <.simple_form
@@ -22,14 +21,14 @@ defmodule ParkingLotWeb.VehicleModelLive.FormComponent do
         <.input
           field={@form[:brand_id]}
           type="select"
-          label="Brand"
-          prompt="Choose the brand"
+          label={gettext("Brand")}
+          prompt={gettext("Choose the brand")}
           options={for brand <- @brands, do: {brand.name, brand.id}}
         />
 
-        <.input field={@form[:name]} type="text" label="Model" />
+        <.input field={@form[:name]} type="text" label={gettext("Model")} />
         <:actions>
-          <.button phx-disable-with="Saving...">Save Model</.button>
+          <.button phx-disable-with={gettext("Saving...")}><%= gettext("Save model") %></.button>
         </:actions>
       </.simple_form>
     </div>
@@ -69,7 +68,7 @@ defmodule ParkingLotWeb.VehicleModelLive.FormComponent do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Model updated successfully")
+         |> put_flash(:info, gettext("Model updated successfully"))
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -84,7 +83,7 @@ defmodule ParkingLotWeb.VehicleModelLive.FormComponent do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Model created successfully")
+         |> put_flash(:info, gettext("Model created successfully"))
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
