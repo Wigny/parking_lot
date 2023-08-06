@@ -1,4 +1,4 @@
-defmodule ParkingLot.ALPR.Text.RecognizerTest do
+defmodule ParkingLot.ALPR.RecognizerTest do
   use ParkingLot.DataCase
 
   alias ParkingLot.ALPR.Recognizer

@@ -21,6 +21,8 @@
 
     <.input field={@form[:uri]} type="url" label="URI" phx-debounce="blur" />
 
+    <.input field={@form[:on]} type="checkbox" label="On" />
+
     <:actions>
       <.button phx-disable-with="Saving...">Save Camera</.button>
     </:actions>

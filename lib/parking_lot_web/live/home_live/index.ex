@@ -2,6 +2,7 @@ defmodule ParkingLotWeb.HomeLive.Index do
   use ParkingLotWeb, :live_view
 
   import ParkingLotWeb.HomeLive.CanvasComponent
+
   @impl true
   def mount(_params, _session, socket) do
     if connected?(socket) do
