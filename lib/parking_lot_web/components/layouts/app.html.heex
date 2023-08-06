@@ -1,7 +1,7 @@
 <header class="px-4 sm:px-6 lg:px-8">
   <div class="flex items-center justify-between border-b border-zinc-100 py-3 text-sm">
     <div class="flex items-center gap-4">
-      <a href={~p"/home"}>
+      <.link navigate={~p"/home"}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 448 512"
@@ -9,7 +9,7 @@
         >
           <path d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zM192 256h48c17.7 0 32-14.3 32-32s-14.3-32-32-32H192v64zm48 64H192v32c0 17.7-14.3 32-32 32s-32-14.3-32-32V288 168c0-22.1 17.9-40 40-40h72c53 0 96 43 96 96s-43 96-96 96z" />
         </svg>
-      </a>
+      </.link>
 
       <p class=" px-2 font-medium leading-6">
         Parking Lot
@@ -17,19 +17,32 @@
     </div>
     <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900">
       <.link
+        :for={
+          {path, icon, title} <- [
+            {~p"/drivers", "hero-identification", "Drivers"},
+            {~p"/vehicles", "hero-truck", "Vehicles"},
+            {~p"/vehicles_drivers", "hero-key", "Drivers/Vehicles"},
+            {~p"/cameras", "hero-video-camera", "Cameras"},
+            {~p"/parkings", "hero-ticket", "Parkings"},
+            {~p"/vehicle/brands", "hero-tag", "Vehicle brands"},
+            {~p"/vehicle/models", "hero-tag", "Vehicle models"}
+          ]
+        }
+        navigate={path}
+        class="hover:text-zinc-700"
+      >
+        <.icon name={icon} /> <%= title %>
+      </.link>
+
+      <span class="h-6 w-px bg-gray-200" aria-hidden="true"></span>
+
+      <.link
         :if={@current_user}
         href={~p"/users/log_out"}
         method="delete"
         class="rounded-lg bg-zinc-100 px-2 py-1 hover:bg-zinc-200/80"
       >
-        Log out
-      </.link>
-      <.link
-        :if={is_nil(@current_user)}
-        href={~p"/users/log_in"}
-        class="rounded-lg bg-zinc-100 px-2 py-1 hover:bg-zinc-200/80"
-      >
-        Log in
+        <.icon name="hero-arrow-right-on-rectangle" /> Log out
       </.link>
     </div>
   </div>
