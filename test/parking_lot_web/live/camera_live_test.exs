@@ -21,15 +21,16 @@ defmodule ParkingLotWeb.CameraLiveTest do
     test "lists all cameras", %{conn: conn, camera: camera} do
       {:ok, _index_live, html} = live(conn, ~p"/cameras")
 
-      assert html =~ "Listing Cameras"
+      assert html =~ "Listing cameras"
       assert html =~ URI.to_string(camera.uri)
     end
 
     test "saves new camera", %{conn: conn} do
       {:ok, index_live, _html} = live(conn, ~p"/cameras")
 
-      assert index_live |> element("a", "New Camera") |> render_click() =~
-               "New Camera"
+      assert index_live
+             |> element("a", "New camera")
+             |> render_click() =~ "New camera"
 
       assert_patch(index_live, ~p"/cameras/new")
 
@@ -51,8 +52,9 @@ defmodule ParkingLotWeb.CameraLiveTest do
     test "updates camera in listing", %{conn: conn, camera: camera} do
       {:ok, index_live, _html} = live(conn, ~p"/cameras")
 
-      assert index_live |> element("#cameras-#{camera.id} a", "Edit") |> render_click() =~
-               "Edit Camera"
+      assert index_live
+             |> element("#cameras-#{camera.id} a", "Edit")
+             |> render_click() =~ "Edit camera"
 
       assert_patch(index_live, ~p"/cameras/#{camera}/edit")
 
@@ -85,15 +87,16 @@ defmodule ParkingLotWeb.CameraLiveTest do
     test "displays camera", %{conn: conn, camera: camera} do
       {:ok, _show_live, html} = live(conn, ~p"/cameras/#{camera}")
 
-      assert html =~ "Show Camera"
+      assert html =~ "Show camera"
       assert html =~ URI.to_string(camera.uri)
     end
 
     test "updates camera within modal", %{conn: conn, camera: camera} do
       {:ok, show_live, _html} = live(conn, ~p"/cameras/#{camera}")
 
-      assert show_live |> element("a", "Edit") |> render_click() =~
-               "Edit Camera"
+      assert show_live
+             |> element("a", "Edit")
+             |> render_click() =~ "Edit camera"
 
       assert_patch(show_live, ~p"/cameras/#{camera}/show/edit")
 

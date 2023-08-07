@@ -42,7 +42,7 @@ defmodule ParkingLotWeb.VehicleLive.FormComponent do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Vehicle updated successfully")
+         |> put_flash(:info, gettext("Vehicle updated successfully"))
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -57,7 +57,7 @@ defmodule ParkingLotWeb.VehicleLive.FormComponent do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Vehicle created successfully")
+         |> put_flash(:info, gettext("Vehicle created successfully"))
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->

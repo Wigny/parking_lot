@@ -1,5 +1,5 @@
 <.header>
-  Listing Parkings
+  <%= gettext("Listing parkings") %>
 </.header>
 
 <.table
@@ -7,10 +7,10 @@
   rows={@streams.parkings}
   row_click={fn {_id, parking} -> JS.navigate(~p"/parkings/#{parking}") end}
 >
-  <:col :let={{_id, parking}} label="Vehicle">
+  <:col :let={{_id, parking}} label={gettext("Vehicle")}>
     <%= parking.vehicle.license_plate %>
   </:col>
-  <:col :let={{_id, parking}} label="Entered at">
+  <:col :let={{_id, parking}} label={gettext("Entered at")}>
     <time
       id={Ecto.UUID.generate()}
       is="relative-time"
@@ -20,7 +20,7 @@
       <%= parking.entered_at %>
     </time>
   </:col>
-  <:col :let={{_id, parking}} label="Left at">
+  <:col :let={{_id, parking}} label={gettext("Left at")}>
     <time
       id={Ecto.UUID.generate()}
       is="relative-time"
@@ -31,22 +31,6 @@
     </time>
   </:col>
   <:action :let={{_id, parking}}>
-    <.link navigate={~p"/parkings/#{parking}"}>Show</.link>
+    <.link navigate={~p"/parkings/#{parking}"}><%= gettext("Show") %></.link>
   </:action>
 </.table>
-
-<.modal
-  :if={@live_action in [:new, :edit]}
-  id="parking-modal"
-  show
-  on_cancel={JS.patch(~p"/parkings")}
->
-  <.live_component
-    module={ParkingLotWeb.ParkingLive.FormComponent}
-    id={@parking.id || :new}
-    title={@page_title}
-    action={@live_action}
-    parking={@parking}
-    patch={~p"/parkings"}
-  />
-</.modal>

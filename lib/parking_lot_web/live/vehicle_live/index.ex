@@ -16,19 +16,19 @@ defmodule ParkingLotWeb.VehicleLive.Index do
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
-    |> assign(:page_title, "Edit Vehicle")
+    |> assign(:page_title, gettext("Edit vehicle"))
     |> assign(:vehicle, Customers.get_vehicle!(id))
   end
 
   defp apply_action(socket, :new, _params) do
     socket
-    |> assign(:page_title, "New Vehicle")
+    |> assign(:page_title, gettext("New vehicle"))
     |> assign(:vehicle, %Vehicle{})
   end
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing Vehicles")
+    |> assign(:page_title, gettext("Listing vehicles"))
     |> assign(:vehicle, nil)
   end
 

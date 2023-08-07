@@ -1,19 +1,22 @@
 <.header>
-  Model <%= @model.id %>
-  <:subtitle>This is a model record from your database.</:subtitle>
+  <%= gettext("Model %{id}", id: @model.id) %>
   <:actions>
     <.link patch={~p"/vehicle/models/#{@model}/show/edit"} phx-click={JS.push_focus()}>
-      <.button>Edit model</.button>
+      <.button><%= gettext("Edit model") %></.button>
     </.link>
   </:actions>
 </.header>
 
 <.list>
-  <:item title="Brand"><%= @model.brand.name %></:item>
-  <:item title="Model"><%= @model.name %></:item>
+  <:item title={gettext("Brand")}>
+    <.link navigate={~p"/vehicle/brands/#{@model.brand.id}"}>
+      <%= @model.brand.name %>
+    </.link>
+  </:item>
+  <:item title={gettext("Model")}><%= @model.name %></:item>
 </.list>
 
-<.back navigate={~p"/vehicle/models"}>Back to vehicle_models</.back>
+<.back navigate={~p"/vehicle/models"}><%= gettext("Back to models") %></.back>
 
 <.modal
   :if={@live_action == :edit}

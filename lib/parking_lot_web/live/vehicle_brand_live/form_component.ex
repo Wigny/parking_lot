@@ -9,7 +9,6 @@ defmodule ParkingLotWeb.VehicleBrandLive.FormComponent do
     <div>
       <.header>
         <%= @title %>
-        <:subtitle>Use this form to manage brand records in your database.</:subtitle>
       </.header>
 
       <.simple_form
@@ -19,9 +18,9 @@ defmodule ParkingLotWeb.VehicleBrandLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:name]} type="text" label="Name" />
+        <.input field={@form[:name]} type="text" label={gettext("Name")} />
         <:actions>
-          <.button phx-disable-with="Saving...">Save Brand</.button>
+          <.button phx-disable-with={gettext("Saving...")}><%= gettext("Save brand") %></.button>
         </:actions>
       </.simple_form>
     </div>
@@ -59,7 +58,7 @@ defmodule ParkingLotWeb.VehicleBrandLive.FormComponent do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Brand updated successfully")
+         |> put_flash(:info, gettext("Brand updated successfully"))
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -74,7 +73,7 @@ defmodule ParkingLotWeb.VehicleBrandLive.FormComponent do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Brand created successfully")
+         |> put_flash(:info, gettext("Brand created successfully"))
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->

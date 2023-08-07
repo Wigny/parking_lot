@@ -18,20 +18,20 @@
     <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900">
       <.link
         :for={
-          {path, icon, title} <- [
-            {~p"/drivers", "hero-identification", "Drivers"},
-            {~p"/vehicles", "hero-truck", "Vehicles"},
-            {~p"/vehicles_drivers", "hero-key", "Drivers/Vehicles"},
-            {~p"/cameras", "hero-video-camera", "Cameras"},
-            {~p"/parkings", "hero-ticket", "Parkings"},
-            {~p"/vehicle/brands", "hero-tag", "Vehicle brands"},
-            {~p"/vehicle/models", "hero-tag", "Vehicle models"}
+          route <- [
+            %{path: ~p"/drivers", icon: "hero-identification", title: gettext("Drivers")},
+            %{path: ~p"/vehicles", icon: "hero-truck", title: gettext("Vehicles")},
+            %{path: ~p"/vehicles_drivers", icon: "hero-key", title: gettext("Vehicles/Drivers")},
+            %{path: ~p"/cameras", icon: "hero-video-camera", title: gettext("Cameras")},
+            %{path: ~p"/parkings", icon: "hero-ticket", title: gettext("Parkings")},
+            %{path: ~p"/vehicle/brands", icon: "hero-tag", title: gettext("Vehicle brands")},
+            %{path: ~p"/vehicle/models", icon: "hero-tag", title: gettext("Vehicle models")}
           ]
         }
-        navigate={path}
+        navigate={route[:path]}
         class="hover:text-zinc-700"
       >
-        <.icon name={icon} /> <%= title %>
+        <.icon name={route[:icon]} /> <%= route[:title] %>
       </.link>
 
       <span class="h-6 w-px bg-gray-200" aria-hidden="true"></span>
@@ -42,7 +42,7 @@
         method="delete"
         class="rounded-lg bg-zinc-100 px-2 py-1 hover:bg-zinc-200/80"
       >
-        <.icon name="hero-arrow-right-on-rectangle" /> Log out
+        <.icon name="hero-arrow-right-on-rectangle" /> <%= gettext("Log out") %>
       </.link>
     </div>
   </div>

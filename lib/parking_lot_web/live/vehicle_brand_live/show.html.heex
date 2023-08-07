@@ -1,18 +1,17 @@
 <.header>
-  Brand <%= @brand.id %>
-  <:subtitle>This is a brand record from your database.</:subtitle>
+  <%= gettext("Brand %{id}", id: @brand.id) %>
   <:actions>
     <.link patch={~p"/vehicle/brands/#{@brand}/show/edit"} phx-click={JS.push_focus()}>
-      <.button>Edit brand</.button>
+      <.button><%= gettext("Edit brand") %></.button>
     </.link>
   </:actions>
 </.header>
 
 <.list>
-  <:item title="Name"><%= @brand.name %></:item>
+  <:item title={gettext("Name")}><%= @brand.name %></:item>
 </.list>
 
-<.back navigate={~p"/vehicle/brands"}>Back to vehicle_brands</.back>
+<.back navigate={~p"/vehicle/brands"}><%= gettext("Back to brands") %></.back>
 
 <.modal
   :if={@live_action == :edit}

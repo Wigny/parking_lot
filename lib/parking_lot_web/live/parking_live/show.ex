@@ -12,7 +12,7 @@ defmodule ParkingLotWeb.ParkingLive.Show do
   def handle_params(%{"id" => id}, _, socket) do
     {:noreply,
      socket
-     |> assign(:page_title, "Show Parking")
+     |> assign(:page_title, gettext("Show parking"))
      |> assign(:parking, Parkings.get_parking!(id))}
   end
 end

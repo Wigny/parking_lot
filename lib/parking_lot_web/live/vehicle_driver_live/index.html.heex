@@ -1,8 +1,8 @@
 <.header>
-  Listing Vehicles drivers
+  <%= gettext("Listing vehicles/drivers") %>
   <:actions>
     <.link patch={~p"/vehicles_drivers/new"}>
-      <.button>New Vehicle driver</.button>
+      <.button><%= gettext("New vehicle/driver") %></.button>
     </.link>
   </:actions>
 </.header>
@@ -12,27 +12,27 @@
   rows={@streams.vehicles_drivers}
   row_click={fn {_id, vehicle_driver} -> JS.navigate(~p"/vehicles_drivers/#{vehicle_driver}") end}
 >
-  <:col :let={{_id, vehicle_driver}} label="Driver">
+  <:col :let={{_id, vehicle_driver}} label={gettext("Driver")}>
     <%= vehicle_driver.driver.name %>
   </:col>
-  <:col :let={{_id, vehicle_driver}} label="Vehicle">
+  <:col :let={{_id, vehicle_driver}} label={gettext("Vehicle")}>
     <%= vehicle_driver.vehicle.license_plate %>
   </:col>
-  <:col :let={{_id, vehicle_driver}} label="Active">
+  <:col :let={{_id, vehicle_driver}} label={gettext("Active")}>
     <%= vehicle_driver.active %>
   </:col>
   <:action :let={{_id, vehicle_driver}}>
     <div class="sr-only">
-      <.link navigate={~p"/vehicles_drivers/#{vehicle_driver}"}>Show</.link>
+      <.link navigate={~p"/vehicles_drivers/#{vehicle_driver}"}><%= gettext("Show") %></.link>
     </div>
-    <.link patch={~p"/vehicles_drivers/#{vehicle_driver}/edit"}>Edit</.link>
+    <.link patch={~p"/vehicles_drivers/#{vehicle_driver}/edit"}><%= gettext("Edit") %></.link>
   </:action>
   <:action :let={{id, vehicle_driver}}>
     <.link
       phx-click={JS.push("delete", value: %{id: vehicle_driver.id}) |> hide("##{id}")}
-      data-confirm="Are you sure?"
+      data-confirm={gettext("Are you sure?")}
     >
-      Delete
+      <%= gettext("Delete") %>
     </.link>
   </:action>
 </.table>
