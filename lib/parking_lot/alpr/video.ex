@@ -7,6 +7,7 @@ defmodule ParkingLot.ALPR.Video do
 
   import Evision.Constant, only: [cv_CAP_FFMPEG: 0]
 
+  require Logger
   alias Evision.VideoCapture
 
   @fps 60
@@ -52,15 +53,10 @@ defmodule ParkingLot.ALPR.Video do
   end
 
   @impl true
-  def handle_info(:grab, %{isOpened: false} = video) do
-    {:stop, "Video stream isn't opened", video}
-  end
-
-  @impl true
   def handle_info(:grab, video) do
     Process.send_after(self(), :grab, floor(:timer.seconds(1) / @fps))
 
-    true = VideoCapture.grab(video)
+    VideoCapture.grab(video)
 
     {:noreply, video}
   end
