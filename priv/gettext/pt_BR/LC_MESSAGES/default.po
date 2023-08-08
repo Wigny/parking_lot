@@ -318,7 +318,7 @@ msgstr "Lista de veículos"
 #: lib/parking_lot_web/live/vehicle_live/show.html.heex:14
 #: lib/parking_lot_web/live/vehicle_model_live/form_component.ex:29
 #: lib/parking_lot_web/live/vehicle_model_live/index.html.heex:16
-#: lib/parking_lot_web/live/vehicle_model_live/show.html.heex:12
+#: lib/parking_lot_web/live/vehicle_model_live/show.html.heex:16
 #, elixir-autogen, elixir-format
 msgid "Model"
 msgstr "Modelo"
@@ -527,7 +527,7 @@ msgstr "Voltar para lista de câmeras"
 msgid "Back to parkings"
 msgstr "Voltar para lista de parqueamentos"
 
-#: lib/parking_lot_web/live/vehicle_model_live/show.html.heex:15
+#: lib/parking_lot_web/live/vehicle_model_live/show.html.heex:19
 #, elixir-autogen, elixir-format
 msgid "Back to models"
 msgstr "Voltar para lista de modelos"
@@ -656,3 +656,13 @@ msgstr "Desconectado com sucesso."
 #, elixir-autogen, elixir-format
 msgid "Welcome back!"
 msgstr "Bem vindo de volta!"
+
+#: lib/parking_lot_web/user_auth.ex:182
+#, elixir-autogen, elixir-format
+msgid "You are not authorized to access this page."
+msgstr "Você não está autorizado à acessar essa página."
+
+#: lib/parking_lot_web/user_auth.ex:164
+#, elixir-autogen, elixir-format
+msgid "You must log in to access this page."
+msgstr "Você deve fazer login para acessar esta página."

@@ -318,7 +318,7 @@ msgstr ""
 #: lib/parking_lot_web/live/vehicle_live/show.html.heex:14
 #: lib/parking_lot_web/live/vehicle_model_live/form_component.ex:29
 #: lib/parking_lot_web/live/vehicle_model_live/index.html.heex:16
-#: lib/parking_lot_web/live/vehicle_model_live/show.html.heex:12
+#: lib/parking_lot_web/live/vehicle_model_live/show.html.heex:16
 #, elixir-autogen, elixir-format
 msgid "Model"
 msgstr ""
@@ -527,7 +527,7 @@ msgstr ""
 msgid "Back to parkings"
 msgstr ""
 
-#: lib/parking_lot_web/live/vehicle_model_live/show.html.heex:15
+#: lib/parking_lot_web/live/vehicle_model_live/show.html.heex:19
 #, elixir-autogen, elixir-format
 msgid "Back to models"
 msgstr ""
@@ -655,4 +655,14 @@ msgstr ""
 #: lib/parking_lot_web/controllers/user_session_controller.ex:19
 #, elixir-autogen, elixir-format
 msgid "Welcome back!"
+msgstr ""
+
+#: lib/parking_lot_web/user_auth.ex:182
+#, elixir-autogen, elixir-format
+msgid "You are not authorized to access this page."
+msgstr ""
+
+#: lib/parking_lot_web/user_auth.ex:164
+#, elixir-autogen, elixir-format
+msgid "You must log in to access this page."
 msgstr ""
