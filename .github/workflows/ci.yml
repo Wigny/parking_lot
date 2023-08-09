@@ -2,8 +2,9 @@ name: CI
 
 on:
   push:
-    branches:
-      - "testing"
+    branches: ["master", "testing"]
+  pull_request:
+    branches: ["master"]
 
 jobs:
   docker:
@@ -20,4 +21,4 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: ghcr.io/wigny/parking_lot:latest
+          tags: ghcr.io/wigny/parking_lot:testing

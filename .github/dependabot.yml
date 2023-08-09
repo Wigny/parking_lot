@@ -1,0 +1,17 @@
+version: 2
+updates:
+  - package-ecosystem: "mix"
+    schedule:
+      interval: "weekly"
+    directory: "/"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
+
+  - package-ecosystem: "npm"
+    schedule:
+      interval: "weekly"
+    directory: "/assets"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
