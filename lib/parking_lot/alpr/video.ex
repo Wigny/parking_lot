@@ -47,12 +47,17 @@ defmodule ParkingLot.ALPR.Video do
 
   @impl true
   def handle_call(:frame, _from, video) do
-    frame = VideoCapture.retrieve(video)
-
-    {:reply, frame, video}
+    {:reply, VideoCapture.retrieve(video), video}
   end
 
   @impl true
+  def handle_info(:grab, %{isOpened: false} = video) do
+    # waits before exiting the process to start a new one
+    Process.sleep(:timer.minutes(1))
+
+    {:stop, "Video stream isn't opened", video}
+  end
+
   def handle_info(:grab, video) do
     Process.send_after(self(), :grab, floor(:timer.seconds(1) / @fps))
 

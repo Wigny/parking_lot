@@ -37,18 +37,19 @@ defmodule ParkingLot.ALPR do
 
     child = %{
       id: {Video, camera.id},
-      start: {Video, :start_link, [%{stream: URI.to_string(camera.uri)}, [name: name]]}
+      start: {Video, :start_link, [%{stream: URI.to_string(camera.uri)}, [name: name]]},
+      restart: :permanent
     }
 
     DynamicSupervisor.start_child(__MODULE__, child)
   end
 
   defp terminate_child(name) do
-    with [{child, nil}] <- Registry.lookup(ParkingLot.Registry, name) do
-      :ok = DynamicSupervisor.terminate_child(__MODULE__, child)
-    end
+    [{child, nil}] = Registry.lookup(ParkingLot.Registry, name)
 
-    {:ok, nil}
+    with :ok <- DynamicSupervisor.terminate_child(__MODULE__, child) do
+      {:ok, nil}
+    end
   end
 
   @impl true

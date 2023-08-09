@@ -11,12 +11,15 @@ defmodule ParkingLot.Cameras do
   alias ParkingLot.Cameras.Camera
 
   def list_cameras do
-    Repo.all(Camera)
+    Camera
+    |> order_by(desc: :type)
+    |> Repo.all()
   end
 
   def list_cameras(attrs) when is_list(attrs) do
     Camera
     |> where(^attrs)
+    |> order_by(desc: :type)
     |> Repo.all()
   end
 
