@@ -21,4 +21,4 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: ghcr.io/wigny/parking_lot:$(date +%s)
+          tags: ghcr.io/wigny/parking_lot:latest
