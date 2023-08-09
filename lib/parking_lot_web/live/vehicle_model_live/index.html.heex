@@ -1,0 +1,47 @@
+<.header>
+  <%= gettext("Listing models") %>
+  <:actions>
+    <.link patch={~p"/vehicle/models/new"}>
+      <.button><%= gettext("New model") %></.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="vehicle_models"
+  rows={@streams.vehicle_models}
+  row_click={fn {_id, model} -> JS.navigate(~p"/vehicle/models/#{model}") end}
+>
+  <:col :let={{_id, model}} label={gettext("Brand")}><%= model.brand.name %></:col>
+  <:col :let={{_id, model}} label={gettext("Model")}><%= model.name %></:col>
+  <:action :let={{_id, model}}>
+    <div class="sr-only">
+      <.link navigate={~p"/vehicle/models/#{model}"}><%= gettext("Show") %></.link>
+    </div>
+    <.link patch={~p"/vehicle/models/#{model}/edit"}><%= gettext("Edit") %></.link>
+  </:action>
+  <:action :let={{id, model}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: model.id}) |> hide("##{id}")}
+      data-confirm={gettext("Are you sure?")}
+    >
+      <%= gettext("Delete") %>
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="model-modal"
+  show
+  on_cancel={JS.patch(~p"/vehicle/models")}
+>
+  <.live_component
+    module={ParkingLotWeb.VehicleModelLive.FormComponent}
+    id={@model.id || :new}
+    title={@page_title}
+    action={@live_action}
+    model={@model}
+    patch={~p"/vehicle/models"}
+  />
+</.modal>

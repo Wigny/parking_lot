@@ -1,8 +1,8 @@
 <.header>
-  Listing Cameras
+  <%= gettext("Listing cameras") %>
   <:actions>
     <.link patch={~p"/cameras/new"}>
-      <.button>New Camera</.button>
+      <.button><%= gettext("New camera") %></.button>
     </.link>
   </:actions>
 </.header>
@@ -12,20 +12,21 @@
   rows={@streams.cameras}
   row_click={fn {_id, camera} -> JS.navigate(~p"/cameras/#{camera}") end}
 >
-  <:col :let={{_id, camera}} label="Type"><%= camera.type %></:col>
-  <:col :let={{_id, camera}} label="URI"><%= camera.uri %></:col>
+  <:col :let={{_id, camera}} label={gettext("Type")}><%= camera.type %></:col>
+  <:col :let={{_id, camera}} label={gettext("URI")}><%= camera.uri %></:col>
+  <:col :let={{_id, camera}} label={gettext("On")}><%= camera.on %></:col>
   <:action :let={{_id, camera}}>
     <div class="sr-only">
-      <.link navigate={~p"/cameras/#{camera}"}>Show</.link>
+      <.link navigate={~p"/cameras/#{camera}"}><%= gettext("Show") %></.link>
     </div>
-    <.link patch={~p"/cameras/#{camera}/edit"}>Edit</.link>
+    <.link patch={~p"/cameras/#{camera}/edit"}><%= gettext("Edit") %></.link>
   </:action>
   <:action :let={{id, camera}}>
     <.link
       phx-click={JS.push("delete", value: %{id: camera.id}) |> hide("##{id}")}
-      data-confirm="Are you sure?"
+      data-confirm={gettext("Are you sure?")}
     >
-      Delete
+      <%= gettext("Delete") %>
     </.link>
   </:action>
 </.table>

@@ -39,7 +39,7 @@ config :esbuild,
   ]
 
 config :tailwind,
-  version: "3.2.7",
+  version: "3.3.2",
   default: [
     args: ~w(
       --config=tailwind.config.js
@@ -54,5 +54,7 @@ config :logger, :console,
   metadata: [:request_id]
 
 config :phoenix, :json_library, Jason
+
+config :gettext, :default_locale, "pt_BR"
 
 import_config "#{config_env()}.exs"

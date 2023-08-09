@@ -1,0 +1,30 @@
+<.header>
+  <%= gettext("Brand %{id}", id: @brand.id) %>
+  <:actions>
+    <.link patch={~p"/vehicle/brands/#{@brand}/show/edit"} phx-click={JS.push_focus()}>
+      <.button><%= gettext("Edit brand") %></.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title={gettext("Name")}><%= @brand.name %></:item>
+</.list>
+
+<.back navigate={~p"/vehicle/brands"}><%= gettext("Back to brands") %></.back>
+
+<.modal
+  :if={@live_action == :edit}
+  id="brand-modal"
+  show
+  on_cancel={JS.patch(~p"/vehicle/brands/#{@brand}")}
+>
+  <.live_component
+    module={ParkingLotWeb.VehicleBrandLive.FormComponent}
+    id={@brand.id}
+    title={@page_title}
+    action={@live_action}
+    brand={@brand}
+    patch={~p"/vehicle/brands/#{@brand}"}
+  />
+</.modal>

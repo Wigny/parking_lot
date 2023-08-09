@@ -16,19 +16,19 @@ defmodule ParkingLotWeb.DriverLive.Index do
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
-    |> assign(:page_title, "Edit Driver")
+    |> assign(:page_title, gettext("Edit driver"))
     |> assign(:driver, Customers.get_driver!(id))
   end
 
   defp apply_action(socket, :new, _params) do
     socket
-    |> assign(:page_title, "New Driver")
+    |> assign(:page_title, gettext("New driver"))
     |> assign(:driver, %Driver{})
   end
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing Drivers")
+    |> assign(:page_title, gettext("Listing drivers"))
     |> assign(:driver, nil)
   end
 

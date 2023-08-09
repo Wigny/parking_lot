@@ -17,7 +17,7 @@ defmodule ParkingLotWeb.ParkingLiveTest do
     test "lists all parkings", %{conn: conn} do
       {:ok, _index_live, html} = live(conn, ~p"/parkings")
 
-      assert html =~ "Listing Parkings"
+      assert html =~ "Listing parkings"
     end
   end
 
@@ -27,7 +27,7 @@ defmodule ParkingLotWeb.ParkingLiveTest do
     test "displays parking", %{conn: conn, parking: parking} do
       {:ok, _show_live, html} = live(conn, ~p"/parkings/#{parking}")
 
-      assert html =~ "Show Parking"
+      assert html =~ "Show parking"
     end
   end
 end

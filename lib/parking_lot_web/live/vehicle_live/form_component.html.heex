@@ -1,7 +1,6 @@
 <div>
   <.header>
     <%= @title %>
-    <:subtitle>Use this form to manage vehicle records in your database.</:subtitle>
   </.header>
 
   <.simple_form
@@ -14,7 +13,7 @@
     <.input
       field={@form[:license_plate]}
       type="text"
-      label="License plate"
+      label={gettext("License plate")}
       phx-hook="InputUppercase"
       phx-debounce="blur"
     />
@@ -22,31 +21,31 @@
     <.input
       field={@form[:type_id]}
       type="select"
-      label="Type"
-      prompt="Choose the type"
+      label={gettext("Type")}
+      prompt={gettext("Choose the type")}
       options={for type <- @types, do: {type.name, type.id}}
     />
 
     <.input
       field={@form[:model_id]}
       type="select"
-      label="Model"
-      prompt="Choose the model"
+      label={gettext("Model")}
+      prompt={gettext("Choose the model")}
       options={for model <- @models, do: {"#{model.brand.name} - #{model.name}", model.id}}
     />
 
     <.input
       field={@form[:color_id]}
       type="select"
-      label="Color"
-      prompt="Choose the color"
+      label={gettext("Color")}
+      prompt={gettext("Choose the color")}
       options={for color <- @colors, do: {color.name, color.id}}
     />
 
-    <.input field={@form[:active]} type="checkbox" label="Active" />
+    <.input field={@form[:active]} type="checkbox" label={gettext("Active")} />
 
     <:actions>
-      <.button phx-disable-with="Saving...">Save Vehicle</.button>
+      <.button phx-disable-with={gettext("Saving...")}><%= gettext("Save vehicle") %></.button>
     </:actions>
   </.simple_form>
 </div>

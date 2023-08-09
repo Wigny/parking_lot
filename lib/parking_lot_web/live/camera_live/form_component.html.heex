@@ -1,7 +1,6 @@
 <div>
   <.header>
     <%= @title %>
-    <:subtitle>Use this form to manage camera records in your database.</:subtitle>
   </.header>
 
   <.simple_form
@@ -14,15 +13,17 @@
     <.input
       field={@form[:type]}
       type="select"
-      label="Type"
-      prompt="Choose a value"
+      label={gettext("Type")}
+      prompt={gettext("Choose a value")}
       options={Ecto.Enum.values(ParkingLot.Cameras.Camera, :type)}
     />
 
-    <.input field={@form[:uri]} type="url" label="URI" phx-debounce="blur" />
+    <.input field={@form[:uri]} type="url" label={gettext("URI")} phx-debounce="blur" />
+
+    <.input field={@form[:on]} type="checkbox" label={gettext("On")} />
 
     <:actions>
-      <.button phx-disable-with="Saving...">Save Camera</.button>
+      <.button phx-disable-with={gettext("Saving...")}><%= gettext("Save camera") %></.button>
     </:actions>
   </.simple_form>
 </div>

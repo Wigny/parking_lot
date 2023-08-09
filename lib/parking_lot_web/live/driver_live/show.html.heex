@@ -1,35 +1,36 @@
 <.header>
-  Driver <%= @driver.id %>
-  <:subtitle>This is a driver record from your database.</:subtitle>
+  <%= gettext("Driver %{id}", id: @driver.id) %>
   <:actions>
     <.link patch={~p"/drivers/#{@driver}/show/edit"} phx-click={JS.push_focus()}>
-      <.button>Edit driver</.button>
+      <.button><%= gettext("Edit driver") %></.button>
     </.link>
   </:actions>
 </.header>
 
 <.list>
-  <:item title="Name">
+  <:item title={gettext("Name")}>
     <%= @driver.name %>
   </:item>
-  <:item title="CPF">
+  <:item title={gettext("CPF")}>
     <.mask value={@driver.cpf} pattern="000.000.000-00" />
   </:item>
-  <:item title="CNH">
+  <:item title={gettext("CNH")}>
     <%= @driver.cnh %>
   </:item>
-  <:item title="E-mail">
-    <%= @driver.email %>
+  <:item title={gettext("E-mail")}>
+    <a href={"mailto:#{@driver.email}"}><%= @driver.email %></a>
   </:item>
-  <:item title="Phone">
-    <.mask value={@driver.phone} pattern="(00) 0 0000-0000" />
+  <:item title={gettext("Phone")}>
+    <a href={"tel:#{@driver.phone}"}>
+      <.mask value={@driver.phone} pattern="(00) 0 0000-0000" />
+    </a>
   </:item>
-  <:item title="Active">
+  <:item title={gettext("Active")}>
     <%= @driver.active %>
   </:item>
 </.list>
 
-<.back navigate={~p"/drivers"}>Back to drivers</.back>
+<.back navigate={~p"/drivers"}><%= gettext("Back to drivers") %></.back>
 
 <.modal
   :if={@live_action == :edit}

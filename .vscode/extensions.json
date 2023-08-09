@@ -1,9 +1,11 @@
 {
   "recommendations": [
     "jakebecker.elixir-ls",
+    "pantajoe.vscode-elixir-credo",
     "phoenixframework.phoenix",
     "bradlc.vscode-tailwindcss",
     "mtxr.sqltools",
-    "mtxr.sqltools-driver-pg"
+    "mtxr.sqltools-driver-pg",
+    "mrorz.language-gettext"
   ]
 }

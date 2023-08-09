@@ -1,0 +1,35 @@
+<.header>
+  <%= gettext("Model %{id}", id: @model.id) %>
+  <:actions>
+    <.link patch={~p"/vehicle/models/#{@model}/show/edit"} phx-click={JS.push_focus()}>
+      <.button><%= gettext("Edit model") %></.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title={gettext("Brand")}>
+    <.link navigate={~p"/vehicle/brands/#{@model.brand.id}"}>
+      <%= @model.brand.name %>
+    </.link>
+  </:item>
+  <:item title={gettext("Model")}><%= @model.name %></:item>
+</.list>
+
+<.back navigate={~p"/vehicle/models"}><%= gettext("Back to models") %></.back>
+
+<.modal
+  :if={@live_action == :edit}
+  id="model-modal"
+  show
+  on_cancel={JS.patch(~p"/vehicle/models/#{@model}")}
+>
+  <.live_component
+    module={ParkingLotWeb.VehicleModelLive.FormComponent}
+    id={@model.id}
+    title={@page_title}
+    action={@live_action}
+    model={@model}
+    patch={~p"/vehicle/models/#{@model}"}
+  />
+</.modal>

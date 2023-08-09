@@ -16,7 +16,8 @@ defmodule ParkingLot.CamerasFixtures do
         port: 554,
         path: "/example",
         query: URI.encode_query(%{id: System.unique_integer([:positive])})
-      }
+      },
+      on: false
     })
   end
 

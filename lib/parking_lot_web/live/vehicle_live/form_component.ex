@@ -13,7 +13,11 @@ defmodule ParkingLotWeb.VehicleLive.FormComponent do
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(types: types, models: models, colors: colors)
+     |> assign(
+       types: Enum.sort_by(types, & &1.name),
+       models: Enum.sort_by(models, &{&1.brand.name, &1.name}),
+       colors: Enum.sort_by(colors, & &1.name)
+     )
      |> assign_form(changeset)}
   end
 
@@ -38,7 +42,7 @@ defmodule ParkingLotWeb.VehicleLive.FormComponent do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Vehicle updated successfully")
+         |> put_flash(:info, gettext("Vehicle updated successfully"))
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -53,7 +57,7 @@ defmodule ParkingLotWeb.VehicleLive.FormComponent do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Vehicle created successfully")
+         |> put_flash(:info, gettext("Vehicle created successfully"))
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->

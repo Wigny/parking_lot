@@ -1,8 +1,8 @@
 <.header>
-  Listing Drivers
+  <%= gettext("Listing drivers") %>
   <:actions>
     <.link patch={~p"/drivers/new"}>
-      <.button>New Driver</.button>
+      <.button><%= gettext("New driver") %></.button>
     </.link>
   </:actions>
 </.header>
@@ -12,36 +12,36 @@
   rows={@streams.drivers}
   row_click={fn {_id, driver} -> JS.navigate(~p"/drivers/#{driver}") end}
 >
-  <:col :let={{_id, driver}} label="Name">
+  <:col :let={{_id, driver}} label={gettext("Name")}>
     <%= driver.name %>
   </:col>
-  <:col :let={{_id, driver}} label="CPF">
+  <:col :let={{_id, driver}} label={gettext("CPF")}>
     <.mask value={driver.cpf} pattern="000.000.000-00" />
   </:col>
-  <:col :let={{_id, driver}} label="CNH">
+  <:col :let={{_id, driver}} label={gettext("CNH")}>
     <%= driver.cnh %>
   </:col>
-  <:col :let={{_id, driver}} label="E-mail">
+  <:col :let={{_id, driver}} label={gettext("E-mail")}>
     <%= driver.email %>
   </:col>
-  <:col :let={{_id, driver}} label="Phone">
+  <:col :let={{_id, driver}} label={gettext("Phone")}>
     <.mask value={driver.phone} pattern="(00) 0 0000-0000" />
   </:col>
-  <:col :let={{_id, driver}} label="Active">
+  <:col :let={{_id, driver}} label={gettext("Active")}>
     <%= driver.active %>
   </:col>
   <:action :let={{_id, driver}}>
     <div class="sr-only">
-      <.link navigate={~p"/drivers/#{driver}"}>Show</.link>
+      <.link navigate={~p"/drivers/#{driver}"}><%= gettext("Show") %></.link>
     </div>
-    <.link patch={~p"/drivers/#{driver}/edit"}>Edit</.link>
+    <.link patch={~p"/drivers/#{driver}/edit"}><%= gettext("Edit") %></.link>
   </:action>
   <:action :let={{id, driver}}>
     <.link
       phx-click={JS.push("delete", value: %{id: driver.id}) |> hide("##{id}")}
-      data-confirm="Are you sure?"
+      data-confirm={gettext("Are you sure?")}
     >
-      Delete
+      <%= gettext("Delete") %>
     </.link>
   </:action>
 </.table>

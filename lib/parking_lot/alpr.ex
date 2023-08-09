@@ -1,44 +1,59 @@
 defmodule ParkingLot.ALPR do
   @moduledoc false
 
-  use Supervisor
+  use DynamicSupervisor
 
-  alias ParkingLot.ALPR.{Recognizer, Video, Watcher}
-  alias ParkingLot.Cameras
+  alias ParkingLot.ALPR.{Video, Watcher}
 
-  def start_link(opts) do
-    Supervisor.start_link(__MODULE__, opts, name: __MODULE__)
+  def start_link(args) do
+    DynamicSupervisor.start_link(__MODULE__, args, name: __MODULE__)
+  end
+
+  def start_children(camera) do
+    with {:ok, _pid} <- start_video(camera) do
+      start_watcher(camera)
+    end
+  end
+
+  def terminate_children(camera) do
+    with {:ok, nil} <- terminate_child("video_#{camera.id}") do
+      terminate_child("watcher_#{camera.id}")
+    end
+  end
+
+  defp start_watcher(camera) do
+    name = {:via, Registry, {ParkingLot.Registry, "watcher_#{camera.id}"}}
+
+    child = %{
+      id: {Watcher, camera.id},
+      start: {Watcher, :start_link, [%{camera: camera}, [name: name]]}
+    }
+
+    DynamicSupervisor.start_child(__MODULE__, child)
+  end
+
+  defp start_video(camera) do
+    name = {:via, Registry, {ParkingLot.Registry, "video_#{camera.id}"}}
+
+    child = %{
+      id: {Video, camera.id},
+      start: {Video, :start_link, [%{stream: URI.to_string(camera.uri)}, [name: name]]},
+      restart: :permanent
+    }
+
+    DynamicSupervisor.start_child(__MODULE__, child)
+  end
+
+  defp terminate_child(name) do
+    [{child, nil}] = Registry.lookup(ParkingLot.Registry, name)
+
+    with :ok <- DynamicSupervisor.terminate_child(__MODULE__, child) do
+      {:ok, nil}
+    end
   end
 
   @impl true
-  def init(_opts) do
-    cameras = Cameras.list_cameras()
-
-    children = [Recognizer]
-
-    cameras
-    |> Enum.reduce(children, &children_by_camera/2)
-    |> Supervisor.init(strategy: :one_for_one)
-  end
-
-  defp children_by_camera(camera, children) do
-    video = %{
-      id: {Video, camera.id},
-      start: {
-        Video,
-        :start_link,
-        [
-          %{stream: URI.to_string(camera.uri)},
-          [name: {:via, Registry, {ParkingLot.Registry, "video_#{camera.id}"}}]
-        ]
-      }
-    }
-
-    watcher = %{
-      id: {Watcher, camera.id},
-      start: {Watcher, :start_link, [%{camera: camera}]}
-    }
-
-    [video, watcher | children]
+  def init(_args) do
+    DynamicSupervisor.init(strategy: :one_for_one)
   end
 end

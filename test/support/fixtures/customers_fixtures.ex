@@ -4,9 +4,9 @@ defmodule ParkingLot.CustomersFixtures do
   entities via the `ParkingLot.Customers` context.
   """
 
-  alias ParkingLot.CheckDigits
   alias ParkingLot.Customers
   alias ParkingLot.Digits
+  alias ParkingLot.Digits.CheckDigits
   alias ParkingLot.VehiclesFixtures
 
   def unique_driver_cpf do

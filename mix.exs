@@ -5,7 +5,7 @@ defmodule ParkingLot.MixProject do
     [
       app: :parking_lot,
       version: "0.1.0",
-      elixir: "~> 1.14",
+      elixir: "~> 1.15",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
@@ -26,9 +26,9 @@ defmodule ParkingLot.MixProject do
 
   defp deps do
     [
-      {:phoenix, "~> 1.7.2"},
+      {:phoenix, "~> 1.7.7"},
       {:phoenix_ecto, "~> 4.4"},
-      {:ecto_sql, "~> 3.6"},
+      {:ecto_sql, "~> 3.10"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 3.3"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
@@ -42,7 +42,7 @@ defmodule ParkingLot.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:ueberauth_google, "~> 0.10"},
-      {:evision, "~> 0.1.31"},
+      {:evision, "~> 0.1.33"},
       {:nx, "~> 0.5"},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
@@ -59,7 +59,7 @@ defmodule ParkingLot.MixProject do
 
   defp aliases do
     [
-      setup: ["deps.get", "assets.setup", "assets.build", "ecto.setup"],
+      setup: ["deps.get", "ecto.setup", "assets.setup", "assets.build"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],

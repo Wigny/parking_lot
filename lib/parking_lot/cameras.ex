@@ -4,30 +4,67 @@ defmodule ParkingLot.Cameras do
   """
 
   import Ecto.Query, warn: false
+  alias Ecto.Multi
+  alias ParkingLot.ALPR
   alias ParkingLot.Repo
 
   alias ParkingLot.Cameras.Camera
 
   def list_cameras do
-    Repo.all(Camera)
+    Camera
+    |> order_by(desc: :type)
+    |> Repo.all()
+  end
+
+  def list_cameras(attrs) when is_list(attrs) do
+    Camera
+    |> where(^attrs)
+    |> order_by(desc: :type)
+    |> Repo.all()
   end
 
   def get_camera!(id), do: Repo.get!(Camera, id)
 
   def create_camera(attrs \\ %{}) do
-    %Camera{}
-    |> Camera.changeset(attrs)
-    |> Repo.insert()
+    Multi.new()
+    |> Multi.insert(:camera, Camera.changeset(%Camera{}, attrs))
+    |> Multi.run(:alpr_watcher, fn _repo, %{camera: camera} ->
+      if camera.on, do: ALPR.start_children(camera), else: {:ok, nil}
+    end)
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{camera: camera}} -> {:ok, camera}
+      {:error, :camera, changeset, _changes} -> {:error, changeset}
+    end
   end
 
   def update_camera(%Camera{} = camera, attrs) do
-    camera
-    |> Camera.changeset(attrs)
-    |> Repo.update()
+    Multi.new()
+    |> Multi.update(:camera, Camera.changeset(camera, attrs))
+    |> Multi.run({:stop, :alpr_watcher}, fn _repo, _changes ->
+      if camera.on, do: ALPR.terminate_children(camera), else: {:ok, nil}
+    end)
+    |> Multi.run({:start, :alpr_watcher}, fn _repo, %{camera: camera} ->
+      if camera.on, do: ALPR.start_children(camera), else: {:ok, nil}
+    end)
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{camera: camera}} -> {:ok, camera}
+      {:error, :camera, changeset, _changes} -> {:error, changeset}
+    end
   end
 
   def delete_camera(%Camera{} = camera) do
-    Repo.delete(camera)
+    Multi.new()
+    |> Multi.delete(:camera, camera)
+    |> Multi.run(:alpr_watcher, fn _repo, %{camera: camera} ->
+      if camera.on, do: ALPR.terminate_children(camera), else: {:ok, nil}
+    end)
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{camera: camera}} -> {:ok, camera}
+      {:error, :camera, changeset, _changes} -> {:error, changeset}
+    end
   end
 
   def change_camera(%Camera{} = camera, attrs \\ %{}) do

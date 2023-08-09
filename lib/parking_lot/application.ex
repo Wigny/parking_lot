@@ -11,7 +11,14 @@ defmodule ParkingLot.Application do
       {Phoenix.PubSub, name: ParkingLot.PubSub},
       ParkingLotWeb.Endpoint,
       {Registry, keys: :unique, name: ParkingLot.Registry},
-      ParkingLot.ALPR
+      ParkingLot.ALPR,
+      ParkingLot.ALPR.Recognizer,
+      {Task,
+       fn ->
+         for camera <- ParkingLot.Cameras.list_cameras(on: true) do
+           {:ok, _pid} = ParkingLot.ALPR.start_children(camera)
+         end
+       end}
     ]
 
     opts = [strategy: :one_for_one, name: ParkingLot.Supervisor]

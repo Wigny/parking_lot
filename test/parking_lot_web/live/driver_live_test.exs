@@ -21,15 +21,16 @@ defmodule ParkingLotWeb.DriverLiveTest do
     test "lists all drivers", %{conn: conn, driver: driver} do
       {:ok, _index_live, html} = live(conn, ~p"/drivers")
 
-      assert html =~ "Listing Drivers"
+      assert html =~ "Listing drivers"
       assert html =~ driver.name
     end
 
     test "saves new driver", %{conn: conn} do
       {:ok, index_live, _html} = live(conn, ~p"/drivers")
 
-      assert index_live |> element("a", "New Driver") |> render_click() =~
-               "New Driver"
+      assert index_live
+             |> element("a", "New driver")
+             |> render_click() =~ "New driver"
 
       assert_patch(index_live, ~p"/drivers/new")
 
@@ -51,8 +52,9 @@ defmodule ParkingLotWeb.DriverLiveTest do
     test "updates driver in listing", %{conn: conn, driver: driver} do
       {:ok, index_live, _html} = live(conn, ~p"/drivers")
 
-      assert index_live |> element("#drivers-#{driver.id} a", "Edit") |> render_click() =~
-               "Edit Driver"
+      assert index_live
+             |> element("#drivers-#{driver.id} a", "Edit")
+             |> render_click() =~ "Edit driver"
 
       assert_patch(index_live, ~p"/drivers/#{driver}/edit")
 
@@ -85,15 +87,16 @@ defmodule ParkingLotWeb.DriverLiveTest do
     test "displays driver", %{conn: conn, driver: driver} do
       {:ok, _show_live, html} = live(conn, ~p"/drivers/#{driver}")
 
-      assert html =~ "Show Driver"
+      assert html =~ "Show driver"
       assert html =~ driver.name
     end
 
     test "updates driver within modal", %{conn: conn, driver: driver} do
       {:ok, show_live, _html} = live(conn, ~p"/drivers/#{driver}")
 
-      assert show_live |> element("a", "Edit") |> render_click() =~
-               "Edit Driver"
+      assert show_live
+             |> element("a", "Edit")
+             |> render_click() =~ "Edit driver"
 
       assert_patch(show_live, ~p"/drivers/#{driver}/show/edit")
 

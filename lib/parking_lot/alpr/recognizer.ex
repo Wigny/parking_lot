@@ -63,9 +63,9 @@ defmodule ParkingLot.ALPR.Recognizer do
         nmsThreshold: opts[:nms_threshold]
       ]
 
-      model
-      |> DNN.DetectionModel.detect(image, detect_opts)
-      |> Tuple.to_list()
+      {class_ids, confidences, boxes} = DNN.DetectionModel.detect(model, image, detect_opts)
+
+      [class_ids, confidences, boxes]
       |> Enum.zip()
       |> Enum.map(fn {class_id, confidence, box} ->
         class = Enum.at(classes, class_id)

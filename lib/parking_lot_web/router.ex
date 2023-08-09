@@ -7,7 +7,7 @@ defmodule ParkingLotWeb.Router do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_live_flash
-    plug :put_root_layout, {ParkingLotWeb.Layouts, :root}
+    plug :put_root_layout, html: {ParkingLotWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :fetch_current_user
@@ -18,15 +18,24 @@ defmodule ParkingLotWeb.Router do
   end
 
   scope "/", ParkingLotWeb do
-    pipe_through [:browser]
-
-    get "/", PageController, :home
+    pipe_through :browser
 
     delete "/users/log_out", UserSessionController, :delete
 
     live_session :ensure_authenticated, on_mount: {ParkingLotWeb.UserAuth, :ensure_authenticated} do
       live "/home", HomeLive.Index, :index
 
+      scope "/parkings", ParkingLive do
+        live "/", Index, :index
+        live "/:id", Show, :show
+      end
+    end
+
+    live_session :ensure_authorized,
+      on_mount: [
+        {ParkingLotWeb.UserAuth, :ensure_authenticated},
+        {ParkingLotWeb.UserAuth, :ensure_authorized}
+      ] do
       scope "/drivers", DriverLive do
         live "/", Index, :index
         live "/new", Index, :new
@@ -54,12 +63,25 @@ defmodule ParkingLotWeb.Router do
         live "/:id/show/edit", Show, :edit
       end
 
-      scope "/parkings", ParkingLive do
+      scope "/cameras", CameraLive do
         live "/", Index, :index
+        live "/new", Index, :new
+        live "/:id/edit", Index, :edit
+
         live "/:id", Show, :show
+        live "/:id/show/edit", Show, :edit
       end
 
-      scope "/cameras", CameraLive do
+      scope "/vehicle/models", VehicleModelLive do
+        live "/", Index, :index
+        live "/new", Index, :new
+        live "/:id/edit", Index, :edit
+
+        live "/:id", Show, :show
+        live "/:id/show/edit", Show, :edit
+      end
+
+      scope "/vehicle/brands", VehicleBrandLive do
         live "/", Index, :index
         live "/new", Index, :new
         live "/:id/edit", Index, :edit
@@ -72,6 +94,8 @@ defmodule ParkingLotWeb.Router do
 
   scope "/", ParkingLotWeb do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
+
+    get "/", PageController, :index
 
     get "/users/log_in", UserSessionController, :request
     get "/users/log_in/callback", UserSessionController, :create
