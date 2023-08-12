@@ -19,7 +19,4 @@ defmodule ParkingLot.Type.URI do
   def dump(%URI{} = uri), do: {:ok, URI.to_string(uri)}
   def dump(_), do: :error
 
-  defimpl Phoenix.HTML.Safe do
-    def to_iodata(%URI{} = uri), do: URI.to_string(uri)
-  end
 end
