@@ -13,20 +13,24 @@
     <.input field={@form[:name]} type="text" label={gettext("Name")} />
     <.input
       field={@form[:cpf]}
-      type="digits"
+      type="text"
       label={gettext("CPF")}
+      inputmode="numeric"
+      pattern="[0-9]*"
       maxlength={11}
       phx-debounce="blur"
     />
     <.input
       field={@form[:cnh]}
-      type="digits"
+      type="text"
       label={gettext("CNH")}
+      inputmode="numeric"
+      pattern="[0-9]*"
       maxlength={11}
       phx-debounce="blur"
     />
     <.input field={@form[:email]} type="email" label={gettext("E-mail")} phx-debounce="blur" />
-    <.input field={@form[:phone]} type="tel" label={gettext("Phone")} maxlength={11} />
+    <.input field={@form[:phone]} type="tel" label={gettext("Phone")} phx-debounce="blur" />
     <.input field={@form[:active]} type="checkbox" label={gettext("Active")} />
     <:actions>
       <.button phx-disable-with={gettext("Saving...")}><%= gettext("Save driver") %></.button>
