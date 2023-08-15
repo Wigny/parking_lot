@@ -12,12 +12,24 @@
   rows={@streams.vehicles}
   row_click={fn {_id, vehicle} -> JS.navigate(~p"/vehicles/#{vehicle}") end}
 >
-  <:col :let={{_id, vehicle}} label={gettext("License plate")}><%= vehicle.license_plate %></:col>
-  <:col :let={{_id, vehicle}} label={gettext("Type")}><%= vehicle.type.name %></:col>
-  <:col :let={{_id, vehicle}} label={gettext("Brand")}><%= vehicle.model.brand.name %></:col>
-  <:col :let={{_id, vehicle}} label={gettext("Model")}><%= vehicle.model.name %></:col>
-  <:col :let={{_id, vehicle}} label={gettext("Color")}><%= vehicle.color.name %></:col>
-  <:col :let={{_id, vehicle}} label={gettext("Active")}><%= vehicle.active %></:col>
+  <:col :let={{_id, vehicle}} label={gettext("License plate")}>
+    <%= vehicle.license_plate %>
+  </:col>
+  <:col :let={{_id, vehicle}} label={gettext("Type")}>
+    <%= vehicle.type.name %>
+  </:col>
+  <:col :let={{_id, vehicle}} label={gettext("Brand")}>
+    <%= vehicle.model.brand.name %>
+  </:col>
+  <:col :let={{_id, vehicle}} label={gettext("Model")}>
+    <%= vehicle.model.name %>
+  </:col>
+  <:col :let={{_id, vehicle}} label={gettext("Color")}>
+    <%= vehicle.color.name %>
+  </:col>
+  <:col :let={{_id, vehicle}} label={gettext("Active")}>
+    <%= Gettext.dgettext(ParkingLotWeb.Gettext, "enum", Atom.to_string(vehicle.active)) %>
+  </:col>
   <:action :let={{_id, vehicle}}>
     <div class="sr-only">
       <.link navigate={~p"/vehicles/#{vehicle}"}><%= gettext("Show") %></.link>

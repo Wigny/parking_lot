@@ -21,10 +21,10 @@ defmodule ParkingLot.CamerasTest do
     end
 
     test "create_camera/1 with valid data creates a camera" do
-      valid_attrs = valid_camera_attributes(%{type: :internal})
+      valid_attrs = valid_camera_attributes(%{type: :entry})
 
       assert {:ok, %Camera{} = camera} = Cameras.create_camera(valid_attrs)
-      assert camera.type == :internal
+      assert camera.type == :entry
       assert camera.uri == valid_attrs.uri
     end
 
@@ -34,10 +34,10 @@ defmodule ParkingLot.CamerasTest do
 
     test "update_camera/2 with valid data updates the camera" do
       camera = camera_fixture()
-      update_attrs = valid_camera_attributes(%{type: :external})
+      update_attrs = valid_camera_attributes(%{type: :leave})
 
       assert {:ok, %Camera{} = camera} = Cameras.update_camera(camera, update_attrs)
-      assert camera.type == :external
+      assert camera.type == :leave
       assert camera.uri == update_attrs.uri
     end
 

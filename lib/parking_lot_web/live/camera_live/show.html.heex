@@ -8,9 +8,15 @@
 </.header>
 
 <.list>
-  <:item title={gettext("Type")}><%= @camera.type %></:item>
-  <:item title={gettext("URI")}><a href={@camera.uri}><%= @camera.uri %></a></:item>
-  <:item title={gettext("On")}><%= @camera.on %></:item>
+  <:item title={gettext("Type")}>
+    <%= Gettext.dgettext(ParkingLotWeb.Gettext, "enum", Atom.to_string(@camera.type)) %>
+  </:item>
+  <:item title={gettext("URI")}>
+    <a href={@camera.uri}><%= @camera.uri %></a>
+  </:item>
+  <:item title={gettext("Active")}>
+    <%= Gettext.dgettext(ParkingLotWeb.Gettext, "enum", Atom.to_string(@camera.active)) %>
+  </:item>
 </.list>
 
 <.back navigate={~p"/cameras"}><%= gettext("Back to cameras") %></.back>

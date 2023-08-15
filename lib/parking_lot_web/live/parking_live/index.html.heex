@@ -16,7 +16,9 @@
       is="relative-time"
       datetime={parking.entered_at}
       phx-update="ignore"
-    />
+    >
+      <%= parking.entered_at %>
+    </time>
   </:col>
   <:col :let={{_id, parking}} label={gettext("Left at")}>
     <time
@@ -24,7 +26,9 @@
       is="relative-time"
       datetime={parking.left_at}
       phx-update="ignore"
-    />
+    >
+      <%= parking.left_at %>
+    </time>
   </:col>
   <:action :let={{_id, parking}}>
     <.link navigate={~p"/parkings/#{parking}"}><%= gettext("Show") %></.link>

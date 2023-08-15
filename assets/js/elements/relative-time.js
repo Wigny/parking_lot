@@ -13,8 +13,10 @@ class RelativeTime extends HTMLTimeElement {
   connectedCallback() {
     const date = Date.parse(this.dateTime);
 
-    this.textContent = this.#formatter.format(date);
-    this.title = this.dateTime;
+    if (!isNaN(date)) {
+      this.textContent = this.#formatter.format(date);
+      this.title = this.dateTime;
+    }
   }
 }
 

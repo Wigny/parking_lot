@@ -19,7 +19,7 @@
     <%= vehicle_driver.vehicle.license_plate %>
   </:col>
   <:col :let={{_id, vehicle_driver}} label={gettext("Active")}>
-    <%= vehicle_driver.active %>
+    <%= Gettext.dgettext(ParkingLotWeb.Gettext, "enum", Atom.to_string(vehicle_driver.active)) %>
   </:col>
   <:action :let={{_id, vehicle_driver}}>
     <div class="sr-only">

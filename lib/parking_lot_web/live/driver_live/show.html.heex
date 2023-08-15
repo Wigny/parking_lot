@@ -26,7 +26,7 @@
     </a>
   </:item>
   <:item title={gettext("Active")}>
-    <%= @driver.active %>
+    <%= Gettext.dgettext(ParkingLotWeb.Gettext, "enum", Atom.to_string(@driver.active)) %>
   </:item>
 </.list>
 

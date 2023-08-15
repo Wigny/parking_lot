@@ -44,10 +44,9 @@ defmodule ParkingLot.ALPR.Watcher do
   # predicted characters (temporal redundancy) and register parking
   def handle_cast({:register, nil}, %{recognitions: recognitions, camera: camera} = state) do
     recognition = majority_voting(recognitions)
-    parking_action = Keyword.get([internal: :leave, external: :entry], camera.type)
 
     with %Vehicle{} = vehicle <- Customers.get_vehicle(license_plate: Enum.join(recognition)),
-         {:ok, parking} <- Parkings.register_parking(parking_action, vehicle) do
+         {:ok, parking} <- Parkings.register_parking(camera.type, vehicle) do
       Phoenix.PubSub.broadcast(ParkingLot.PubSub, "alpr", {:parking, parking})
     end
 
