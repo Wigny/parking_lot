@@ -15,9 +15,19 @@
     <%= parking.vehicle.license_plate %>
   </:col>
   <:col :let={{_id, parking}} label={gettext("Entered at")}>
-    <.time id={Ecto.UUID.generate()} value={parking.entered_at} />
+    <time
+      id={Ecto.UUID.generate()}
+      is="relative-time"
+      datetime={parking.entered_at}
+      phx-update="ignore"
+    />
   </:col>
   <:col :let={{_id, parking}} label={gettext("Left at")}>
-    <.time id={Ecto.UUID.generate()} value={parking.left_at} />
+    <time
+      id={Ecto.UUID.generate()}
+      is="relative-time"
+      datetime={parking.left_at}
+      phx-update="ignore"
+    />
   </:col>
 </.table>

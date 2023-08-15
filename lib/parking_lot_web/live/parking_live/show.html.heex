@@ -14,9 +14,7 @@
       is="relative-time"
       datetime={@parking.entered_at}
       phx-update="ignore"
-    >
-      <%= @parking.entered_at %>
-    </time>
+    />
   </:item>
   <:item title={gettext("Left at")}>
     <time
@@ -24,9 +22,7 @@
       is="relative-time"
       datetime={@parking.left_at}
       phx-update="ignore"
-    >
-      <%= @parking.left_at %>
-    </time>
+    />
   </:item>
 </.list>
 

@@ -270,7 +270,7 @@ defmodule ParkingLotWeb.CoreComponents do
 
   attr :type, :string,
     default: "text",
-    values: ~w(checkbox color date datetime-local digits email file hidden month number password
+    values: ~w(checkbox color date datetime-local email file hidden month number password
                range radio search select tel text textarea time url week)
 
   attr :field, Phoenix.HTML.FormField,
@@ -294,17 +294,6 @@ defmodule ParkingLotWeb.CoreComponents do
     |> assign(:errors, Enum.map(field.errors, &translate_error(&1)))
     |> assign_new(:name, fn -> if assigns.multiple, do: field.name <> "[]", else: field.name end)
     |> assign_new(:value, fn -> field.value end)
-    |> input()
-  end
-
-  def input(%{type: "digits"} = assigns) do
-    assigns
-    |> assign(:type, "text")
-    |> update(:rest, fn rest ->
-      opts = [inputmode: "numeric", pattern: "[0-9]*", phx_hook: "InputPatternConstraint"]
-
-      Enum.concat(rest, opts)
-    end)
     |> input()
   end
 
@@ -598,45 +587,6 @@ defmodule ParkingLotWeb.CoreComponents do
   def icon(%{name: "hero-" <> _} = assigns) do
     ~H"""
     <span class={[@name, @class]} />
-    """
-  end
-
-  attr(:value, :string, required: true)
-  attr(:pattern, :string, required: true)
-  attr(:acc, :string, default: "")
-
-  def mask(%{value: <<>>} = assigns) do
-    ~H"""
-    <span><%= @acc %></span>
-    """
-  end
-
-  def mask(%{pattern: <<p::binary-size(1), pattern::binary>>} = assigns) when p in ~w[0 A] do
-    %{value: <<v, value::binary>>} = assigns
-
-    assigns
-    |> update(:acc, fn acc -> <<acc::binary, v>> end)
-    |> assign(value: value, pattern: pattern)
-    |> mask()
-  end
-
-  def mask(%{pattern: <<p, pattern::binary>>} = assigns) do
-    %{acc: acc} = assigns
-
-    assigns
-    |> assign(:acc, <<acc::binary, p>>)
-    |> assign(pattern: pattern)
-    |> mask()
-  end
-
-  attr(:id, :string, required: true)
-  attr(:value, :string, required: true)
-
-  def time(assigns) do
-    ~H"""
-    <time id={@id} is="relative-time" datetime={@value} phx-update="ignore">
-      <%= @value %>
-    </time>
     """
   end
 
