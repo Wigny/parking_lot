@@ -8,12 +8,24 @@
 </.header>
 
 <.list>
-  <:item title={gettext("License plate")}><%= @vehicle.license_plate %></:item>
-  <:item title={gettext("Type")}><%= @vehicle.type.name %></:item>
-  <:item title={gettext("Brand")}><%= @vehicle.model.brand.name %></:item>
-  <:item title={gettext("Model")}><%= @vehicle.model.name %></:item>
-  <:item title={gettext("Color")}><%= @vehicle.color.name %></:item>
-  <:item title={gettext("Active")}><%= @vehicle.active %></:item>
+  <:item title={gettext("License plate")}>
+    <%= @vehicle.license_plate %>
+  </:item>
+  <:item title={gettext("Type")}>
+    <%= @vehicle.type.name %>
+  </:item>
+  <:item title={gettext("Brand")}>
+    <%= @vehicle.model.brand.name %>
+  </:item>
+  <:item title={gettext("Model")}>
+    <%= @vehicle.model.name %>
+  </:item>
+  <:item title={gettext("Color")}>
+    <%= @vehicle.color.name %>
+  </:item>
+  <:item title={gettext("Active")}>
+    <%= Gettext.dgettext(ParkingLotWeb.Gettext, "enum", Atom.to_string(@vehicle.active)) %>
+  </:item>
 </.list>
 
 <.back navigate={~p"/vehicles"}><%= gettext("Back to vehicles") %></.back>

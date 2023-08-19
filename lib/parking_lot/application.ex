@@ -15,7 +15,7 @@ defmodule ParkingLot.Application do
       ParkingLot.ALPR.Recognizer,
       {Task,
        fn ->
-         for camera <- ParkingLot.Cameras.list_cameras(on: true) do
+         for camera <- ParkingLot.Cameras.list_cameras(active: true) do
            {:ok, _pid} = ParkingLot.ALPR.start_children(camera)
          end
        end}

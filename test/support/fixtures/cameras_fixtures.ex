@@ -17,7 +17,7 @@ defmodule ParkingLot.CamerasFixtures do
         path: "/example",
         query: URI.encode_query(%{id: System.unique_integer([:positive])})
       },
-      on: false
+      active: false
     })
   end
 

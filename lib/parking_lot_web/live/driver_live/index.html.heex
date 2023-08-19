@@ -16,7 +16,7 @@
     <%= driver.name %>
   </:col>
   <:col :let={{_id, driver}} label={gettext("CPF")}>
-    <.mask value={driver.cpf} pattern="000.000.000-00" />
+    <%= String.replace(driver.cpf, ~r/(\d{3})(\d{3})(\d{3})(\d{2})/, ~S"\1.\2.\3-\4") %>
   </:col>
   <:col :let={{_id, driver}} label={gettext("CNH")}>
     <%= driver.cnh %>
@@ -25,10 +25,10 @@
     <%= driver.email %>
   </:col>
   <:col :let={{_id, driver}} label={gettext("Phone")}>
-    <.mask value={driver.phone} pattern="(00) 0 0000-0000" />
+    <%= String.replace(driver.phone, ~r/(\d{2})(\d{5})(\d{4})/, ~S"(\1) \2-\3") %>
   </:col>
   <:col :let={{_id, driver}} label={gettext("Active")}>
-    <%= driver.active %>
+    <%= Gettext.dgettext(ParkingLotWeb.Gettext, "enum", Atom.to_string(driver.active)) %>
   </:col>
   <:action :let={{_id, driver}}>
     <div class="sr-only">

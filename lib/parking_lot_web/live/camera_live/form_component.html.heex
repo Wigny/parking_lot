@@ -14,13 +14,17 @@
       field={@form[:type]}
       type="select"
       label={gettext("Type")}
-      prompt={gettext("Choose a value")}
-      options={Ecto.Enum.values(ParkingLot.Cameras.Camera, :type)}
+      prompt={gettext("Choose a type")}
+      options={
+        for value <- Ecto.Enum.values(ParkingLot.Cameras.Camera, :type) do
+          {Gettext.dgettext(ParkingLotWeb.Gettext, "enum", Atom.to_string(value)), value}
+        end
+      }
     />
 
     <.input field={@form[:uri]} type="url" label={gettext("URI")} phx-debounce="blur" />
 
-    <.input field={@form[:on]} type="checkbox" label={gettext("On")} />
+    <.input field={@form[:active]} type="checkbox" label={gettext("Active")} />
 
     <:actions>
       <.button phx-disable-with={gettext("Saving...")}><%= gettext("Save camera") %></.button>

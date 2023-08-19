@@ -6,8 +6,8 @@ defmodule ParkingLotWeb.VehicleDriverLive.FormComponent do
   @impl true
   def update(%{vehicle_driver: vehicle_driver} = assigns, socket) do
     changeset = Customers.change_vehicle_driver(vehicle_driver)
-    drivers = Customers.list_drivers()
-    vehicles = Customers.list_vehicles()
+    drivers = Customers.list_drivers(active: true)
+    vehicles = Customers.list_vehicles(active: true)
 
     {:ok,
      socket

@@ -4,12 +4,12 @@ defmodule ParkingLotWeb.CameraLiveTest do
   import Phoenix.LiveViewTest
   import ParkingLot.CamerasFixtures
 
-  @create_attrs valid_camera_attributes(%{type: :external})
-  @update_attrs valid_camera_attributes(%{type: :external})
+  @create_attrs valid_camera_attributes(%{type: :leave})
+  @update_attrs valid_camera_attributes(%{type: :leave})
   @invalid_attrs %{type: nil, uri: nil}
 
   defp create_camera(_) do
-    camera = camera_fixture(%{type: :internal})
+    camera = camera_fixture(%{type: :entry})
     %{camera: camera}
   end
 

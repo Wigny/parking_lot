@@ -8,8 +8,10 @@ defmodule ParkingLot.Customers do
 
   alias ParkingLot.Customers.{Driver, Vehicle, VehicleDriver}
 
-  def list_drivers do
-    Repo.all(Driver)
+  def list_drivers(where \\ []) when is_list(where) do
+    Driver
+    |> where(^where)
+    |> Repo.all()
   end
 
   def get_driver!(id), do: Repo.get!(Driver, id)
@@ -43,8 +45,9 @@ defmodule ParkingLot.Customers do
     end
   end
 
-  def list_vehicles do
+  def list_vehicles(where \\ []) when is_list(where) do
     Vehicle
+    |> where(^where)
     |> Repo.all()
     |> preload_vehicle()
   end

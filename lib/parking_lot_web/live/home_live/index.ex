@@ -2,20 +2,21 @@ defmodule ParkingLotWeb.HomeLive.Index do
   use ParkingLotWeb, :live_view
 
   import ParkingLotWeb.HomeLive.CanvasComponent
-
+  alias ParkingLot.{Cameras, Parkings}
   @impl true
   def mount(_params, _session, socket) do
     if connected?(socket) do
       Phoenix.PubSub.subscribe(ParkingLot.PubSub, "alpr")
     end
 
-    cameras = ParkingLot.Cameras.list_cameras()
+    cameras = Cameras.list_cameras()
+    parkings = Parkings.list_parkings([], order: [desc: :id], limit: 10)
 
     {:ok,
      socket
      |> assign(:cameras, cameras)
      |> assign(:videos, %{})
-     |> stream(:last_parkings, [], limit: 10)}
+     |> stream(:last_parkings, parkings, limit: 10)}
   end
 
   @impl true

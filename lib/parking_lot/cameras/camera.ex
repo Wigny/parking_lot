@@ -8,9 +8,9 @@ defmodule ParkingLot.Cameras.Camera do
   @timestamps_opts [type: :utc_datetime]
 
   schema "cameras" do
-    field :type, Ecto.Enum, values: [:internal, :external]
+    field :type, Ecto.Enum, values: [:entry, :leave]
     field :uri, ParkingLot.Type.URI
-    field :on, :boolean
+    field :active, :boolean
 
     timestamps()
   end
@@ -18,8 +18,8 @@ defmodule ParkingLot.Cameras.Camera do
   @doc false
   def changeset(camera, attrs) do
     camera
-    |> cast(attrs, [:type, :uri, :on])
-    |> validate_required([:type, :uri, :on])
+    |> cast(attrs, [:type, :uri, :active])
+    |> validate_required([:type, :uri, :active])
     |> validate_uri(:uri)
     |> unique_constraint(:uri)
     |> unique_constraint(:type)
