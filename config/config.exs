@@ -11,10 +11,6 @@ config :ueberauth, Ueberauth,
     }
   ]
 
-config :evision,
-  compile_mode: :only_enabled_modules,
-  enabled_modules: ~w[core videoio dnn]a
-
 config :parking_lot,
   ecto_repos: [ParkingLot.Repo]
 
