@@ -9,8 +9,7 @@ defmodule ParkingLot.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps(),
-      dialyzer: dialyzer()
+      deps: deps()
     ]
   end
 
@@ -43,17 +42,9 @@ defmodule ParkingLot.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:ueberauth_google, "~> 0.10"},
       {:evision, "~> 0.1.33"},
-      {:nx, "~> 0.5"},
-      {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:mix_test_watch, "~> 1.1", only: [:dev, :test], runtime: false},
       {:git_hooks, "~> 0.8.0-pre0", only: [:dev], runtime: false}
-    ]
-  end
-
-  defp dialyzer do
-    [
-      plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
     ]
   end
 
