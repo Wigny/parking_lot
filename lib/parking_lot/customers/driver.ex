@@ -9,8 +9,8 @@ defmodule ParkingLot.Customers.Driver do
 
   schema "drivers" do
     field :name, :string
-    field :cpf, :string
-    field :cnh, :string
+    field :cpf, ParkingLot.Type.Document, as: ParkingLot.Document.CPF
+    field :cnh, ParkingLot.Type.Document, as: ParkingLot.Document.CNH
     field :email, :string
     field :phone, :string
     field :active, :boolean, default: true
@@ -26,8 +26,8 @@ defmodule ParkingLot.Customers.Driver do
     |> validate_length(:phone, is: 11)
     |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/)
     |> validate_format(:phone, ~r/^\d+$/)
-    |> validate_digits(:cpf, length: 11, weights: [Enum.to_list(10..2), Enum.to_list(11..2)])
-    |> validate_digits(:cnh, length: 11, weights: [Enum.to_list(2..10), Enum.concat(3..11, [2])])
+    |> validate_document(:cpf)
+    |> validate_document(:cnh)
     |> unique_constraint(:cpf)
     |> unique_constraint(:cnh)
     |> unique_constraint(:email)

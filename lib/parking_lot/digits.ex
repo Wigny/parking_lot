@@ -27,7 +27,7 @@ defmodule ParkingLot.Digits do
   def parse(value) when is_binary(value) do
     value
     |> String.replace(~r/\D/, "")
-    |> String.split("", trim: true)
+    |> String.graphemes()
     |> Enum.map(&String.to_integer/1)
   end
 
@@ -84,5 +84,19 @@ defmodule ParkingLot.Digits do
     else
       Enum.concat(List.duplicate(0, count - digits_length), digits)
     end
+  end
+
+  def check_digit(digits, weights) do
+    [digits, weights]
+    |> Enum.zip()
+    |> Enum.map(&Tuple.product/1)
+    |> Enum.sum()
+    |> modulus11()
+  end
+
+  defp modulus11(value) do
+    rem = rem(value, 11)
+
+    if rem < 2, do: 0, else: 11 - rem
   end
 end

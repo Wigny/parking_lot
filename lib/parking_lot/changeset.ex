@@ -2,19 +2,15 @@ defmodule ParkingLot.Changeset do
   @moduledoc false
 
   import Ecto.Changeset
-  alias ParkingLot.Digits
-  alias ParkingLot.Digits.CheckDigits
 
-  def validate_digits(changeset, field, opts) do
-    changeset
-    |> validate_length(field, is: opts[:length])
-    |> validate_change(field, fn ^field, value ->
-      digits = Digits.pad_leading(Digits.parse(value), opts[:length])
+  def validate_document(changeset, field) do
+    validate_change(changeset, field, fn ^field, %{__struct__: type} = document ->
+      digits = type.to_digits(document)
 
       cond do
-        Digits.duplicated?(digits) -> [{field, "has invalid digits"}]
-        not CheckDigits.valid?(digits, opts[:weights]) -> [{field, "has invalid check digit"}]
-        true -> []
+        ParkingLot.Digits.duplicated?(digits) -> [{field, "has invalid digits"}]
+        not type.valid?(document) -> [{field, "has invalid check digit"}]
+        :otherwise -> []
       end
     end)
   end
@@ -25,7 +21,7 @@ defmodule ParkingLot.Changeset do
         is_nil(uri.scheme) -> [{field, "is missing scheme"}]
         is_nil(uri.host) -> [{field, "is missing host"}]
         not valid_host?(uri.host) -> [{field, "has invalid host"}]
-        true -> []
+        :otherwise -> []
       end
     end)
   end
