@@ -26,6 +26,13 @@ defmodule ParkingLot.Changeset do
     end)
   end
 
+  def validate_email(changeset, field) do
+    changeset
+    |> validate_format(field, ~r/^[^\s]+@[^\s]+$/, message: "must have the @ sign and no spaces")
+    |> validate_length(field, max: 160)
+    |> unsafe_validate_unique(field, ParkingLot.Repo)
+  end
+
   defp valid_host?(host) do
     match?({:ok, _hostent}, :inet.gethostbyname(to_charlist(host)))
   end
