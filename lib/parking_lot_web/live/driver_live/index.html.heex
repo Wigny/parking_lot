@@ -28,7 +28,7 @@
     <%= String.replace(driver.phone, ~r/(\d{2})(\d{5})(\d{4})/, ~S"(\1) \2-\3") %>
   </:col>
   <:col :let={{_id, driver}} label={gettext("Active")}>
-    <%= driver.active %>
+    <%= Gettext.dgettext(ParkingLotWeb.Gettext, "enum", Atom.to_string(driver.active)) %>
   </:col>
   <:action :let={{_id, driver}}>
     <div class="sr-only">

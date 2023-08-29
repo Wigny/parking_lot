@@ -12,14 +12,14 @@ defmodule ParkingLot.Cameras do
 
   def list_cameras do
     Camera
-    |> order_by(desc: :type)
+    |> order_by(asc: :type)
     |> Repo.all()
   end
 
   def list_cameras(attrs) when is_list(attrs) do
     Camera
     |> where(^attrs)
-    |> order_by(desc: :type)
+    |> order_by(asc: :type)
     |> Repo.all()
   end
 
@@ -29,7 +29,7 @@ defmodule ParkingLot.Cameras do
     Multi.new()
     |> Multi.insert(:camera, Camera.changeset(%Camera{}, attrs))
     |> Multi.run(:alpr_watcher, fn _repo, %{camera: camera} ->
-      if camera.on, do: ALPR.start_children(camera), else: {:ok, nil}
+      if camera.active, do: ALPR.start_children(camera), else: {:ok, nil}
     end)
     |> Repo.transaction()
     |> case do
@@ -42,10 +42,10 @@ defmodule ParkingLot.Cameras do
     Multi.new()
     |> Multi.update(:camera, Camera.changeset(camera, attrs))
     |> Multi.run({:stop, :alpr_watcher}, fn _repo, _changes ->
-      if camera.on, do: ALPR.terminate_children(camera), else: {:ok, nil}
+      if camera.active, do: ALPR.terminate_children(camera), else: {:ok, nil}
     end)
     |> Multi.run({:start, :alpr_watcher}, fn _repo, %{camera: camera} ->
-      if camera.on, do: ALPR.start_children(camera), else: {:ok, nil}
+      if camera.active, do: ALPR.start_children(camera), else: {:ok, nil}
     end)
     |> Repo.transaction()
     |> case do
@@ -58,7 +58,7 @@ defmodule ParkingLot.Cameras do
     Multi.new()
     |> Multi.delete(:camera, camera)
     |> Multi.run(:alpr_watcher, fn _repo, %{camera: camera} ->
-      if camera.on, do: ALPR.terminate_children(camera), else: {:ok, nil}
+      if camera.active, do: ALPR.terminate_children(camera), else: {:ok, nil}
     end)
     |> Repo.transaction()
     |> case do

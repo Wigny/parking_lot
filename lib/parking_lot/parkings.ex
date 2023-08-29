@@ -8,8 +8,10 @@ defmodule ParkingLot.Parkings do
 
   alias ParkingLot.Parkings.Parking
 
-  def list_parkings do
+  def list_parkings(where \\ [], opts \\ []) when is_list(where) do
     Parking
+    |> where(^where)
+    |> query(opts)
     |> Repo.all()
     |> preload_parking()
   end
@@ -61,7 +63,7 @@ defmodule ParkingLot.Parkings do
     Repo.preload(parking, vehicle: [[model: [:brand]], :color, :type])
   end
 
-  # the external camera register the car entry
+  # register the car entry
   def register_parking(:entry, vehicle) do
     last_parking = get_last_parking(vehicle_id: vehicle.id)
 
@@ -72,7 +74,7 @@ defmodule ParkingLot.Parkings do
     end
   end
 
-  # the internal camera register the car exit
+  # register the car exit
   def register_parking(:leave, vehicle) do
     last_parking = get_last_parking(vehicle_id: vehicle.id)
 
@@ -81,5 +83,12 @@ defmodule ParkingLot.Parkings do
     else
       {:error, :already_left}
     end
+  end
+
+  defp query(q, criteria) do
+    Enum.reduce(criteria, q, fn
+      {:limit, limit}, query -> limit(query, ^limit)
+      {:order, order}, query -> order_by(query, ^order)
+    end)
   end
 end

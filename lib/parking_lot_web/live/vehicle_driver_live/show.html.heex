@@ -18,7 +18,9 @@
       <%= @vehicle_driver.vehicle.license_plate %>
     </.link>
   </:item>
-  <:item title={gettext("Active")}><%= @vehicle_driver.active %></:item>
+  <:item title={gettext("Active")}>
+    <%= Gettext.dgettext(ParkingLotWeb.Gettext, "enum", Atom.to_string(@vehicle_driver.active)) %>
+  </:item>
 </.list>
 
 <.back navigate={~p"/vehicles_drivers"}><%= gettext("Back to vehicles/drivers") %></.back>

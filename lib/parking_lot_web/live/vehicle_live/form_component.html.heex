@@ -31,7 +31,11 @@
       type="select"
       label={gettext("Model")}
       prompt={gettext("Choose the model")}
-      options={for model <- @models, do: {"#{model.brand.name} - #{model.name}", model.id}}
+      options={
+        for {brand_name, models} <- Enum.group_by(@models, & &1.brand.name), reduce: [] do
+          acc -> [{brand_name, Enum.map(models, fn model -> {model.name, model.id} end)} | acc]
+        end
+      }
     />
 
     <.input

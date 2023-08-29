@@ -1,0 +1,11 @@
+msgid "entry"
+msgstr ""
+
+msgid "leave"
+msgstr ""
+
+msgid "true"
+msgstr ""
+
+msgid "false"
+msgstr ""
