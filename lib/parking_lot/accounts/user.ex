@@ -3,6 +3,7 @@ defmodule ParkingLot.Accounts.User do
 
   use Ecto.Schema
   import Ecto.Changeset
+  import ParkingLot.Changeset
 
   @timestamps_opts [type: :utc_datetime]
 

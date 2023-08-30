@@ -42,6 +42,7 @@ defmodule ParkingLot.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:ueberauth_google, "~> 0.10"},
       {:evision, "~> 0.1.33"},
+      {:ex_phone_number, "~> 0.4"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:mix_test_watch, "~> 1.1", only: [:dev, :test], runtime: false},
       {:git_hooks, "~> 0.8.0-pre0", only: [:dev], runtime: false}
@@ -50,7 +51,7 @@ defmodule ParkingLot.MixProject do
 
   defp aliases do
     [
-      setup: ["deps.get", "ecto.setup", "assets.setup", "assets.build"],
+      setup: ["deps.get", "assets.setup", "ecto.setup", "assets.build"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],

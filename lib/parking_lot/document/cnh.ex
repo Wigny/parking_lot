@@ -5,11 +5,6 @@ defmodule ParkingLot.Document.CNH do
 
   defstruct [:base, :check_digits]
 
-  @weights [
-    2..10,
-    Enum.concat(3..11, [2])
-  ]
-
   @impl true
   def new(digits) do
     {base, check_digits} = Enum.split(Digits.pad_leading(digits, 11), -2)
@@ -24,10 +19,10 @@ defmodule ParkingLot.Document.CNH do
   # https://github.com/klawdyo/validation-br/blob/v.1.4.2/src/cnh.ts
   @impl true
   def valid?(%{base: base, check_digits: check_digits}) do
-    check_digit_1 = Digits.check_digit(base, 2..10)
-    check_digit_2 = Digits.check_digit(Enum.concat(base, [digit1]), Enum.concat(3..11, [2]))
+    digit_1 = Digits.check_digit(base, 2..10)
+    digit_2 = Digits.check_digit(Enum.concat(base, [digit_1]), Enum.concat(3..11, [2]))
 
-    match?(^check_digits, [check_digit_1, check_digit_2])
+    match?(^check_digits, [digit_1, digit_2])
   end
 
   defimpl String.Chars do

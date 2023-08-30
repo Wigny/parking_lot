@@ -26,6 +26,16 @@ defmodule ParkingLot.Changeset do
     end)
   end
 
+  def validate_phone(changeset, field) do
+    validate_change(changeset, field, fn ^field, phone ->
+      if ParkingLot.Phone.valid?(phone) do
+        []
+      else
+        [{field, "is invalid"}]
+      end
+    end)
+  end
+
   def validate_email(changeset, field) do
     changeset
     |> validate_format(field, ~r/^[^\s]+@[^\s]+$/, message: "must have the @ sign and no spaces")
