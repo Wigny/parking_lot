@@ -1,25 +1,21 @@
 {
   "[elixir]": {
     "editor.defaultFormatter": "JakeBecker.elixir-ls",
-    "editor.formatOnSave": true,
     "editor.rulers": [
       98
     ]
   },
   "[phoenix-heex]": {
     "editor.defaultFormatter": "JakeBecker.elixir-ls",
-    "editor.formatOnSave": true,
     "editor.rulers": [
       98
     ]
   },
   "emmet.includeLanguages": {
-    "phoenix-heex": "html",
-    "elixir": "html"
+    "phoenix-heex": "html"
   },
   "tailwindCSS.includeLanguages": {
-    "phoenix-heex": "html",
-    "elixir": "html"
+    "phoenix-heex": "html"
   },
   "files.associations": {
     "*.heex": "phoenix-heex"

@@ -39,7 +39,7 @@ defmodule ParkingLot.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
-      {:plug_cowboy, "~> 2.5"},
+      {:bandit, ">= 0.7.7"},
       {:ueberauth_google, "~> 0.10"},
       {:evision, "~> 0.1.33"},
       {:ex_phone_number, "~> 0.4"},

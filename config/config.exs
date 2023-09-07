@@ -15,6 +15,7 @@ config :parking_lot,
   ecto_repos: [ParkingLot.Repo]
 
 config :parking_lot, ParkingLotWeb.Endpoint,
+  adapter: Bandit.PhoenixAdapter,
   url: [host: "localhost"],
   render_errors: [
     formats: [html: ParkingLotWeb.ErrorHTML, json: ParkingLotWeb.ErrorJSON],
