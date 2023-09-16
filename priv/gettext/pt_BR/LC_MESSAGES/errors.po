@@ -101,12 +101,6 @@ msgstr "deve ser maior ou igual a %{number}"
 msgid "must be equal to %{number}"
 msgstr "deve ser igual a %{number}"
 
-msgid "has invalid digits"
-msgstr "possui dígitos inválidos"
-
-msgid "has invalid check digit"
-msgstr "possui dígito de verificação inválido"
-
 msgid "is missing scheme"
 msgstr "está sem esquema"
 
@@ -115,3 +109,29 @@ msgstr "está sem host"
 
 msgid "has invalid host"
 msgstr "possui um host inválido"
+
+## From ParkingLot.Type.Phone.cast/2
+msgid "invalid country code"
+msgstr "código de país inválido"
+
+msgid "not a number"
+msgstr "não é um número"
+
+msgid "too short after IDD"
+msgstr "muito curto após o código de país"
+
+msgid "too short"
+msgstr "muito curto"
+
+msgid "too long"
+msgstr "muito longo"
+
+msgid "invalid length"
+msgstr "comprimento inválido"
+
+msgid "invalid digits"
+msgstr "dígitos inválidos"
+
+## From ParkingLot.Accounts.User.changeset/2
+msgid "must have the @ sign and no spaces"
+msgstr "deve ter o símbolo @ e nenhum espaço"

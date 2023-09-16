@@ -111,13 +111,6 @@ msgstr ""
 msgid "must be equal to %{number}"
 msgstr ""
 
-## From Ecto.Changeset.validate_format/3
-msgid "has invalid digits"
-msgstr ""
-
-msgid "has invalid check digit"
-msgstr ""
-
 ## From ParkingLot.Changeset.validate_uri/3
 msgid "is missing scheme"
 msgstr ""
@@ -127,4 +120,31 @@ msgstr ""
 
 ## From Ecto.Changeset.validate_format/3
 msgid "has invalid host"
+msgstr ""
+
+## From ParkingLot.Type.Phone.cast/2
+msgid "invalid country code"
+msgstr ""
+
+msgid "not a number"
+msgstr ""
+
+msgid "too short after IDD"
+msgstr "too short after country code"
+
+msgid "too short"
+msgstr ""
+
+msgid "too long"
+msgstr ""
+
+msgid "invalid length"
+msgstr ""
+
+## From Ecto.Changeset.validate_format/3
+msgid "invalid digits"
+msgstr ""
+
+## From ParkingLot.Accounts.User.changeset/2
+msgid "must have the @ sign and no spaces"
 msgstr ""

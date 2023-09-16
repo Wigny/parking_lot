@@ -100,7 +100,7 @@ msgid "Entered at"
 msgstr "Entrada em"
 
 #: lib/parking_lot_web/live/home_live/index.html.heex:27
-#: lib/parking_lot_web/live/parking_live/index.html.heex:23
+#: lib/parking_lot_web/live/parking_live/index.html.heex:21
 #: lib/parking_lot_web/live/parking_live/show.html.heex:19
 #, elixir-autogen, elixir-format
 msgid "Left at"
@@ -117,8 +117,8 @@ msgid "Vehicle"
 msgstr "Veículo"
 
 #: lib/parking_lot_web/live/camera_live/form_component.html.heex:27
-#: lib/parking_lot_web/live/camera_live/index.html.heex:17
-#: lib/parking_lot_web/live/camera_live/show.html.heex:15
+#: lib/parking_lot_web/live/camera_live/index.html.heex:21
+#: lib/parking_lot_web/live/camera_live/show.html.heex:17
 #: lib/parking_lot_web/live/driver_live/form_component.html.heex:34
 #: lib/parking_lot_web/live/driver_live/index.html.heex:30
 #: lib/parking_lot_web/live/driver_live/show.html.heex:28
@@ -126,17 +126,17 @@ msgstr "Veículo"
 #: lib/parking_lot_web/live/vehicle_driver_live/index.html.heex:21
 #: lib/parking_lot_web/live/vehicle_driver_live/show.html.heex:21
 #: lib/parking_lot_web/live/vehicle_live/form_component.html.heex:49
-#: lib/parking_lot_web/live/vehicle_live/index.html.heex:20
-#: lib/parking_lot_web/live/vehicle_live/show.html.heex:16
+#: lib/parking_lot_web/live/vehicle_live/index.html.heex:30
+#: lib/parking_lot_web/live/vehicle_live/show.html.heex:26
 #, elixir-autogen, elixir-format
 msgid "Active"
 msgstr "Ativo"
 
-#: lib/parking_lot_web/live/camera_live/index.html.heex:27
+#: lib/parking_lot_web/live/camera_live/index.html.heex:33
 #: lib/parking_lot_web/live/driver_live/index.html.heex:42
 #: lib/parking_lot_web/live/vehicle_brand_live/index.html.heex:25
 #: lib/parking_lot_web/live/vehicle_driver_live/index.html.heex:33
-#: lib/parking_lot_web/live/vehicle_live/index.html.heex:30
+#: lib/parking_lot_web/live/vehicle_live/index.html.heex:42
 #: lib/parking_lot_web/live/vehicle_model_live/index.html.heex:26
 #, elixir-autogen, elixir-format
 msgid "Are you sure?"
@@ -156,11 +156,11 @@ msgstr ""
 msgid "CPF"
 msgstr ""
 
-#: lib/parking_lot_web/live/camera_live/index.html.heex:29
+#: lib/parking_lot_web/live/camera_live/index.html.heex:35
 #: lib/parking_lot_web/live/driver_live/index.html.heex:44
 #: lib/parking_lot_web/live/vehicle_brand_live/index.html.heex:27
 #: lib/parking_lot_web/live/vehicle_driver_live/index.html.heex:35
-#: lib/parking_lot_web/live/vehicle_live/index.html.heex:32
+#: lib/parking_lot_web/live/vehicle_live/index.html.heex:44
 #: lib/parking_lot_web/live/vehicle_model_live/index.html.heex:28
 #, elixir-autogen, elixir-format
 msgid "Delete"
@@ -173,11 +173,11 @@ msgstr "Excluir"
 msgid "E-mail"
 msgstr ""
 
-#: lib/parking_lot_web/live/camera_live/index.html.heex:22
+#: lib/parking_lot_web/live/camera_live/index.html.heex:28
 #: lib/parking_lot_web/live/driver_live/index.html.heex:37
 #: lib/parking_lot_web/live/vehicle_brand_live/index.html.heex:20
 #: lib/parking_lot_web/live/vehicle_driver_live/index.html.heex:28
-#: lib/parking_lot_web/live/vehicle_live/index.html.heex:25
+#: lib/parking_lot_web/live/vehicle_live/index.html.heex:37
 #: lib/parking_lot_web/live/vehicle_model_live/index.html.heex:21
 #, elixir-autogen, elixir-format
 msgid "Edit"
@@ -212,12 +212,12 @@ msgstr "Novo motorista"
 msgid "Phone"
 msgstr "Telefone"
 
-#: lib/parking_lot_web/live/camera_live/index.html.heex:20
+#: lib/parking_lot_web/live/camera_live/index.html.heex:26
 #: lib/parking_lot_web/live/driver_live/index.html.heex:35
-#: lib/parking_lot_web/live/parking_live/index.html.heex:34
+#: lib/parking_lot_web/live/parking_live/index.html.heex:30
 #: lib/parking_lot_web/live/vehicle_brand_live/index.html.heex:18
 #: lib/parking_lot_web/live/vehicle_driver_live/index.html.heex:26
-#: lib/parking_lot_web/live/vehicle_live/index.html.heex:23
+#: lib/parking_lot_web/live/vehicle_live/index.html.heex:35
 #: lib/parking_lot_web/live/vehicle_model_live/index.html.heex:19
 #, elixir-autogen, elixir-format
 msgid "Show"
@@ -260,13 +260,13 @@ msgstr "Salvar motorista"
 msgid "Show driver"
 msgstr "Detalhes do motorista"
 
-#: lib/parking_lot_web/live/vehicle_live/show.html.heex:19
+#: lib/parking_lot_web/live/vehicle_live/show.html.heex:31
 #, elixir-autogen, elixir-format
 msgid "Back to vehicles"
 msgstr "Voltar para lista de veículos"
 
-#: lib/parking_lot_web/live/vehicle_live/index.html.heex:17
-#: lib/parking_lot_web/live/vehicle_live/show.html.heex:13
+#: lib/parking_lot_web/live/vehicle_live/index.html.heex:21
+#: lib/parking_lot_web/live/vehicle_live/show.html.heex:17
 #: lib/parking_lot_web/live/vehicle_model_live/form_component.ex:24
 #: lib/parking_lot_web/live/vehicle_model_live/index.html.heex:15
 #: lib/parking_lot_web/live/vehicle_model_live/show.html.heex:11
@@ -290,8 +290,8 @@ msgid "Choose the type"
 msgstr "Escolha o tipo"
 
 #: lib/parking_lot_web/live/vehicle_live/form_component.html.heex:44
-#: lib/parking_lot_web/live/vehicle_live/index.html.heex:19
-#: lib/parking_lot_web/live/vehicle_live/show.html.heex:15
+#: lib/parking_lot_web/live/vehicle_live/index.html.heex:27
+#: lib/parking_lot_web/live/vehicle_live/show.html.heex:23
 #, elixir-autogen, elixir-format
 msgid "Color"
 msgstr "Cor"
@@ -317,8 +317,8 @@ msgid "Listing vehicles"
 msgstr "Lista de veículos"
 
 #: lib/parking_lot_web/live/vehicle_live/form_component.html.heex:32
-#: lib/parking_lot_web/live/vehicle_live/index.html.heex:18
-#: lib/parking_lot_web/live/vehicle_live/show.html.heex:14
+#: lib/parking_lot_web/live/vehicle_live/index.html.heex:24
+#: lib/parking_lot_web/live/vehicle_live/show.html.heex:20
 #: lib/parking_lot_web/live/vehicle_model_live/form_component.ex:29
 #: lib/parking_lot_web/live/vehicle_model_live/index.html.heex:16
 #: lib/parking_lot_web/live/vehicle_model_live/show.html.heex:16
@@ -351,8 +351,8 @@ msgstr "Detalhes do veículo"
 #: lib/parking_lot_web/live/camera_live/index.html.heex:15
 #: lib/parking_lot_web/live/camera_live/show.html.heex:11
 #: lib/parking_lot_web/live/vehicle_live/form_component.html.heex:24
-#: lib/parking_lot_web/live/vehicle_live/index.html.heex:16
-#: lib/parking_lot_web/live/vehicle_live/show.html.heex:12
+#: lib/parking_lot_web/live/vehicle_live/index.html.heex:18
+#: lib/parking_lot_web/live/vehicle_live/show.html.heex:14
 #, elixir-autogen, elixir-format
 msgid "Type"
 msgstr "Tipo"
@@ -372,7 +372,7 @@ msgstr "Veículo criado com sucesso"
 msgid "Vehicle updated successfully"
 msgstr "Veículo atualizado com sucesso"
 
-#: lib/parking_lot_web/live/vehicle_driver_live/show.html.heex:24
+#: lib/parking_lot_web/live/vehicle_driver_live/show.html.heex:26
 #, elixir-autogen, elixir-format
 msgid "Back to vehicles/drivers"
 msgstr "Voltar para lista de veículos/motoristas"
@@ -463,7 +463,7 @@ msgid "New camera"
 msgstr "Nova câmera"
 
 #: lib/parking_lot_web/live/camera_live/form_component.html.heex:25
-#: lib/parking_lot_web/live/camera_live/index.html.heex:16
+#: lib/parking_lot_web/live/camera_live/index.html.heex:18
 #: lib/parking_lot_web/live/camera_live/show.html.heex:14
 #, elixir-autogen, elixir-format
 msgid "URI"
@@ -513,7 +513,7 @@ msgstr "Editar marca"
 msgid "Edit model"
 msgstr "Editar modelo"
 
-#: lib/parking_lot_web/live/camera_live/show.html.heex:20
+#: lib/parking_lot_web/live/camera_live/show.html.heex:22
 #, elixir-autogen, elixir-format
 msgid "Back to cameras"
 msgstr "Voltar para lista de câmeras"

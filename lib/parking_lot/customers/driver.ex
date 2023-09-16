@@ -22,7 +22,7 @@ defmodule ParkingLot.Customers.Driver do
     driver
     |> cast(attrs, [:name, :cpf, :cnh, :email, :phone, :active])
     |> validate_required([:name, :cpf, :cnh, :email])
-    |> validate_email(:email)
+    |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/)
     |> validate_phone(:phone)
     |> unique_constraint(:cpf)
     |> unique_constraint(:cnh)
