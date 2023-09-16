@@ -1,5 +1,11 @@
 defmodule ParkingLot.Document do
-  @moduledoc "Behaviour that defines a document digits-based."
+  @moduledoc """
+  Behaviour that defines a document digits-based.
+
+  A document here can be defined as a sequence of digits that can a identifier number, such as a
+  CPF, CNPJ, CNH, UPC, ISBN-10 or ISBN-13. Refer to [Check digit](https://en.wikipedia.org/wiki/Check_digit#Examples)
+  for more information.
+  """
 
   alias ParkingLot.Digits
 
@@ -23,13 +29,5 @@ defmodule ParkingLot.Document do
     |> Enum.zip()
     |> Enum.map(&Tuple.product/1)
     |> Enum.sum()
-  end
-
-  @doc "Calculates the modulo 11 of the given weighted sum."
-  @spec modulo11(sum :: integer) :: integer
-  def modulo11(sum) do
-    rem = rem(sum, 11)
-
-    if rem < 2, do: 0, else: 11 - rem
   end
 end

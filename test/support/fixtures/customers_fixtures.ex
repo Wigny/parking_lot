@@ -31,10 +31,9 @@ defmodule ParkingLot.CustomersFixtures do
   end
 
   def unique_driver_phone do
-    digits = random_list(9, 0..9)
+    digits = Enum.concat([5, 5, 1, 1], random_list(9, 0..9))
 
-    {:ok, phone} = Phone.new(Digits.to_string(digits), "BR")
-    phone
+    Phone.new!(<<?+, Digits.to_string(digits)::binary>>)
   end
 
   def valid_driver_attributes(attrs \\ %{}) do

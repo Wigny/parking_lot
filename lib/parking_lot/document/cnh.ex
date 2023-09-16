@@ -43,10 +43,15 @@ defmodule ParkingLot.Document.CNH do
 
   @doc false
   def check_digits(base) do
-    digit1 = Document.modulo11(Document.weighted_sum(base, 2..10))
-    digit2 = Document.modulo11(Document.weighted_sum(base ++ [digit1], Enum.concat(3..11, [2])))
+    [2..10, Enum.concat(3..11, [2])]
+    |> Stream.transform(base, fn weigths, digits ->
+      weighted_sum = Document.weighted_sum(digits, weigths)
+      mod11 = rem(weighted_sum, 11)
+      digit = if mod11 < 2, do: 0, else: 11 - mod11
 
-    [digit1, digit2]
+      {[digit], digits ++ [digit]}
+    end)
+    |> Enum.to_list()
   end
 
   defimpl String.Chars do
