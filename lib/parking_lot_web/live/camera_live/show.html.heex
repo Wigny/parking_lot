@@ -15,7 +15,7 @@
     <a href={@camera.uri}><%= @camera.uri %></a>
   </:item>
   <:item title={gettext("Active")}>
-    <%= Gettext.dgettext(ParkingLotWeb.Gettext, "enum", Atom.to_string(@camera.active)) %>
+    <%= if @camera.active, do: gettext("yes"), else: gettext("no") %>
   </:item>
 </.list>
 

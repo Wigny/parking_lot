@@ -49,6 +49,10 @@ defmodule ParkingLot.Document.CNH do
     [digit1, digit2]
   end
 
+  defimpl String.Chars do
+    defdelegate to_string(cnh), to: ParkingLot.Document.CNH
+  end
+
   defimpl Inspect do
     def inspect(cnh, _opts) do
       Inspect.Algebra.concat(["#ParkingLot.Document.CNH<", to_string(cnh), ">"])

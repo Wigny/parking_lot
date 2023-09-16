@@ -16,9 +16,3 @@ msgstr "Entrada"
 
 msgid "leave"
 msgstr "Saída"
-
-msgid "true"
-msgstr "sim"
-
-msgid "false"
-msgstr "não"

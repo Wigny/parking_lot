@@ -16,8 +16,8 @@
       label={gettext("Type")}
       prompt={gettext("Choose a type")}
       options={
-        for value <- Ecto.Enum.values(ParkingLot.Cameras.Camera, :type) do
-          {Gettext.dgettext(ParkingLotWeb.Gettext, "enum", Atom.to_string(value)), value}
+        for {key, value} <- Ecto.Enum.mappings(ParkingLot.Cameras.Camera, :type) do
+          {Gettext.dgettext(ParkingLotWeb.Gettext, "enum", value), key}
         end
       }
     />

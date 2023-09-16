@@ -19,7 +19,7 @@
     </.link>
   </:item>
   <:item title={gettext("Active")}>
-    <%= Gettext.dgettext(ParkingLotWeb.Gettext, "enum", Atom.to_string(@vehicle_driver.active)) %>
+    <%= if @vehicle_driver.active, do: gettext("yes"), else: gettext("no") %>
   </:item>
 </.list>
 
