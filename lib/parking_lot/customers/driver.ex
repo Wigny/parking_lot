@@ -12,7 +12,7 @@ defmodule ParkingLot.Customers.Driver do
     field :cpf, ParkingLot.Type.Document, as: ParkingLot.Document.CPF
     field :cnh, ParkingLot.Type.Document, as: ParkingLot.Document.CNH
     field :email, :string
-    field :phone, ParkingLot.Phone, country: "BR"
+    field :phone, ParkingLot.Type.Phone, country: "BR"
     field :active, :boolean, default: true
 
     timestamps()
@@ -22,8 +22,6 @@ defmodule ParkingLot.Customers.Driver do
     driver
     |> cast(attrs, [:name, :cpf, :cnh, :email, :phone, :active])
     |> validate_required([:name, :cpf, :cnh, :email])
-    |> validate_document(:cpf)
-    |> validate_document(:cnh)
     |> validate_email(:email)
     |> validate_phone(:phone)
     |> unique_constraint(:cpf)

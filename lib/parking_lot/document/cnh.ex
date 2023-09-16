@@ -1,14 +1,33 @@
 defmodule ParkingLot.Document.CNH do
-  alias ParkingLot.Digits
+  @moduledoc """
+  CNH (Carteira Nacional de Habilitação) document implementation.
 
-  @behaviour ParkingLot.Document
+  Validation based on the [validation-br](https://github.com/klawdyo/validation-br/blob/v.1.4.2/src/cnh.ts) JS library.
+  """
+
+  alias ParkingLot.{Digits, Document}
+
+  @behaviour Document
 
   defstruct [:base, :check_digits]
+
+  defmodule Error do
+    defexception [:reason]
+
+    def new(fields), do: struct!(__MODULE__, fields)
+
+    def message(%{reason: "invalid digits"}), do: "The CNH is invalid"
+  end
 
   @impl true
   def new(digits) do
     {base, check_digits} = Enum.split(Digits.pad_leading(digits, 11), -2)
-    struct(__MODULE__, base: base, check_digits: check_digits)
+
+    if not Digits.monodigit?(base) and match?(^check_digits, check_digits(base)) do
+      {:ok, struct(__MODULE__, base: base, check_digits: check_digits)}
+    else
+      {:error, Error.new(reason: "invalid digits")}
+    end
   end
 
   @impl true
@@ -16,26 +35,29 @@ defmodule ParkingLot.Document.CNH do
     Enum.concat([base, check_digits])
   end
 
-  # https://github.com/klawdyo/validation-br/blob/v.1.4.2/src/cnh.ts
   @impl true
-  def valid?(%{base: base, check_digits: check_digits}) do
-    digit_1 = Digits.check_digit(base, 2..10)
-    digit_2 = Digits.check_digit(Enum.concat(base, [digit_1]), Enum.concat(3..11, [2]))
-
-    match?(^check_digits, [digit_1, digit_2])
+  def to_string(cnh) do
+    digits = to_digits(cnh)
+    Digits.to_string(digits)
   end
 
-  defimpl String.Chars do
-    alias ParkingLot.Digits
-    alias ParkingLot.Document.CNH
+  @doc false
+  def check_digits(base) do
+    digit1 = Document.modulo11(Document.weighted_sum(base, 2..10))
+    digit2 = Document.modulo11(Document.weighted_sum(base ++ [digit1], Enum.concat(3..11, [2])))
 
-    def to_string(cnh) do
-      digits = CNH.to_digits(cnh)
-      Digits.to_string(digits)
+    [digit1, digit2]
+  end
+
+  defimpl Inspect do
+    def inspect(cnh, _opts) do
+      Inspect.Algebra.concat(["#ParkingLot.Document.CNH<", to_string(cnh), ">"])
     end
   end
 
   defimpl Phoenix.HTML.Safe do
-    def to_iodata(cnh), do: to_string(cnh)
+    def to_iodata(cnh) do
+      to_string(cnh)
+    end
   end
 end

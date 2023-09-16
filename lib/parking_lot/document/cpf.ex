@@ -1,14 +1,32 @@
 defmodule ParkingLot.Document.CPF do
-  alias ParkingLot.Digits
+  @moduledoc """
+  CPF (Cadastro de Pessoa Física) document implementation.
 
-  @behaviour ParkingLot.Document
+  Validation based on the [validation-br](https://github.com/klawdyo/validation-br/blob/v.1.4.2/src/cpf.ts) JS library.
+  """
+  alias ParkingLot.{Digits, Document}
+
+  @behaviour Document
 
   defstruct [:base, :check_digits]
+
+  defmodule Error do
+    defexception [:reason]
+
+    def new(fields), do: struct!(__MODULE__, fields)
+
+    def message(%{reason: "invalid digits"}), do: "The CPF is invalid"
+  end
 
   @impl true
   def new(digits) do
     {base, check_digits} = Enum.split(Digits.pad_leading(digits, 11), -2)
-    struct(__MODULE__, base: base, check_digits: check_digits)
+
+    if not Digits.monodigit?(base) and match?(^check_digits, check_digits(base)) do
+      {:ok, struct(__MODULE__, base: base, check_digits: check_digits)}
+    else
+      {:error, Error.new(reason: "invalid digits")}
+    end
   end
 
   @impl true
@@ -16,28 +34,34 @@ defmodule ParkingLot.Document.CPF do
     Enum.concat([base, check_digits])
   end
 
-  # https://github.com/klawdyo/validation-br/blob/v.1.4.2/src/cpf.ts
   @impl true
-  def valid?(%{base: base, check_digits: check_digits}) do
-    check_digit_1 = Digits.check_digit(base, 10..2)
-    check_digit_2 = Digits.check_digit(base ++ [check_digit_1], 11..2)
+  def to_string(cpf) do
+    digits = to_digits(cpf)
 
-    match?(^check_digits, [check_digit_1, check_digit_2])
+    String.replace(Digits.to_string(digits), ~r/(\d{3})(\d{3})(\d{3})(\d{2})/, ~S"\1.\2.\3-\4")
+  end
+
+  @doc false
+  def check_digits(base) do
+    digit1 = Document.modulo11(Document.weighted_sum(base, 10..2))
+    digit2 = Document.modulo11(Document.weighted_sum(base ++ [digit1], 11..2))
+
+    [digit1, digit2]
   end
 
   defimpl String.Chars do
-    alias ParkingLot.Digits
-    alias ParkingLot.Document.CPF
+    defdelegate to_string(cnh), to: ParkingLot.Document.CPF
+  end
 
-    def to_string(cpf) do
-      digits = CPF.to_digits(cpf)
-      Digits.to_string(digits)
+  defimpl Inspect do
+    def inspect(cpf, _opts) do
+      Inspect.Algebra.concat(["#ParkingLot.Document.CPF<", to_string(cpf), ">"])
     end
   end
 
   defimpl Phoenix.HTML.Safe do
     def to_iodata(cpf) do
-      String.replace(to_string(cpf), ~r/(\d{3})(\d{3})(\d{3})(\d{2})/, ~S"\1.\2.\3-\4")
+      to_string(cpf)
     end
   end
 end
