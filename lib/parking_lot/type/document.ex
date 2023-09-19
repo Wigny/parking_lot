@@ -1,4 +1,6 @@
 defmodule ParkingLot.Type.Document do
+  @moduledoc false
+
   use Ecto.ParameterizedType
 
   alias ParkingLot.Digits
@@ -16,7 +18,7 @@ defmodule ParkingLot.Type.Document do
   end
 
   def cast(value, %{type: document}) when is_list(value) do
-    case apply(document, :new, [value]) do
+    case document.new(value) do
       {:ok, _document} = ok -> ok
       {:error, error} -> {:error, message: error.reason}
     end
@@ -36,7 +38,7 @@ defmodule ParkingLot.Type.Document do
 
   @impl true
   def load(value, _loader, %{type: document}) when is_binary(value) do
-    case apply(document, :new, [Digits.parse(value)]) do
+    case document.new(Digits.parse(value)) do
       {:ok, _document} = ok -> ok
       {:error, _error} -> :error
     end
@@ -48,7 +50,7 @@ defmodule ParkingLot.Type.Document do
 
   @impl true
   def dump(value, _dumper, %{type: document}) when is_struct(value, document) do
-    digits = apply(document, :to_digits, [value])
+    digits = document.to_digits(value)
     {:ok, Digits.to_string(digits)}
   end
 
