@@ -3,6 +3,7 @@ defmodule ParkingLot.CustomersFixtures do
   This module defines test helpers for creating
   entities via the `ParkingLot.Customers` context.
   """
+  import ParkingLot.Digits, only: [sigil_d: 2]
 
   alias ParkingLot.Customers
   alias ParkingLot.Digits
@@ -31,7 +32,7 @@ defmodule ParkingLot.CustomersFixtures do
   end
 
   def unique_driver_phone do
-    digits = Enum.concat([5, 5, 1, 1], random_list(9, 0..9))
+    digits = Enum.concat(~d[55119], random_list(8, 0..9))
 
     Phone.new!(<<?+, Digits.to_string(digits)::binary>>)
   end
