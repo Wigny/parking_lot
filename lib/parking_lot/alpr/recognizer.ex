@@ -4,75 +4,9 @@ defmodule ParkingLot.ALPR.Recognizer do
   """
 
   use GenServer
-  import Evision.Constant
   require Logger
 
-  defmodule NeuralNetwork do
-    @moduledoc false
-
-    alias Evision.DNN
-
-    defstruct ~w[model classes]a
-
-    @models %{
-      detection: %{
-        config:
-          "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-detection-layout-classification.cfg",
-        weights:
-          "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-detection-layout-classification.weights",
-        classes:
-          "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-detection-layout-classification.names"
-      },
-      recognition: %{
-        config:
-          "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-recognition.cfg",
-        weights:
-          "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-recognition.weights",
-        classes:
-          "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data/lp-recognition.names"
-      }
-    }
-
-    def init(model, opts) do
-      %{config: config_url, weights: weights_url, classes: classes_url} = @models[model]
-
-      {:ok, config_path} = Evision.Zoo.download(config_url, Path.basename(config_url))
-      {:ok, weights_path} = Evision.Zoo.download(weights_url, Path.basename(weights_url))
-      {:ok, classes_path} = Evision.Zoo.download(classes_url, Path.basename(classes_url))
-
-      classes = String.split(File.read!(classes_path), "\n")
-
-      network = DNN.readNetFromDarknet(config_path, darknetModel: weights_path)
-      DNN.Net.setPreferableTarget(network, cv_DNN_TARGET_CPU())
-
-      model =
-        network
-        |> DNN.DetectionModel.detectionModel()
-        |> DNN.DetectionModel.setInputParams(
-          scale: 1 / 255,
-          size: {opts[:width], opts[:height]},
-          swapRB: true
-        )
-
-      struct!(__MODULE__, model: model, classes: classes)
-    end
-
-    def infer(%__MODULE__{model: model, classes: classes}, image, opts) do
-      detect_opts = [
-        confThreshold: opts[:threshold],
-        nmsThreshold: opts[:nms_threshold]
-      ]
-
-      {class_ids, confidences, boxes} = DNN.DetectionModel.detect(model, image, detect_opts)
-
-      [class_ids, confidences, boxes]
-      |> Enum.zip()
-      |> Enum.map(fn {class_id, confidence, box} ->
-        class = Enum.at(classes, class_id)
-        {class, confidence, box}
-      end)
-    end
-  end
+  alias ParkingLot.NeuralNetwork
 
   # Client
 
@@ -121,8 +55,8 @@ defmodule ParkingLot.ALPR.Recognizer do
   def handle_continue(:init, nil) do
     Logger.info("Initializing the neural network models")
 
-    detection = NeuralNetwork.init(:detection, width: 416, height: 416)
-    recognition = NeuralNetwork.init(:recognition, width: 352, height: 128)
+    detection = NeuralNetwork.init(:detection)
+    recognition = NeuralNetwork.init(:recognition)
 
     {:noreply, %{detection: detection, recognition: recognition}}
   end
