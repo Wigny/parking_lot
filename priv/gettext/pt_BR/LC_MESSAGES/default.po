@@ -19,12 +19,12 @@ msgstr "Câmeras"
 #: lib/parking_lot_web/components/layouts/app.html.heex:22
 #, elixir-autogen, elixir-format
 msgid "Drivers"
-msgstr "Motoristas"
+msgstr "Condutores"
 
 #: lib/parking_lot_web/components/layouts/app.html.heex:24
 #, elixir-autogen, elixir-format
 msgid "Vehicles/Drivers"
-msgstr "Veículos/Motoristas"
+msgstr "Veículos/Condutores"
 
 #: lib/parking_lot_web/components/layouts/app.html.heex:45
 #, elixir-autogen, elixir-format
@@ -187,7 +187,7 @@ msgstr "Editar"
 #: lib/parking_lot_web/live/driver_live/index.html.heex:2
 #, elixir-autogen, elixir-format
 msgid "Listing drivers"
-msgstr "Lista de motoristas"
+msgstr "Lista de condutores"
 
 #: lib/parking_lot_web/live/driver_live/form_component.html.heex:13
 #: lib/parking_lot_web/live/driver_live/index.html.heex:15
@@ -203,7 +203,7 @@ msgstr "Nome"
 #: lib/parking_lot_web/live/driver_live/index.html.heex:5
 #, elixir-autogen, elixir-format
 msgid "New driver"
-msgstr "Novo motorista"
+msgstr "Novo condutor"
 
 #: lib/parking_lot_web/live/driver_live/form_component.html.heex:33
 #: lib/parking_lot_web/live/driver_live/index.html.heex:27
@@ -226,39 +226,39 @@ msgstr "Detalhar"
 #: lib/parking_lot_web/live/driver_live/show.html.heex:33
 #, elixir-autogen, elixir-format
 msgid "Back to drivers"
-msgstr "Voltar para lista de motoristas"
+msgstr "Voltar para lista de condutores"
 
 #: lib/parking_lot_web/live/driver_live/show.html.heex:2
 #, elixir-autogen, elixir-format
 msgid "Driver %{id}"
-msgstr "Motorista %{id}"
+msgstr "Condutor %{id}"
 
 #: lib/parking_lot_web/live/driver_live/form_component.ex:52
 #, elixir-autogen, elixir-format
 msgid "Driver created successfully"
-msgstr "Motorista criado com sucesso"
+msgstr "Condutor criado com sucesso"
 
 #: lib/parking_lot_web/live/driver_live/form_component.ex:37
 #, elixir-autogen, elixir-format
 msgid "Driver updated successfully"
-msgstr "Motorista atualizado com sucesso"
+msgstr "Condutor atualizado com sucesso"
 
 #: lib/parking_lot_web/live/driver_live/index.ex:19
 #: lib/parking_lot_web/live/driver_live/show.ex:20
 #: lib/parking_lot_web/live/driver_live/show.html.heex:5
 #, elixir-autogen, elixir-format
 msgid "Edit driver"
-msgstr "Editar motorista"
+msgstr "Editar condutor"
 
 #: lib/parking_lot_web/live/driver_live/form_component.html.heex:36
 #, elixir-autogen, elixir-format
 msgid "Save driver"
-msgstr "Salvar motorista"
+msgstr "Salvar condutor"
 
 #: lib/parking_lot_web/live/driver_live/show.ex:19
 #, elixir-autogen, elixir-format
 msgid "Show driver"
-msgstr "Detalhes do motorista"
+msgstr "Detalhes do condutor"
 
 #: lib/parking_lot_web/live/vehicle_live/show.html.heex:19
 #, elixir-autogen, elixir-format
@@ -375,12 +375,12 @@ msgstr "Veículo atualizado com sucesso"
 #: lib/parking_lot_web/live/vehicle_driver_live/show.html.heex:24
 #, elixir-autogen, elixir-format
 msgid "Back to vehicles/drivers"
-msgstr "Voltar para lista de veículos/motoristas"
+msgstr "Voltar para lista de veículos/condutores"
 
 #: lib/parking_lot_web/live/vehicle_driver_live/form_component.html.heex:17
 #, elixir-autogen, elixir-format
 msgid "Choose the driver"
-msgstr "Escolha o motorista"
+msgstr "Escolha o condutor"
 
 #: lib/parking_lot_web/live/vehicle_driver_live/form_component.html.heex:25
 #, elixir-autogen, elixir-format
@@ -392,26 +392,26 @@ msgstr "Escolha o veículo"
 #: lib/parking_lot_web/live/vehicle_driver_live/show.html.heex:11
 #, elixir-autogen, elixir-format
 msgid "Driver"
-msgstr "Motorista"
+msgstr "Condutor"
 
 #: lib/parking_lot_web/live/vehicle_driver_live/index.ex:19
 #: lib/parking_lot_web/live/vehicle_driver_live/show.ex:20
 #: lib/parking_lot_web/live/vehicle_driver_live/show.html.heex:5
 #, elixir-autogen, elixir-format
 msgid "Edit vehicle/driver"
-msgstr "Editar veículo/motorista"
+msgstr "Editar veículo/condutor"
 
 #: lib/parking_lot_web/live/vehicle_driver_live/index.ex:31
 #: lib/parking_lot_web/live/vehicle_driver_live/index.html.heex:2
 #, elixir-autogen, elixir-format
 msgid "Listing vehicles/drivers"
-msgstr "Lista de veículos/motoristas"
+msgstr "Lista de veículos/condutores"
 
 #: lib/parking_lot_web/live/vehicle_driver_live/index.ex:25
 #: lib/parking_lot_web/live/vehicle_driver_live/index.html.heex:5
 #, elixir-autogen, elixir-format
 msgid "New vehicle/driver"
-msgstr "Novo veículo/motorista"
+msgstr "Novo veículo/condutor"
 
 #: lib/parking_lot_web/live/vehicle_live/form_component.html.heex:52
 #, elixir-autogen, elixir-format
@@ -421,27 +421,27 @@ msgstr "Salvar veículo"
 #: lib/parking_lot_web/live/vehicle_driver_live/form_component.html.heex:33
 #, elixir-autogen, elixir-format
 msgid "Save vehicle/driver"
-msgstr "Salvar veículo/motorista"
+msgstr "Salvar veículo/condutor"
 
 #: lib/parking_lot_web/live/vehicle_driver_live/show.ex:19
 #, elixir-autogen, elixir-format
 msgid "Show vehicle/driver"
-msgstr "Detalhes do veículo/motorista"
+msgstr "Detalhes do veículo/condutor"
 
 #: lib/parking_lot_web/live/vehicle_driver_live/show.html.heex:2
 #, elixir-autogen, elixir-format
 msgid "Vehicle/Driver %{id}"
-msgstr "Veículo/Motorista %{id}"
+msgstr "Veículo/Condutor %{id}"
 
 #: lib/parking_lot_web/live/vehicle_driver_live/form_component.ex:55
 #, elixir-autogen, elixir-format
 msgid "Vehicle/driver created successfully"
-msgstr "Veículo/motorista criado com sucesso"
+msgstr "Veículo/condutor criado com sucesso"
 
 #: lib/parking_lot_web/live/vehicle_driver_live/form_component.ex:40
 #, elixir-autogen, elixir-format
 msgid "Vehicle/driver updated successfully"
-msgstr "Veículo/motorista atualizado com sucesso"
+msgstr "Veículo/condutor atualizado com sucesso"
 
 #: lib/parking_lot_web/live/camera_live/index.ex:19
 #: lib/parking_lot_web/live/camera_live/show.ex:20
@@ -636,7 +636,7 @@ msgstr "Entrar agora"
 #: lib/parking_lot_web/controllers/page_html/index.html.heex:9
 #, elixir-autogen, elixir-format
 msgid "Manage your parking lot' authorized drivers and vehicles along with the automated parking registrations powered by ALPR."
-msgstr "Gerencie motoristas e veículos autorizados do seu estacionamento juntamente com registro automático de parqueamentos alimentado por Reconhecimento Automático de Placas Veículares (ALPR)."
+msgstr "Gerencie condutores e veículos autorizados do seu estacionamento juntamente com registro automático de parqueamentos alimentado por Reconhecimento Automático de Placas Veículares (ALPR)."
 
 #: lib/parking_lot_web/controllers/user_session_controller.ex:11
 #, elixir-autogen, elixir-format

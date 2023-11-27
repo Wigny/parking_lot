@@ -4,7 +4,6 @@ defmodule ParkingLot.NeuralNetwork do
   alias Evision.Constant
   alias ParkingLot.ReqCacheFile
   alias Evision.DNN
-  alias Evision.DNN.{DetectionModel, Net}
 
   defstruct ~w[model classes]a
 
@@ -39,13 +38,14 @@ defmodule ParkingLot.NeuralNetwork do
     weights_file = download(filenames[:weights])
     classes_file = download(filenames[:classes])
 
+    network = DNN.readNetFromDarknetBuffer(config_file, bufferModel: weights_file)
+    DNN.Net.setPreferableTarget(network, @target_device)
+    DNN.Net.setPreferableBackend(network, @computation_backend)
+
     model =
-      config_file
-      |> DNN.readNetFromDarknetBuffer(bufferModel: weights_file)
-      |> Net.setPreferableTarget(@target_device)
-      |> Net.setPreferableBackend(@computation_backend)
-      |> DetectionModel.detectionModel()
-      |> DetectionModel.setInputParams(scale: 1 / 255, size: size, swapRB: true)
+      network
+      |> DNN.DetectionModel.detectionModel()
+      |> DNN.DetectionModel.setInputParams(scale: 1 / 255, size: size, swapRB: true)
 
     classes = String.split(classes_file, "\n")
 
@@ -54,7 +54,7 @@ defmodule ParkingLot.NeuralNetwork do
 
   def infer(%__MODULE__{model: model, classes: classes}, image, opts) do
     detect_opts = [confThreshold: opts[:threshold], nmsThreshold: opts[:nms_threshold]]
-    {class_ids, confidences, boxes} = DetectionModel.detect(model, image, detect_opts)
+    {class_ids, confidences, boxes} = DNN.DetectionModel.detect(model, image, detect_opts)
 
     [class_ids, confidences, boxes]
     |> Enum.zip()

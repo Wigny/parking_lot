@@ -37,24 +37,3 @@ config :logger, :console, format: "[$level] $message\n"
 config :phoenix, :stacktrace_depth, 20
 
 config :phoenix, :plug_init_mode, :runtime
-
-config :git_hooks,
-  extra_success_returns: [
-    {:noop, []},
-    {:ok, []}
-  ],
-  hooks: [
-    pre_commit: [
-      tasks: [
-        {:mix_task, :format, ~w"--check-formatted"},
-        {:mix_task, :test, ~w"--max-failures 1 --stale --warnings-as-errors"}
-      ]
-    ],
-    pre_push: [
-      tasks: [
-        {:mix_task, :compile, ~w"--warning-as-errors"},
-        {:mix_task, :test, ~w"--max-failures 1 --warnings-as-errors"},
-        {:mix_task, :credo, ~w"--strict --format oneline"}
-      ]
-    ]
-  ]
