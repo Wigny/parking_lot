@@ -12,7 +12,8 @@ config :ueberauth, Ueberauth,
   ]
 
 config :parking_lot,
-  ecto_repos: [ParkingLot.Repo]
+  ecto_repos: [ParkingLot.Repo],
+  generators: [timestamp_type: :utc_datetime]
 
 config :parking_lot, ParkingLotWeb.Endpoint,
   adapter: Bandit.PhoenixAdapter,
