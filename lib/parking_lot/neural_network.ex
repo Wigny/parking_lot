@@ -8,7 +8,6 @@ defmodule ParkingLot.NeuralNetwork do
 
   defstruct ~w[model classes]a
 
-  @cache_dir Path.join(:code.priv_dir(:parking_lot), "alpr_models")
   @base_url "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data"
 
   @models %{
@@ -68,7 +67,7 @@ defmodule ParkingLot.NeuralNetwork do
   defp download(file) do
     [base_url: @base_url]
     |> Req.new()
-    |> ReqCacheFile.attach(cache_dir: @cache_dir)
+    |> ReqCacheFile.attach(cache_dir: Application.get_env(:parking_lot, :cache_dir))
     |> Req.get!(url: file)
     |> Map.fetch!(:body)
   end

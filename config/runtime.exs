@@ -4,6 +4,9 @@ config :ueberauth, Ueberauth.Strategy.Google.OAuth,
   client_id: System.get_env("GOOGLE_CLIENT_ID"),
   client_secret: System.get_env("GOOGLE_CLIENT_SECRET")
 
+config :parking_lot,
+  cache_dir: System.get_env("CACHE_DIR") || :filename.basedir(:user_cache, "")
+
 if System.get_env("PHX_SERVER") do
   config :parking_lot, ParkingLotWeb.Endpoint, server: true
 end
