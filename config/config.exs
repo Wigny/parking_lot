@@ -1,16 +1,5 @@
 import Config
 
-config :ueberauth, Ueberauth,
-  providers: [
-    google: {
-      Ueberauth.Strategy.Google,
-      [
-        request_path: "/users/log_in",
-        callback_path: "/users/log_in/callback"
-      ]
-    }
-  ]
-
 config :parking_lot,
   ecto_repos: [ParkingLot.Repo],
   generators: [timestamp_type: :utc_datetime]

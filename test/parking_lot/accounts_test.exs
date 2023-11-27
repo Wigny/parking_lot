@@ -15,11 +15,15 @@ defmodule ParkingLot.AccountsTest do
     end
 
     test "does not return the user if the email does not exist" do
-      refute Accounts.get_user(email: "unknown@example.com")
+      refute Accounts.get_user(email: "unknown@example.com", password: "hello world!")
     end
 
-    test "returns the user if the email exists", %{user: %{id: id, email: email}} do
-      assert %User{id: ^id} = Accounts.get_user(email: email)
+    test "does not return the user if the password is not valid", %{user: user} do
+      refute Accounts.get_user(email: user.email, password: "invalid")
+    end
+
+    test "returns the user if the email and password are valid", %{user: %{id: id, email: email}} do
+      assert %User{id: ^id} = Accounts.get_user(email: email, password: valid_user_password())
     end
 
     test "returns user by token", %{user: user, token: token} do
@@ -38,26 +42,29 @@ defmodule ParkingLot.AccountsTest do
   end
 
   describe "create_user/1" do
-    test "requires email to be set" do
+    test "requires email and password to be set" do
       {:error, changeset} = Accounts.create_user(%{})
 
       errors = errors_on(changeset)
       assert "can't be blank" in errors.email
+      assert "can't be blank" in errors.password
     end
 
-    test "validates email when given" do
-      {:error, changeset} = Accounts.create_user(%{email: "not valid"})
+    test "validates email and password when given" do
+      {:error, changeset} = Accounts.create_user(%{email: "not valid", password: "not valid"})
 
       errors = errors_on(changeset)
       assert "must have the @ sign and no spaces" in errors.email
+      assert "should be at least 12 character(s)" in errors.password
     end
 
-    test "validates maximum values for email for security" do
+    test "validates maximum values for email and password for security" do
       too_long = String.duplicate("db", 100)
-      {:error, changeset} = Accounts.create_user(%{email: too_long})
+      {:error, changeset} = Accounts.create_user(%{email: too_long, password: too_long})
 
       errors = errors_on(changeset)
       assert "should be at most 160 character(s)" in errors.email
+      assert "should be at most 72 character(s)" in errors.password
     end
 
     test "validates email uniqueness" do
@@ -101,6 +108,12 @@ defmodule ParkingLot.AccountsTest do
       assert Accounts.delete_sessions(token: token) == :ok
 
       refute Accounts.get_user(session: [token: token])
+    end
+  end
+
+  describe "inspect/2 for the User module" do
+    test "does not include password" do
+      refute inspect(%User{password: "123456"}) =~ "password: \"123456\""
     end
   end
 end

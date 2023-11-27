@@ -4,25 +4,18 @@ defmodule ParkingLotWeb.UserSessionController do
   import ParkingLotWeb.UserAuth
   alias ParkingLot.Accounts
 
-  plug Ueberauth
+  def create(conn, %{"user" => user_params}) do
+    %{"email" => email, "password" => password} = user_params
 
-  def create(%{assigns: %{ueberauth_failure: _fails}} = conn, _params) do
-    conn
-    |> put_flash(:error, gettext("Failed to authenticate."))
-    |> redirect(to: ~p"/")
-  end
-
-  def create(%{assigns: %{ueberauth_auth: auth}} = conn, _params) do
-    case Accounts.get_or_create_user(email: auth.info.email) do
-      {:ok, user} ->
-        conn
-        |> put_flash(:info, gettext("Welcome back!"))
-        |> log_in_user(user)
-
-      {:error, reason} ->
-        conn
-        |> put_flash(:error, reason)
-        |> redirect(to: ~p"/")
+    if user = Accounts.get_user(email: email, password: password) do
+      conn
+      |> put_flash(:info, gettext("Welcome back!"))
+      |> log_in_user(user, user_params)
+    else
+      conn
+      |> put_flash(:error, gettext("Invalid email or password"))
+      |> put_flash(:email, String.slice(email, 0, 160))
+      |> redirect(to: ~p"/users/log_in")
     end
   end
 

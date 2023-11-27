@@ -25,6 +25,7 @@ defmodule ParkingLot.MixProject do
 
   defp deps do
     [
+      {:bcrypt_elixir, "~> 3.0"},
       {:phoenix, "~> 1.7.10"},
       {:phoenix_ecto, "~> 4.4"},
       {:ecto_sql, "~> 3.10"},
@@ -41,7 +42,6 @@ defmodule ParkingLot.MixProject do
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, ">= 0.0.0"},
-      {:ueberauth_google, "~> 0.10"},
       {:evision, "~> 0.1.33"},
       {:req, "~> 0.4"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
@@ -51,7 +51,7 @@ defmodule ParkingLot.MixProject do
 
   defp aliases do
     [
-      setup: ["deps.get", "ecto.setup", "assets.setup", "assets.build"],
+      setup: ["deps.get", "assets.setup", "ecto.setup", "assets.build"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
