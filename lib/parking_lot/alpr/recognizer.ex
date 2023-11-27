@@ -6,6 +6,7 @@ defmodule ParkingLot.ALPR.Recognizer do
   use GenServer
   require Logger
 
+  alias Evision.Mat
   alias ParkingLot.NeuralNetwork
 
   # Client
@@ -17,21 +18,21 @@ defmodule ParkingLot.ALPR.Recognizer do
   def infer(image) do
     license_plates = detect_license_plate(image)
 
-    with %Evision.Mat{} = area <- List.first(license_plates) do
+    with %Mat{} = area <- List.first(license_plates) do
       recognize_license_plate(area)
     end
   end
 
-  @spec detect_license_plate(image) :: [image] when image: Evision.Mat.maybe_mat_in()
+  @spec detect_license_plate(image) :: [image] when image: Mat.maybe_mat_in()
   def detect_license_plate(image) do
     detections = GenServer.call(__MODULE__, {:detect_license_plate, image}, :infinity)
 
     for {_class, _confidence, box} <- detections do
-      Evision.Mat.roi(image, box)
+      Mat.roi(image, box)
     end
   end
 
-  @spec recognize_license_plate(image :: Evision.Mat.t()) :: [binary]
+  @spec recognize_license_plate(image :: Mat.t()) :: [binary]
   def recognize_license_plate(image) do
     recognitions = GenServer.call(__MODULE__, {:recognize_license_plate, image})
 
