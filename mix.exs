@@ -42,6 +42,7 @@ defmodule ParkingLot.MixProject do
       {:bandit, ">= 0.7.7"},
       {:ueberauth_google, "~> 0.10"},
       {:evision, "~> 0.1.33"},
+      {:req, git: "https://github.com/wojtekmach/req", branch: "main"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:mix_test_watch, "~> 1.1", only: [:dev, :test], runtime: false},
       {:git_hooks, "~> 0.8.0-pre0", only: [:dev], runtime: false}
