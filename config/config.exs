@@ -7,6 +7,7 @@ config :parking_lot,
 config :parking_lot, ParkingLotWeb.Endpoint,
   adapter: Bandit.PhoenixAdapter,
   url: [host: "localhost"],
+  secret_key_base: "jVItoF805EN9xxoN60jjyWeEq4Aff7cVTT9RNyYCFC0VeuXxWu5kGVDgVGCKX2aF",
   render_errors: [
     formats: [html: ParkingLotWeb.ErrorHTML, json: ParkingLotWeb.ErrorJSON],
     layout: false
