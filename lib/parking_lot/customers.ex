@@ -67,6 +67,7 @@ defmodule ParkingLot.Customers do
     vehicle
     |> Vehicle.changeset(attrs)
     |> Repo.update()
+    |> preload_vehicle()
   end
 
   def delete_vehicle(%Vehicle{} = vehicle) do
@@ -112,6 +113,7 @@ defmodule ParkingLot.Customers do
     vehicle_driver
     |> VehicleDriver.changeset(attrs)
     |> Repo.update()
+    |> preload_vehicle_driver()
   end
 
   def delete_vehicle_driver(%VehicleDriver{} = vehicle_driver) do
