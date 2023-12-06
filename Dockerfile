@@ -22,7 +22,7 @@ FROM ${BUILDER_IMAGE} as builder
 
 # install build dependencies
 RUN apt-get update -y \
-  && apt-get install -y build-essential nodejs npm wget unzip cmake libavcodec-dev libavformat-dev libavutil-dev libswscale-dev libavresample-dev ffmpeg python3 git \
+  && apt-get install -y build-essential nodejs npm wget unzip cmake pkg-config libavcodec-dev libavformat-dev libavutil-dev libswscale-dev libavresample-dev ffmpeg python3 git \
   && apt-get clean \
   && rm -f /var/lib/apt/lists/*_*
 
