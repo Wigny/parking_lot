@@ -13,7 +13,12 @@
       <%= @model.brand.name %>
     </.link>
   </:item>
-  <:item title={gettext("Model")}><%= @model.name %></:item>
+  <:item title={gettext("Type")}>
+    <%= @model.type.name %>
+  </:item>
+  <:item title={gettext("Model")}>
+    <%= @model.name %>
+  </:item>
 </.list>
 
 <.back navigate={~p"/vehicle/models"}><%= gettext("Back to models") %></.back>

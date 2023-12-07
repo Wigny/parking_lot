@@ -10,7 +10,6 @@ defmodule ParkingLotWeb.VehicleLiveTest do
 
     invalid_attrs = %{
       license_plate: nil,
-      type_id: nil,
       model_id: nil,
       color_id: nil,
       active: false

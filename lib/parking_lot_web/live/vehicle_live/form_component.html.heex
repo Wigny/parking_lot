@@ -19,14 +19,6 @@
     />
 
     <.input
-      field={@form[:type_id]}
-      type="select"
-      label={gettext("Type")}
-      prompt={gettext("Choose the type")}
-      options={for type <- @types, do: {type.name, type.id}}
-    />
-
-    <.input
       field={@form[:model_id]}
       type="select"
       label={gettext("Model")}

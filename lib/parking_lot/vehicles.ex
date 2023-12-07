@@ -105,7 +105,7 @@ defmodule ParkingLot.Vehicles do
   end
 
   def preload_model(model) do
-    Repo.preload(model, :brand)
+    Repo.preload(model, [:brand, :type])
   end
 
   def list_types do

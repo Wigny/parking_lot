@@ -26,6 +26,14 @@ defmodule ParkingLotWeb.VehicleModelLive.FormComponent do
           options={for brand <- @brands, do: {brand.name, brand.id}}
         />
 
+        <.input
+          field={@form[:type_id]}
+          type="select"
+          label={gettext("Type")}
+          prompt={gettext("Choose the type")}
+          options={for type <- @types, do: {type.name, type.id}}
+        />
+
         <.input field={@form[:name]} type="text" label={gettext("Model")} />
         <:actions>
           <.button phx-disable-with={gettext("Saving...")}><%= gettext("Save model") %></.button>
@@ -38,12 +46,13 @@ defmodule ParkingLotWeb.VehicleModelLive.FormComponent do
   @impl true
   def update(%{model: model} = assigns, socket) do
     changeset = Vehicles.change_model(model)
-    brands = Vehicles.list_brands()
+    brands = Enum.sort_by(Vehicles.list_brands(), & &1.name)
+    types = Enum.sort_by(Vehicles.list_types(), & &1.name)
 
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(:brands, brands)
+     |> assign(brands: brands, types: types)
      |> assign_form(changeset)}
   end
 

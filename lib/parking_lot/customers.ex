@@ -87,7 +87,7 @@ defmodule ParkingLot.Customers do
   end
 
   def preload_vehicle(vehicle) do
-    Repo.preload(vehicle, [:type, :color, model: :brand])
+    Repo.preload(vehicle, [:color, model: :brand])
   end
 
   def list_vehicles_drivers do

@@ -78,10 +78,6 @@ defmodule ParkingLot.CustomersFixtures do
       license_plate: unique_vehicle_license_plate(),
       active: true
     })
-    |> Map.put_new_lazy(:type_id, fn ->
-      type = VehiclesFixtures.type_fixture()
-      type.id
-    end)
     |> Map.put_new_lazy(:model_id, fn ->
       model = VehiclesFixtures.model_fixture()
       model.id
