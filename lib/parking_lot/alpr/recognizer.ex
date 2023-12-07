@@ -18,8 +18,8 @@ defmodule ParkingLot.ALPR.Recognizer do
   def infer(image) do
     license_plates = detect_license_plate(image)
 
-    with %Mat{} = area <- List.first(license_plates) do
-      recognize_license_plate(area)
+    with {layout, %Mat{} = area} <- List.first(license_plates) do
+      {layout, recognize_license_plate(area)}
     end
   end
 
@@ -27,8 +27,8 @@ defmodule ParkingLot.ALPR.Recognizer do
   def detect_license_plate(image) do
     detections = GenServer.call(__MODULE__, {:detect_license_plate, image}, :infinity)
 
-    for {_class, _confidence, box} <- detections do
-      Mat.roi(image, box)
+    for {class, _confidence, box} <- detections do
+      {class, Mat.roi(image, box)}
     end
   end
 
