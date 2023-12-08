@@ -21,7 +21,7 @@
     <%= @vehicle.color.name %>
   </:item>
   <:item title={gettext("Active")}>
-    <%= Gettext.dgettext(ParkingLotWeb.Gettext, "enum", Atom.to_string(@vehicle.active)) %>
+    <%= if @vehicle.active, do: gettext("yes"), else: gettext("no") %>
   </:item>
 </.list>
 

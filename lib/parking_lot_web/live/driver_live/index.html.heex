@@ -16,7 +16,7 @@
     <%= driver.name %>
   </:col>
   <:col :let={{_id, driver}} label={gettext("CPF")}>
-    <%= String.replace(driver.cpf, ~r/(\d{3})(\d{3})(\d{3})(\d{2})/, ~S"\1.\2.\3-\4") %>
+    <%= driver.cpf %>
   </:col>
   <:col :let={{_id, driver}} label={gettext("CNH")}>
     <%= driver.cnh %>
@@ -25,10 +25,10 @@
     <%= driver.email %>
   </:col>
   <:col :let={{_id, driver}} label={gettext("Phone")}>
-    <%= String.replace(driver.phone, ~r/(\d{2})(\d{5})(\d{4})/, ~S"(\1) \2-\3") %>
+    <%= driver.phone %>
   </:col>
   <:col :let={{_id, driver}} label={gettext("Active")}>
-    <%= Gettext.dgettext(ParkingLotWeb.Gettext, "enum", Atom.to_string(driver.active)) %>
+    <%= if driver.active, do: gettext("yes"), else: gettext("no") %>
   </:col>
   <:action :let={{_id, driver}}>
     <div class="sr-only">

@@ -44,6 +44,7 @@ defmodule ParkingLot.MixProject do
       {:bandit, ">= 0.0.0"},
       {:evision, "~> 0.1.33"},
       {:req, "~> 0.4"},
+      {:ex_phone_number, "~> 0.4"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:mix_test_watch, "~> 1.1", only: [:dev, :test], runtime: false}
     ]

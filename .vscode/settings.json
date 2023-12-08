@@ -29,9 +29,5 @@
       "username": "postgres",
       "password": "postgres"
     }
-  ],
-  "terminal.integrated.env.linux": {
-    "EVISION_PREFER_PRECOMPILED": "false",
-    "CMAKE_OPENCV_OPTIONS": "-D WITH_FFMPEG=ON"
-  }
+  ]
 }

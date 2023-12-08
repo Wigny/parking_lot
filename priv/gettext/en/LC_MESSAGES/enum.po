@@ -12,13 +12,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "entry"
-msgstr "Entrada"
+msgstr "Entry"
 
 msgid "leave"
-msgstr "Saída"
-
-msgid "true"
-msgstr "yes"
-
-msgid "false"
-msgstr "no"
+msgstr "Leave"

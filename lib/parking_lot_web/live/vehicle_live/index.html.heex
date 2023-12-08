@@ -25,7 +25,7 @@
     <%= vehicle.color.name %>
   </:col>
   <:col :let={{_id, vehicle}} label={gettext("Active")}>
-    <%= Gettext.dgettext(ParkingLotWeb.Gettext, "enum", Atom.to_string(vehicle.active)) %>
+    <%= if vehicle.active, do: gettext("yes"), else: gettext("no") %>
   </:col>
   <:action :let={{_id, vehicle}}>
     <div class="sr-only">

@@ -60,7 +60,7 @@ defmodule ParkingLot.Parkings do
   end
 
   def preload_parking(parking) do
-    Repo.preload(parking, vehicle: [[model: [:brand]], :color])
+    Repo.preload(parking, vehicle: [:color, model: [:brand]])
   end
 
   # register the car entry

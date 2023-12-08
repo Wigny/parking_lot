@@ -12,21 +12,21 @@
     <%= @driver.name %>
   </:item>
   <:item title={gettext("CPF")}>
-    <%= String.replace(@driver.cpf, ~r/(\d{3})(\d{3})(\d{3})(\d{2})/, ~S"\1.\2.\3-\4") %>
+    <%= @driver.cpf %>
   </:item>
   <:item title={gettext("CNH")}>
     <%= @driver.cnh %>
   </:item>
   <:item title={gettext("E-mail")}>
-    <a href={"mailto:#{@driver.email}"}><%= @driver.email %></a>
+    <a href={%URI{scheme: "mailto", path: @driver.email}}><%= @driver.email %></a>
   </:item>
   <:item title={gettext("Phone")}>
-    <a href={"tel:#{@driver.phone}"}>
-      <%= String.replace(@driver.phone, ~r/(\d{2})(\d{5})(\d{4})/, ~S"(\1) \2-\3") %>
+    <a href={ParkingLot.Phone.to_uri(@driver.phone)}>
+      <%= @driver.phone %>
     </a>
   </:item>
   <:item title={gettext("Active")}>
-    <%= Gettext.dgettext(ParkingLotWeb.Gettext, "enum", Atom.to_string(@driver.active)) %>
+    <%= if @driver.active, do: gettext("yes"), else: gettext("no") %>
   </:item>
 </.list>
 

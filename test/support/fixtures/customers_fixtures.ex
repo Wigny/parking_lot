@@ -3,20 +3,28 @@ defmodule ParkingLot.CustomersFixtures do
   This module defines test helpers for creating
   entities via the `ParkingLot.Customers` context.
   """
+  import ParkingLot.Digits, only: [sigil_d: 2]
 
   alias ParkingLot.Customers
   alias ParkingLot.Digits
-  alias ParkingLot.Digits.CheckDigits
+  alias ParkingLot.Document
+  alias ParkingLot.Phone
   alias ParkingLot.VehiclesFixtures
 
   def unique_driver_cpf do
-    cpf = CheckDigits.generate(Digits.random(9), [Enum.to_list(10..2), Enum.to_list(11..2)])
-    Digits.to_string(cpf)
+    base = random_list(9, 0..9)
+    check_digits = Document.CPF.check_digits(base)
+
+    {:ok, document} = Document.CPF.new(Enum.concat(base, check_digits))
+    document
   end
 
   def unique_driver_cnh do
-    cnh = CheckDigits.generate(Digits.random(9), [Enum.to_list(2..10), Enum.concat(3..11, [2])])
-    Digits.to_string(cnh)
+    base = random_list(9, 0..9)
+    check_digits = Document.CNH.check_digits(base)
+
+    {:ok, document} = Document.CNH.new(Enum.concat(base, check_digits))
+    document
   end
 
   def unique_driver_email do
@@ -24,8 +32,9 @@ defmodule ParkingLot.CustomersFixtures do
   end
 
   def unique_driver_phone do
-    phone = Digits.random(11)
-    Digits.to_string(phone)
+    digits = Enum.concat(~d[55119], random_list(8, 0..9))
+
+    Phone.new!(<<?+, Digits.to_string(digits)::binary>>)
   end
 
   def valid_driver_attributes(attrs \\ %{}) do
@@ -55,10 +64,10 @@ defmodule ParkingLot.CustomersFixtures do
     numbers = Enum.map(?0..?9, &<<&1::utf8>>)
 
     Enum.join([
-      Digits.random(3, letters),
-      Digits.random(1, numbers),
-      Digits.random(1, letters),
-      Digits.random(2, numbers)
+      random_list(3, letters),
+      random_list(1, numbers),
+      random_list(1, letters),
+      random_list(2, numbers)
     ])
   end
 
@@ -67,8 +76,8 @@ defmodule ParkingLot.CustomersFixtures do
     numbers = Enum.map(?0..?9, &<<&1::utf8>>)
 
     Enum.join([
-      Digits.random(3, letters),
-      Digits.random(4, numbers)
+      random_list(3, letters),
+      random_list(4, numbers)
     ])
   end
 
@@ -117,5 +126,13 @@ defmodule ParkingLot.CustomersFixtures do
       |> Customers.create_vehicle_driver()
 
     vehicle_driver
+  end
+
+  defp random_list(length, elements) do
+    generator = fn -> Enum.random(elements) end
+
+    generator
+    |> Stream.repeatedly()
+    |> Enum.take(length)
   end
 end

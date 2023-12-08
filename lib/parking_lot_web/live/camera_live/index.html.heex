@@ -19,7 +19,7 @@
     <%= camera.uri %>
   </:col>
   <:col :let={{_id, camera}} label={gettext("Active")}>
-    <%= Gettext.dgettext(ParkingLotWeb.Gettext, "enum", Atom.to_string(camera.active)) %>
+    <%= if camera.active, do: gettext("yes"), else: gettext("no") %>
   </:col>
   <:action :let={{_id, camera}}>
     <div class="sr-only">

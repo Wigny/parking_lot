@@ -19,7 +19,7 @@ defmodule ParkingLot.Digits do
       iex> ParkingLot.Digits.parse("12-3")
       [1, 2, 3]
   """
-
+  @spec parse(value :: non_neg_integer | binary) :: t
   def parse(value) when is_integer(value) do
     Integer.digits(value)
   end
@@ -27,35 +27,35 @@ defmodule ParkingLot.Digits do
   def parse(value) when is_binary(value) do
     value
     |> String.replace(~r/\D/, "")
-    |> String.split("", trim: true)
+    |> String.graphemes()
     |> Enum.map(&String.to_integer/1)
   end
 
+  @doc """
+  Converts a digits sequence to a binary.
+
+  ## Examples
+
+      iex> ParkingLot.Digits.to_string([1, 2, 3])
+      "123"
+  """
+  @spec to_string(digits :: t) :: binary
   def to_string(digits) do
     Enum.join(digits)
   end
 
   @doc """
-  Returns random digits given the desired length.
+  Checks whether a digits sequence is composed by a single repeated digit.
 
-  ### Example
+  ## Examples
 
-      # Although not necessary, let's seed the random algorithm
-      iex> :rand.seed(:exsss, {1, 2, 3})
-      iex> ParkingLot.Digits.random(3)
-      [6, 0, 4]
-      iex> ParkingLot.Digits.random(3, [3, 4, 5, 6])
-      [5, 5, 4]
+      iex> ParkingLot.Digits.monodigit?([1, 1, 1])
+      true
+      iex> ParkingLot.Digits.monodigit?([1, 2, 3])
+      false
   """
-  def random(length, elements \\ 0..9) do
-    generator = fn -> Enum.random(elements) end
-
-    generator
-    |> Stream.repeatedly()
-    |> Enum.take(length)
-  end
-
-  def duplicated?(digits) do
+  @spec monodigit?(digits :: t) :: boolean
+  def monodigit?(digits) do
     uniq = Enum.uniq(digits)
 
     length(uniq) == 1
@@ -64,7 +64,7 @@ defmodule ParkingLot.Digits do
   @doc """
   Returns a new digits sequence padded with 0 as the leading filler.
 
-  ### Example
+  ## Examples
 
       iex> ParkingLot.Digits.pad_leading([1, 2, 3], 4)
       [0, 1, 2, 3]
@@ -75,7 +75,7 @@ defmodule ParkingLot.Digits do
       iex> ParkingLot.Digits.pad_leading([1], 5)
       [0, 0, 0, 0, 1]
   """
-
+  @spec pad_leading(digits :: t, count :: non_neg_integer) :: t
   def pad_leading(digits, count) do
     digits_length = length(digits)
 
