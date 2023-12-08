@@ -6,6 +6,8 @@ defmodule ParkingLot.Phone do
   API to deal with creating, parsing and validating phone numbers.
   """
 
+  alias ExPhoneNumber.Model.PhoneNumber
+
   @type t :: %__MODULE__{code: non_neg_integer, number: non_neg_integer}
   defstruct [:code, :number]
 
@@ -14,17 +16,25 @@ defmodule ParkingLot.Phone do
 
     alias ExPhoneNumber.Constants.ErrorMessages
 
+    @reasons_messages [
+      {"invalid country code", ErrorMessages.invalid_country_code()},
+      {"not a number", ErrorMessages.not_a_number()},
+      {"too short after IDD", ErrorMessages.too_short_after_idd()},
+      {"too short", ErrorMessages.too_short_nsn()},
+      {"too long", ErrorMessages.too_long()},
+      {"invalid length", "The phone number has not a valid length"}
+    ]
+
     @type t :: %__MODULE__{reason: binary}
     defexception [:reason]
 
     def new(fields), do: struct!(__MODULE__, fields)
 
-    def message(%{reason: "invalid country code"}), do: ErrorMessages.invalid_country_code()
-    def message(%{reason: "not a number"}), do: ErrorMessages.not_a_number()
-    def message(%{reason: "too short after IDD"}), do: ErrorMessages.too_short_after_idd()
-    def message(%{reason: "too short"}), do: ErrorMessages.too_short_nsn()
-    def message(%{reason: "too long"}), do: ErrorMessages.too_long()
-    def message(%{reason: "invalid length"}), do: "The phone number has not a valid length"
+    for {reason, message} <- @reasons_messages do
+      def exception(unquote(message)), do: new(reason: unquote(reason))
+
+      def message(%__MODULE__{reason: unquote(reason)}), do: unquote(message)
+    end
   end
 
   @doc """
@@ -106,8 +116,11 @@ defmodule ParkingLot.Phone do
   @spec parse(number :: binary, country :: binary | nil) :: {:ok, t} | {:error, Error.t()}
   def parse(number, country \\ nil) do
     case ExPhoneNumber.parse(number, country) do
-      {:ok, phone_number} -> {:ok, from_phone_number(phone_number)}
-      {:error, message} -> {:error, Error.new(reason: to_error_reason(message))}
+      {:ok, phone_number} ->
+        {:ok, %__MODULE__{code: phone_number.country_code, number: phone_number.national_number}}
+
+      {:error, message} ->
+        {:error, Error.exception(message)}
     end
   end
 
@@ -126,7 +139,7 @@ defmodule ParkingLot.Phone do
   """
   @spec valid?(phone :: t) :: boolean
   def valid?(phone) do
-    phone_number = to_phone_number(phone)
+    phone_number = %PhoneNumber{country_code: phone.code, national_number: phone.number}
 
     ExPhoneNumber.is_possible_number?(phone_number) and
       ExPhoneNumber.is_valid_number?(phone_number)
@@ -143,7 +156,7 @@ defmodule ParkingLot.Phone do
   """
   @spec to_number(phone :: t) :: binary
   def to_number(phone) do
-    phone_number = to_phone_number(phone)
+    phone_number = %PhoneNumber{country_code: phone.code, national_number: phone.number}
 
     ExPhoneNumber.format(phone_number, :e164)
   end
@@ -159,7 +172,7 @@ defmodule ParkingLot.Phone do
   """
   @spec to_string(phone :: t) :: binary
   def to_string(phone) do
-    phone_number = to_phone_number(phone)
+    phone_number = %PhoneNumber{country_code: phone.code, national_number: phone.number}
 
     ExPhoneNumber.format(phone_number, :international)
   end
@@ -175,26 +188,21 @@ defmodule ParkingLot.Phone do
   """
   @spec to_uri(phone :: t) :: URI.t()
   def to_uri(phone) do
-    phone_number = to_phone_number(phone)
+    phone_number = %PhoneNumber{country_code: phone.code, national_number: phone.number}
 
     tel = ExPhoneNumber.format(phone_number, :rfc3966)
     URI.parse(tel)
   end
 
-  defp from_phone_number(phone_number) do
-    %__MODULE__{code: phone_number.country_code, number: phone_number.national_number}
-  end
-
-  defp to_phone_number(phone) do
-    %ExPhoneNumber.Model.PhoneNumber{country_code: phone.code, national_number: phone.number}
-  end
-
   defp validate_number_possible(phone) do
-    phone_number = to_phone_number(phone)
+    phone_number = %PhoneNumber{country_code: phone.code, national_number: phone.number}
 
     case ExPhoneNumber.Validation.is_possible_number_with_reason?(phone_number) do
       :is_possible -> :ok
-      reason -> {:error, Error.new(reason: to_error_reason(reason))}
+      :invalid_country_code -> {:error, Error.new(reason: "invalid country code")}
+      :too_short -> {:error, Error.new(reason: "too short")}
+      :too_long -> {:error, Error.new(reason: "too long")}
+      :invalid_length -> {:error, Error.new(reason: "invalid length")}
     end
   end
 
@@ -207,27 +215,6 @@ defmodule ParkingLot.Phone do
       :ok
     else
       {:error, Error.new(reason: "invalid country code")}
-    end
-  end
-
-  defp to_error_reason(message) when is_binary(message) do
-    import ExPhoneNumber.Constants.ErrorMessages
-
-    cond do
-      message === invalid_country_code() -> "invalid country code"
-      message === not_a_number() -> "not a number"
-      message === too_short_after_idd() -> "too short after IDD"
-      message === too_short_nsn() -> "too short"
-      message === too_long() -> "too long"
-    end
-  end
-
-  defp to_error_reason(reason) when is_atom(reason) do
-    case reason do
-      :invalid_country_code -> "invalid country code"
-      :too_short -> "too short"
-      :too_long -> "too long"
-      :invalid_length -> "invalid length"
     end
   end
 
