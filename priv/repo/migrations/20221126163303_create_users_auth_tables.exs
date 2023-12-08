@@ -6,7 +6,8 @@ defmodule ParkingLot.Repo.Migrations.CreateUsersAuthTables do
 
     create table(:users) do
       add :email, :citext, null: false
-      timestamps()
+      add :hashed_password, :string, null: false
+      timestamps(type: :utc_datetime)
     end
 
     create unique_index(:users, [:email])

@@ -14,7 +14,6 @@ config :parking_lot, ParkingLotWeb.Endpoint,
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "jVItoF805EN9xxoN60jjyWeEq4Aff7cVTT9RNyYCFC0VeuXxWu5kGVDgVGCKX2aF",
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
     tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
@@ -38,23 +37,4 @@ config :phoenix, :stacktrace_depth, 20
 
 config :phoenix, :plug_init_mode, :runtime
 
-config :git_hooks,
-  extra_success_returns: [
-    {:noop, []},
-    {:ok, []}
-  ],
-  hooks: [
-    pre_commit: [
-      tasks: [
-        {:mix_task, :format, ~w"--check-formatted"},
-        {:mix_task, :test, ~w"--max-failures 1 --stale --warnings-as-errors"}
-      ]
-    ],
-    pre_push: [
-      tasks: [
-        {:mix_task, :compile, ~w"--warning-as-errors"},
-        {:mix_task, :test, ~w"--max-failures 1 --warnings-as-errors"},
-        {:mix_task, :credo, ~w"--strict --format oneline"}
-      ]
-    ]
-  ]
+config :phoenix_live_view, :debug_heex_annotations, true

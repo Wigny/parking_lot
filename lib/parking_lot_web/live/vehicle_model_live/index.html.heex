@@ -13,6 +13,7 @@
   row_click={fn {_id, model} -> JS.navigate(~p"/vehicle/models/#{model}") end}
 >
   <:col :let={{_id, model}} label={gettext("Brand")}><%= model.brand.name %></:col>
+  <:col :let={{_id, model}} label={gettext("Type")}><%= model.type.name %></:col>
   <:col :let={{_id, model}} label={gettext("Model")}><%= model.name %></:col>
   <:action :let={{_id, model}}>
     <div class="sr-only">

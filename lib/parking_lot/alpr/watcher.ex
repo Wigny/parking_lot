@@ -5,7 +5,7 @@ defmodule ParkingLot.ALPR.Watcher do
 
   alias ParkingLot.{Customers, Parkings}
   alias ParkingLot.Customers.Vehicle
-  alias ParkingLot.ALPR.{Recognizer, Video}
+  alias ParkingLot.ALPR.{Heuristics, Recognizer, Video}
 
   def start_link(%{camera: camera}, opts \\ []) do
     GenServer.start_link(__MODULE__, %{camera: camera}, opts)
@@ -41,13 +41,13 @@ defmodule ParkingLot.ALPR.Watcher do
   end
 
   # when the license plate was already recognized: finds the most frequently
-  # predicted characters (temporal redundancy) and register parking
+  # predicted characters and register parking
   def handle_cast({:register, nil}, %{recognitions: recognitions, camera: camera} = state) do
-    recognition = majority_voting(recognitions)
-
-    with %Vehicle{} = vehicle <- Customers.get_vehicle(license_plate: Enum.join(recognition)),
-         {:ok, parking} <- Parkings.register_parking(camera.type, vehicle) do
-      Phoenix.PubSub.broadcast(ParkingLot.PubSub, "alpr", {:parking, parking})
+    if license_plate = retrieve_license_plate(recognitions) do
+      with %Vehicle{} = vehicle <- Customers.get_vehicle(license_plate: license_plate),
+           {:ok, parking} <- Parkings.register_parking(camera.type, vehicle) do
+        Phoenix.PubSub.broadcast(ParkingLot.PubSub, "alpr", {:parking, parking})
+      end
     end
 
     {:noreply, %{state | recognitions: []}}
@@ -58,12 +58,32 @@ defmodule ParkingLot.ALPR.Watcher do
     {:noreply, %{state | recognitions: [recognition | recognitions]}}
   end
 
-  defp majority_voting(enumerable) do
-    Enum.zip_with(enumerable, fn characters ->
-      characters
-      |> Enum.frequencies()
-      |> Enum.max_by(fn {_character, frequency} -> frequency end)
-      |> then(fn {character, _frequency} -> character end)
-    end)
+  defp retrieve_license_plate(recognitions) do
+    recognitions
+    |> apply_temporal_redundancy()
+    |> replace_layout_characters()
+  end
+
+  defp replace_layout_characters({"Brazilian", characters}) when byte_size(characters) == 7 do
+    Heuristics.replace_characters(:legacy, characters)
+  end
+
+  # The neural model was not trained for mercosur plates, so we are considering here that any
+  # license plate that is not Brazilian should be considered a mercosur one
+  defp replace_layout_characters({"European", characters}) when byte_size(characters) == 7 do
+    Heuristics.replace_characters(:mercosur, characters)
+  end
+
+  defp replace_layout_characters({_classification, _characters}) do
+    nil
+  end
+
+  defp apply_temporal_redundancy(recognitions) do
+    {layouts, license_plates} = Enum.unzip(recognitions)
+
+    layout = Heuristics.majority_voting(layouts)
+    license_plate = Enum.join(Enum.zip_with(license_plates, &Heuristics.majority_voting/1))
+
+    {layout, license_plate}
   end
 end

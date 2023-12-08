@@ -6,14 +6,13 @@ defmodule ParkingLotWeb.VehicleLive.FormComponent do
   @impl true
   def update(%{vehicle: vehicle} = assigns, socket) do
     changeset = Customers.change_vehicle(vehicle)
-    types = Enum.sort_by(Vehicles.list_types(), & &1.name)
     models = Enum.sort_by(Vehicles.list_models(), &{&1.brand.name, &1.name})
     colors = Enum.sort_by(Vehicles.list_colors(), & &1.name)
 
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(types: types, models: models, colors: colors)
+     |> assign(models: models, colors: colors)
      |> assign_form(changeset)}
   end
 

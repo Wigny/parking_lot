@@ -8,8 +8,8 @@ const path = require("path");
 module.exports = {
   content: [
     "./js/**/*.js",
-    "../lib/*_web.ex",
-    "../lib/*_web/**/*.*ex"
+    "../lib/parking_lot_web.ex",
+    "../lib/parking_lot_web/**/*.*ex"
   ],
   theme: {
     extend: {
@@ -42,7 +42,7 @@ module.exports = {
         ["-mini", "/20/solid"]
       ];
       icons.forEach(([suffix, dir]) => {
-        fs.readdirSync(path.join(iconsDir, dir)).map(file => {
+        fs.readdirSync(path.join(iconsDir, dir)).forEach(file => {
           let name = path.basename(file, ".svg") + suffix;
           values[name] = { name, fullPath: path.join(iconsDir, dir, file) };
         });

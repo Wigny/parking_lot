@@ -8,6 +8,7 @@ defmodule ParkingLot.Application do
     children = [
       ParkingLotWeb.Telemetry,
       ParkingLot.Repo,
+      {DNSCluster, query: Application.get_env(:parking_lot, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: ParkingLot.PubSub},
       ParkingLotWeb.Endpoint,
       {Registry, keys: :unique, name: ParkingLot.Registry},

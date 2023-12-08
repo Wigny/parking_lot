@@ -7,7 +7,7 @@ defmodule ParkingLotWeb.VehicleModelLiveTest do
   defp get_model_attibutes(_) do
     create_attrs = valid_model_attributes(%{name: "some name"})
     update_attrs = valid_model_attributes(%{name: "some updated name"})
-    invalid_attrs = %{brand_id: nil, name: nil}
+    invalid_attrs = %{brand_id: nil, type_id: nil, name: nil}
 
     %{attrs: %{create: create_attrs, update: update_attrs, invalid: invalid_attrs}}
   end

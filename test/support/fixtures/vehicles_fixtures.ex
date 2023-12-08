@@ -37,6 +37,10 @@ defmodule ParkingLot.VehiclesFixtures do
       brand = brand_fixture()
       brand.id
     end)
+    |> Map.put_new_lazy(:type_id, fn ->
+      type = type_fixture()
+      type.id
+    end)
   end
 
   def model_fixture(attrs \\ %{}) do

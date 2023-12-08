@@ -5,13 +5,12 @@ defmodule ParkingLot.Accounts.Session do
   import Ecto.Changeset
 
   @rand_size 32
-  @timestamps_opts [type: :utc_datetime]
 
   schema "sessions" do
     field :token, :binary
     belongs_to :user, ParkingLot.Accounts.User
 
-    timestamps updated_at: false
+    timestamps updated_at: false, type: :utc_datetime
   end
 
   def changeset(session, attrs) do

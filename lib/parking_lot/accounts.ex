@@ -5,21 +5,13 @@ defmodule ParkingLot.Accounts do
 
   import Ecto.Query, warn: false
   alias ParkingLot.Repo
-
   alias ParkingLot.Accounts.{Session, User}
 
   @session_validity_in_days 60
 
-  def get_or_create_user(attrs) do
-    if user = get_user(email: attrs[:email]) do
-      {:ok, user}
-    else
-      create_user(%{email: attrs[:email]})
-    end
-  end
-
-  def get_user(email: email) do
-    Repo.get_by(User, email: email)
+  def get_user(email: email, password: password) do
+    user = Repo.get_by(User, email: email)
+    if User.valid_password?(user, password), do: user
   end
 
   def get_user(session: [token: token]) do

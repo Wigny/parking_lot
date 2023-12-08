@@ -1,22 +1,13 @@
 import Config
 
-config :ueberauth, Ueberauth,
-  providers: [
-    google: {
-      Ueberauth.Strategy.Google,
-      [
-        request_path: "/users/log_in",
-        callback_path: "/users/log_in/callback"
-      ]
-    }
-  ]
-
 config :parking_lot,
-  ecto_repos: [ParkingLot.Repo]
+  ecto_repos: [ParkingLot.Repo],
+  generators: [timestamp_type: :utc_datetime]
 
 config :parking_lot, ParkingLotWeb.Endpoint,
   adapter: Bandit.PhoenixAdapter,
   url: [host: "localhost"],
+  secret_key_base: "jVItoF805EN9xxoN60jjyWeEq4Aff7cVTT9RNyYCFC0VeuXxWu5kGVDgVGCKX2aF",
   render_errors: [
     formats: [html: ParkingLotWeb.ErrorHTML, json: ParkingLotWeb.ErrorJSON],
     layout: false

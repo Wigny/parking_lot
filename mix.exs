@@ -25,27 +25,28 @@ defmodule ParkingLot.MixProject do
 
   defp deps do
     [
-      {:phoenix, "~> 1.7.7"},
+      {:bcrypt_elixir, "~> 3.0"},
+      {:phoenix, "~> 1.7.10"},
       {:phoenix_ecto, "~> 4.4"},
       {:ecto_sql, "~> 3.10"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 3.3"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_view, "~> 0.19.0"},
+      {:phoenix_live_view, "~> 0.20.1"},
       {:floki, ">= 0.30.0", only: :test},
-      {:esbuild, "~> 0.7", runtime: Mix.env() == :dev},
+      {:esbuild, "~> 0.8", runtime: Mix.env() == :dev},
       {:tailwind, "~> 0.2.0", runtime: Mix.env() == :dev},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
-      {:bandit, ">= 0.7.7"},
-      {:ueberauth_google, "~> 0.10"},
+      {:dns_cluster, "~> 0.1.1"},
+      {:bandit, ">= 0.0.0"},
       {:evision, "~> 0.1.33"},
+      {:req, "~> 0.4"},
       {:ex_phone_number, "~> 0.4"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
-      {:mix_test_watch, "~> 1.1", only: [:dev, :test], runtime: false},
-      {:git_hooks, "~> 0.8.0-pre0", only: [:dev], runtime: false}
+      {:mix_test_watch, "~> 1.1", only: [:dev, :test], runtime: false}
     ]
   end
 
