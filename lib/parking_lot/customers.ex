@@ -29,7 +29,9 @@ defmodule ParkingLot.Customers do
   end
 
   def delete_driver(%Driver{} = driver) do
-    Repo.delete(driver)
+    driver
+    |> Driver.changeset(%{})
+    |> Repo.delete()
   end
 
   def change_driver(%Driver{} = driver, attrs \\ %{}) do
@@ -71,7 +73,9 @@ defmodule ParkingLot.Customers do
   end
 
   def delete_vehicle(%Vehicle{} = vehicle) do
-    Repo.delete(vehicle)
+    vehicle
+    |> Vehicle.changeset(%{})
+    |> Repo.delete()
   end
 
   def change_vehicle(%Vehicle{} = vehicle, attrs \\ %{}) do

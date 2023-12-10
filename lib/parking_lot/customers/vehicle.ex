@@ -3,13 +3,15 @@ defmodule ParkingLot.Customers.Vehicle do
 
   use Ecto.Schema
   import Ecto.Changeset
-  alias ParkingLot.Vehicles
+  alias ParkingLot.{Customers, Parkings, Vehicles}
 
   schema "vehicles" do
     field :license_plate, :string
+    field :active, :boolean, default: true
     belongs_to :model, Vehicles.Model
     belongs_to :color, Vehicles.Color
-    field :active, :boolean, default: true
+    has_many :parkings, Parkings.Parking
+    has_many :vehicles_drivers, Customers.VehicleDriver
 
     timestamps type: :utc_datetime
   end
@@ -27,5 +29,7 @@ defmodule ParkingLot.Customers.Vehicle do
     |> unique_constraint(:license_plate)
     |> assoc_constraint(:model)
     |> assoc_constraint(:color)
+    |> no_assoc_constraint(:parkings)
+    |> no_assoc_constraint(:vehicles_drivers)
   end
 end

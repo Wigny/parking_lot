@@ -89,7 +89,9 @@ defmodule ParkingLot.Vehicles do
   end
 
   def delete_model(%Model{} = model) do
-    Repo.delete(model)
+    model
+    |> Model.changeset(%{})
+    |> Repo.delete()
   end
 
   def change_model(%Model{} = model, attrs \\ %{}) do

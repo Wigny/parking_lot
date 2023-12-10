@@ -12,6 +12,7 @@ defmodule ParkingLot.Customers.Driver do
     field :email, :string
     field :phone, ParkingLot.Type.Phone, country: "BR"
     field :active, :boolean, default: true
+    has_many :vehicles_drivers, ParkingLot.Customers.VehicleDriver
 
     timestamps type: :utc_datetime
   end
@@ -26,5 +27,6 @@ defmodule ParkingLot.Customers.Driver do
     |> unique_constraint(:cnh)
     |> unique_constraint(:email)
     |> unique_constraint(:phone)
+    |> no_assoc_constraint(:vehicles_drivers)
   end
 end

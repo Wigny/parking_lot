@@ -17,5 +17,6 @@ defmodule ParkingLot.Parkings.Parking do
     parking
     |> cast(attrs, [:vehicle_id, :entered_at, :left_at])
     |> validate_required([:vehicle_id, :entered_at])
+    |> assoc_constraint(:vehicle)
   end
 end

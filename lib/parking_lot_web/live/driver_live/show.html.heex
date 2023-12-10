@@ -21,7 +21,7 @@
     <a href={%URI{scheme: "mailto", path: @driver.email}}><%= @driver.email %></a>
   </:item>
   <:item title={gettext("Phone")}>
-    <a href={ParkingLot.Phone.to_uri(@driver.phone)}>
+    <a href={@driver.phone && ParkingLot.Phone.to_uri(@driver.phone)}>
       <%= @driver.phone %>
     </a>
   </:item>

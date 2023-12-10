@@ -40,8 +40,14 @@ defmodule ParkingLotWeb.VehicleLive.Index do
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     vehicle = Customers.get_vehicle!(id)
-    {:ok, _} = Customers.delete_vehicle(vehicle)
 
-    {:noreply, stream_delete(socket, :vehicles, vehicle)}
+    case Customers.delete_vehicle(vehicle) do
+      {:ok, _vehicle} ->
+        {:noreply, stream_delete(socket, :vehicles, vehicle)}
+
+      {:error, _changeset} ->
+        message = gettext("This registry cannot be deleted!")
+        {:noreply, put_flash(socket, :error, message)}
+    end
   end
 end
