@@ -5,7 +5,7 @@ defmodule ParkingLot.Repo.Migrations.CreateVehicleTypes do
     create table(:vehicle_types) do
       add :name, :string
 
-      timestamps()
+      timestamps type: :utc_datetime
     end
 
     create unique_index(:vehicle_types, [:name])

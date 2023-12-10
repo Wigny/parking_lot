@@ -5,8 +5,6 @@ defmodule ParkingLot.Customers.Driver do
   import Ecto.Changeset
   import ParkingLot.Changeset
 
-  @timestamps_opts [type: :utc_datetime]
-
   schema "drivers" do
     field :name, :string
     field :cpf, ParkingLot.Type.Document, as: ParkingLot.Document.CPF
@@ -15,7 +13,7 @@ defmodule ParkingLot.Customers.Driver do
     field :phone, ParkingLot.Type.Phone, country: "BR"
     field :active, :boolean, default: true
 
-    timestamps()
+    timestamps type: :utc_datetime
   end
 
   def changeset(driver, attrs) do

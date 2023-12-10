@@ -7,7 +7,7 @@ defmodule ParkingLot.Repo.Migrations.CreateParkings do
       add :entered_at, :utc_datetime, null: false
       add :left_at, :utc_datetime
 
-      timestamps()
+      timestamps type: :utc_datetime
     end
 
     create index(:parkings, [:vehicle_id])

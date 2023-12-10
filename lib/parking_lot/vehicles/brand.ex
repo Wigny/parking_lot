@@ -4,13 +4,11 @@ defmodule ParkingLot.Vehicles.Brand do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @timestamps_opts [type: :utc_datetime]
-
   schema "vehicle_brands" do
     field :name, :string
     has_many :models, ParkingLot.Vehicles.Model
 
-    timestamps()
+    timestamps type: :utc_datetime
   end
 
   @doc false

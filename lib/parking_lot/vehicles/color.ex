@@ -4,12 +4,10 @@ defmodule ParkingLot.Vehicles.Color do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @timestamps_opts [type: :utc_datetime]
-
   schema "vehicle_colors" do
     field :name, :string
 
-    timestamps()
+    timestamps type: :utc_datetime
   end
 
   @doc false

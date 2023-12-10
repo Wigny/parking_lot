@@ -7,7 +7,7 @@ defmodule ParkingLot.Repo.Migrations.CreateVehiclesDrivers do
       add :driver_id, references(:drivers, on_delete: :nothing)
       add :vehicle_id, references(:vehicles, on_delete: :nothing)
 
-      timestamps()
+      timestamps type: :utc_datetime
     end
 
     create index(:vehicles_drivers, [:driver_id])

@@ -5,15 +5,13 @@ defmodule ParkingLot.Customers.Vehicle do
   import Ecto.Changeset
   alias ParkingLot.Vehicles
 
-  @timestamps_opts [type: :utc_datetime]
-
   schema "vehicles" do
     field :license_plate, :string
     belongs_to :model, Vehicles.Model
     belongs_to :color, Vehicles.Color
     field :active, :boolean, default: true
 
-    timestamps()
+    timestamps type: :utc_datetime
   end
 
   @doc false

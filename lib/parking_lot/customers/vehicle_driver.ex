@@ -5,14 +5,12 @@ defmodule ParkingLot.Customers.VehicleDriver do
   import Ecto.Changeset
   alias ParkingLot.Customers.{Driver, Vehicle}
 
-  @timestamps_opts [type: :utc_datetime]
-
   schema "vehicles_drivers" do
     belongs_to :driver, Driver
     belongs_to :vehicle, Vehicle
     field :active, :boolean, default: true
 
-    timestamps()
+    timestamps type: :utc_datetime
   end
 
   @doc false

@@ -5,14 +5,12 @@ defmodule ParkingLot.Cameras.Camera do
   import Ecto.Changeset
   import ParkingLot.Changeset
 
-  @timestamps_opts [type: :utc_datetime]
-
   schema "cameras" do
     field :type, Ecto.Enum, values: [:entry, :leave]
     field :uri, ParkingLot.Type.URI
     field :active, :boolean
 
-    timestamps()
+    timestamps type: :utc_datetime
   end
 
   @doc false

@@ -9,7 +9,7 @@ defmodule ParkingLot.Repo.Migrations.CreateVehicles do
       add :model_id, references(:vehicle_models, on_delete: :nothing)
       add :color_id, references(:vehicle_colors, on_delete: :nothing)
 
-      timestamps()
+      timestamps type: :utc_datetime
     end
 
     create unique_index(:vehicles, [:license_plate])

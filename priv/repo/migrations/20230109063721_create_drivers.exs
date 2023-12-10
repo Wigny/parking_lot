@@ -10,7 +10,7 @@ defmodule ParkingLot.Repo.Migrations.CreateDrivers do
       add :phone, :string
       add :active, :boolean, default: false, null: true
 
-      timestamps()
+      timestamps type: :utc_datetime
     end
 
     create unique_index(:drivers, [:phone])

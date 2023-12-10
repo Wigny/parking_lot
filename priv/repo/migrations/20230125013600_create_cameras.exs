@@ -6,7 +6,7 @@ defmodule ParkingLot.Repo.Migrations.CreateCameras do
       add :type, :string
       add :uri, :string
 
-      timestamps()
+      timestamps type: :utc_datetime
     end
 
     create unique_index(:cameras, [:uri])
