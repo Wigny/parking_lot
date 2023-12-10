@@ -64,26 +64,28 @@ defmodule ParkingLot.ALPR.Watcher do
     |> replace_layout_characters()
   end
 
-  defp replace_layout_characters({"Brazilian", characters}) when byte_size(characters) == 7 do
+  defp replace_layout_characters({"Brazilian", characters})
+       when byte_size(characters) == 7 do
     Heuristics.replace_characters(:legacy, characters)
   end
 
-  # The neural model was not trained for mercosur plates, so we are considering here that any
-  # license plate that is not Brazilian should be considered a mercosur one
-  defp replace_layout_characters({"European", characters}) when byte_size(characters) == 7 do
+  # The neural network model was not trained for mercosur plates, so we are considering here that
+  # any license plate that is not Brazilian should be considered a mercosur one
+  defp replace_layout_characters({_license_plate_layout, characters})
+       when byte_size(characters) == 7 do
     Heuristics.replace_characters(:mercosur, characters)
   end
 
-  defp replace_layout_characters({_classification, _characters}) do
+  defp replace_layout_characters({_license_plate_layout, _characters}) do
     nil
   end
 
   defp apply_temporal_redundancy(recognitions) do
-    {layouts, license_plates} = Enum.unzip(recognitions)
+    {_vehicle_types, license_plate_layouts, license_plates} = Enum.unzip(recognitions)
 
-    layout = Heuristics.majority_voting(layouts)
-    license_plate = Enum.join(Enum.zip_with(license_plates, &Heuristics.majority_voting/1))
+    layout = Heuristics.majority_voting(license_plate_layouts)
+    characters = Enum.join(Enum.zip_with(license_plates, &Heuristics.majority_voting/1))
 
-    {layout, license_plate}
+    {layout, characters}
   end
 end

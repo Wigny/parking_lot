@@ -9,34 +9,42 @@ defmodule ParkingLot.NeuralNetwork do
 
   @base_url "http://www.inf.ufpr.br/vri/databases/layout-independent-alpr/data"
 
-  @models %{
-    detection: %{
-      filenames: %{
+  @models [
+    vehicle_detection: %{
+      files: %{
+        config: "vehicle-detection.cfg",
+        weights: "vehicle-detection.weights",
+        classes: "vehicle-detection.names"
+      },
+      size: {448, 288}
+    },
+    license_plate_detection: %{
+      files: %{
         config: "lp-detection-layout-classification.cfg",
         weights: "lp-detection-layout-classification.weights",
         classes: "lp-detection-layout-classification.names"
       },
       size: {416, 416}
     },
-    recognition: %{
-      filenames: %{
+    license_plate_recognition: %{
+      files: %{
         config: "lp-recognition.cfg",
         weights: "lp-recognition.weights",
         classes: "lp-recognition.names"
       },
       size: {352, 128}
     }
-  }
+  ]
 
   @target_device Constant.cv_DNN_TARGET_CPU()
   @computation_backend Constant.cv_DNN_BACKEND_DEFAULT()
 
   def init(model) do
-    %{filenames: filenames, size: size} = @models[model]
+    %{files: files, size: size} = @models[model]
 
-    config_file = download(filenames[:config])
-    weights_file = download(filenames[:weights])
-    classes_file = download(filenames[:classes])
+    config_file = download(files[:config])
+    weights_file = download(files[:weights])
+    classes_file = download(files[:classes])
 
     network = DNN.readNetFromDarknetBuffer(config_file, bufferModel: weights_file)
     DNN.Net.setPreferableTarget(network, @target_device)
