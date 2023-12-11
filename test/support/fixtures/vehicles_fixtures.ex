@@ -6,15 +6,8 @@ defmodule ParkingLot.VehiclesFixtures do
 
   alias ParkingLot.Vehicles
 
-  def unique_color_name, do: "some name#{System.unique_integer([:positive])}"
-
-  def color_fixture(attrs \\ %{}) do
-    {:ok, color} =
-      attrs
-      |> Enum.into(%{name: unique_color_name()})
-      |> Vehicles.create_color()
-
-    color
+  def default_color do
+    Vehicles.get_color!(1)
   end
 
   def unique_brand_name, do: "some name#{System.unique_integer([:positive])}"
@@ -38,7 +31,7 @@ defmodule ParkingLot.VehiclesFixtures do
       brand.id
     end)
     |> Map.put_new_lazy(:type_id, fn ->
-      type = type_fixture()
+      type = default_type()
       type.id
     end)
   end
@@ -52,14 +45,7 @@ defmodule ParkingLot.VehiclesFixtures do
     model
   end
 
-  def unique_type_name, do: "some name#{System.unique_integer([:positive])}"
-
-  def type_fixture(attrs \\ %{}) do
-    {:ok, type} =
-      attrs
-      |> Enum.into(%{name: unique_type_name()})
-      |> Vehicles.create_type()
-
-    type
+  def default_type do
+    Vehicles.get_type!(1)
   end
 end

@@ -92,7 +92,7 @@ defmodule ParkingLot.CustomersFixtures do
       model.id
     end)
     |> Map.put_new_lazy(:color_id, fn ->
-      color = VehiclesFixtures.color_fixture()
+      color = VehiclesFixtures.default_color()
       color.id
     end)
   end

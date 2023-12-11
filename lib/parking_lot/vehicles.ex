@@ -14,26 +14,6 @@ defmodule ParkingLot.Vehicles do
 
   def get_color!(id), do: Repo.get!(Color, id)
 
-  def create_color(attrs \\ %{}) do
-    %Color{}
-    |> Color.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  def update_color(%Color{} = color, attrs) do
-    color
-    |> Color.changeset(attrs)
-    |> Repo.update()
-  end
-
-  def delete_color(%Color{} = color) do
-    Repo.delete(color)
-  end
-
-  def change_color(%Color{} = color, attrs \\ %{}) do
-    Color.changeset(color, attrs)
-  end
-
   def list_brands do
     Repo.all(Brand)
   end
@@ -115,24 +95,4 @@ defmodule ParkingLot.Vehicles do
   end
 
   def get_type!(id), do: Repo.get!(Type, id)
-
-  def create_type(attrs \\ %{}) do
-    %Type{}
-    |> Type.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  def update_type(%Type{} = type, attrs) do
-    type
-    |> Type.changeset(attrs)
-    |> Repo.update()
-  end
-
-  def delete_type(%Type{} = type) do
-    Repo.delete(type)
-  end
-
-  def change_type(%Type{} = type, attrs \\ %{}) do
-    Type.changeset(type, attrs)
-  end
 end

@@ -4,56 +4,16 @@ defmodule ParkingLot.VehiclesTest do
   alias ParkingLot.Vehicles
 
   describe "vehicle_colors" do
-    alias ParkingLot.Vehicles.Color
-
     import ParkingLot.VehiclesFixtures
 
-    @invalid_attrs %{name: nil}
-
     test "list_colors/0 returns all vehicle_colors" do
-      color = color_fixture()
-      assert Vehicles.list_colors() == [color]
+      assert colors = Vehicles.list_colors()
+      assert length(colors) == 16
     end
 
     test "get_color!/1 returns the color with given id" do
-      color = color_fixture()
+      color = default_color()
       assert Vehicles.get_color!(color.id) == color
-    end
-
-    test "create_color/1 with valid data creates a color" do
-      valid_attrs = %{name: "some name"}
-
-      assert {:ok, %Color{} = color} = Vehicles.create_color(valid_attrs)
-      assert color.name == "some name"
-    end
-
-    test "create_color/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Vehicles.create_color(@invalid_attrs)
-    end
-
-    test "update_color/2 with valid data updates the color" do
-      color = color_fixture()
-      update_attrs = %{name: "some updated name"}
-
-      assert {:ok, %Color{} = color} = Vehicles.update_color(color, update_attrs)
-      assert color.name == "some updated name"
-    end
-
-    test "update_color/2 with invalid data returns error changeset" do
-      color = color_fixture()
-      assert {:error, %Ecto.Changeset{}} = Vehicles.update_color(color, @invalid_attrs)
-      assert color == Vehicles.get_color!(color.id)
-    end
-
-    test "delete_color/1 deletes the color" do
-      color = color_fixture()
-      assert {:ok, %Color{}} = Vehicles.delete_color(color)
-      assert_raise Ecto.NoResultsError, fn -> Vehicles.get_color!(color.id) end
-    end
-
-    test "change_color/1 returns a color changeset" do
-      color = color_fixture()
-      assert %Ecto.Changeset{} = Vehicles.change_color(color)
     end
   end
 
@@ -168,56 +128,16 @@ defmodule ParkingLot.VehiclesTest do
   end
 
   describe "vehicle_types" do
-    alias ParkingLot.Vehicles.Type
-
     import ParkingLot.VehiclesFixtures
 
-    @invalid_attrs %{name: nil}
-
     test "list_types/0 returns all vehicle_types" do
-      type = type_fixture()
-      assert Vehicles.list_types() == [type]
+      assert types = Vehicles.list_types()
+      assert length(types) == 22
     end
 
     test "get_type!/1 returns the type with given id" do
-      type = type_fixture()
+      type = default_type()
       assert Vehicles.get_type!(type.id) == type
-    end
-
-    test "create_type/1 with valid data creates a type" do
-      valid_attrs = %{name: "some name"}
-
-      assert {:ok, %Type{} = type} = Vehicles.create_type(valid_attrs)
-      assert type.name == "some name"
-    end
-
-    test "create_type/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Vehicles.create_type(@invalid_attrs)
-    end
-
-    test "update_type/2 with valid data updates the type" do
-      type = type_fixture()
-      update_attrs = %{name: "some updated name"}
-
-      assert {:ok, %Type{} = type} = Vehicles.update_type(type, update_attrs)
-      assert type.name == "some updated name"
-    end
-
-    test "update_type/2 with invalid data returns error changeset" do
-      type = type_fixture()
-      assert {:error, %Ecto.Changeset{}} = Vehicles.update_type(type, @invalid_attrs)
-      assert type == Vehicles.get_type!(type.id)
-    end
-
-    test "delete_type/1 deletes the type" do
-      type = type_fixture()
-      assert {:ok, %Type{}} = Vehicles.delete_type(type)
-      assert_raise Ecto.NoResultsError, fn -> Vehicles.get_type!(type.id) end
-    end
-
-    test "change_type/1 returns a type changeset" do
-      type = type_fixture()
-      assert %Ecto.Changeset{} = Vehicles.change_type(type)
     end
   end
 end
