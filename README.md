@@ -2,7 +2,7 @@
 
 A server-side web application designed for managing parking lot' authorized drivers and vehicles along with the automated parking registrations powered by ALPR.
 
-### Running locally
+## Running locally
 Using Visual Studio Code, first make sure the [`Dev Containers`](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension is installed.
 
 Then open the project inside the Dev Container by typing <kbd>Ctrl/Cmd</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> and selecting `Dev Containers: Reopen in Container`.
@@ -11,7 +11,7 @@ It should automatically setup the environment and install the dependencies. If n
 
 Finally, run the server with `mix phx.server` and open the browser at http://localhost:4000.
 
-### Setting up on a server
+## Setting up on a server
 First make sure you have Docker properly setup on the server. Then we can start a database container with the following command:
 
 ```bash
