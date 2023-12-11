@@ -3,16 +3,16 @@
 A server-side web application designed for managing parking lot' authorized drivers and vehicles along with the automated parking registrations powered by ALPR.
 
 ## Running locally
-Using Visual Studio Code, first make sure the [`Dev Containers`](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension is installed.
+Using Visual Studio Code, first, make sure the [`Dev Containers`](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension is installed.
 
 Then open the project inside the Dev Container by typing <kbd>Ctrl/Cmd</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> and selecting `Dev Containers: Reopen in Container`.
 
-It should automatically setup the environment and install the dependencies. If not, just run `mix setup` inside the terminal.
+It should automatically set up the environment and install the dependencies. If not, just run `mix setup` inside the terminal.
 
 Finally, run the server with `mix phx.server` and open the browser at http://localhost:4000.
 
 ## Setting up on a server
-First make sure you have Docker properly setup on the server. Then we can start a database container with the following command:
+First, make sure you have Docker properly setup on the server. Then we can start a database container with the following command:
 
 ```bash
 docker run -d \
@@ -41,7 +41,7 @@ Then we should pull the latest application image running:
 docker pull ghcr.io/wigny/parking_lot:latest
 ```
 
-Now lets run the migrations on the database:
+Now let's run the migrations on the database:
 
 ```bash
 docker run --env-file path/to/env/file.env -it ghcr.io/wigny/parking_lot bin/migrate
@@ -67,4 +67,4 @@ iex> ParkingLot.Accounts.create_user(%{email: "admin@example.com", password: "pa
 iex> ParkingLot.Accounts.create_user(%{email: "viewer@example.com", password: "password", admin: false})
 ```
 
-The application should be start serving on port `4000` of the configured `PHX_HOST`.
+The application should start serving on port `4000` of the configured `PHX_HOST`.
