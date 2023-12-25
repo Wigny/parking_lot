@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "heroicons": "^2.0.17",
+    "heroicons": "^2.1.1",
     "topbar": "^2.0.1"
   }
 }
